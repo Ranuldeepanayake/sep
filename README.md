@@ -1,2 +1,2 @@
 # sep
-M.Sc group projject for IT5030 Software Engineering Practices
+M.Sc group project for IT5030 Software Engineering Practices
