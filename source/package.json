@@ -1,0 +1,14 @@
+{
+  "name": "sep-project",
+  "version": "1.0.0",
+  "description": "Group project for SEP",
+  "main": "server.js",
+  "author": {
+    "name": "Group",
+    "email": "joe@whatever.com",
+    "url": "https://whatever.com"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}

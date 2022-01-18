@@ -1,0 +1,37 @@
+#Dockerfile to create a NodeJS based app image.
+
+#Use the official CentOS node image.
+FROM centos
+
+#Update the repositories.
+RUN yum update -y
+
+#Set the working directory.
+WORKDIR /root/projects/sep/source
+
+#Install Vim editor.
+RUN yum install vim -y
+
+#Install basic networking commands like Ping.
+RUN yum install iputils -y 
+
+#Install node js.
+RUN yum install nodejs -y
+
+#Install NPM.
+RUN yum install npm -y
+
+#Initialize the project.
+RUN npm install
+
+#Install the express framework.
+RUN npm install express
+
+#Install pm2.
+RUN npm install pm2@latest -g
+
+#Install open SSL
+#RUN yum install openssl -y
+
+#Run the node application.
+#CMD ["pm2", "start", "server.js", "--watch"]
