@@ -1,11 +1,11 @@
-const sql = require("mysql");
+const sql = require("mysql2");
 
 var connection;
 
 function createDbConnection() {
 	//console.log("Entered the function>");
 	connection = sql.createConnection({
-		host: "172.18.0.2",
+		host: "13.212.249.95",
   		user: "sep",
   		password: "RHFkwLSa62uXb7vQ",
 		database: 'sep'
@@ -45,4 +45,19 @@ function signUp(request) {
 	connection.end();
 }
 
+function showUsers() {
+	var query;
+
+	//console.log(request.email + request.firstName + request.age + request.password);
+	createDbConnection();
+	query= `select first_name, email, age from user`;
+	connection.query(query,function(err, results, fields) {
+		  console.log(results); // results contains rows returned by server
+		  //console.log(fields); // fields contains extra meta data about results, if available
+		}
+	);
+	connection.end();
+}
+
 module.exports.signUp= signUp;
+module.exports.showUsers= showUsers;

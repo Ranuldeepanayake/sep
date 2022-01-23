@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
-const port = 80;
+const port = 3000;
 
 //Path preparation.
 const path = require('path');
@@ -25,14 +25,15 @@ app.get('/sign-up', function (req, res){
 });
 
 app.post("/sign-in-process", function(req, res){
-	console.log((req.body));
+	//console.log((req.body));
+	db.showUsers();
 	res.send("Response received!");
 });
 
 app.post("/sign-up-process", function(req, res){
 	//console.log((req.body));
-	res.send("Response received!");
 	db.signUp(req.body);
+	res.send("Response received!");
 });
 
 app.all('*', function(req, res) {
