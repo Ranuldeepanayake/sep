@@ -1,18 +1,22 @@
+//Includes.
 const express = require('express');
-const app = express();
 const bodyParser = require("body-parser");
+const path= require('path');
 const file = require('fs');
+const db = require('./js/db.js');
+
+//Global constants.
+const app = express();
 const port = 3000;
 
 //Path preparation.
-const path= require('path');
 const htmlPath= path.join(__dirname, '/html/');
 const filePath= path.join(__dirname, '/html/'); 
 
-const db = require('./js/db.js');
-
+//Use declarations.
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
 
 app.get('/', function (req, res){
   	res.sendFile(htmlPath + "index.html");
@@ -26,37 +30,36 @@ app.get('/sign-up', function (req, res){
 	res.sendFile(htmlPath + "sign-up.html");
 });
 
+//This function processes the login form.
 app.post("/sign-in-process", function(req, res){
-	//console.log((req.body));
-	//Below is a callback function since node.js doesn't support.
+	//Below is a callback function since node.js doesn't support returning values from functions.
 	db.showUsers(function (result){
 		console.log(result);
 
-		//Write to the json file.
+		//Write to a json file to be read by an HTML page.
 		file.writeFile(filePath + "data.json", JSON.stringify(result), (err) => {
 			if (err) throw err;
-			console.log('Data written to file');
+			console.log('Data written to JSON file');
 
+			//Direct to an HTML file.
 			res.sendFile(htmlPath + "view-users.html");
 		});
 	});
-	//res.send("Response received!");
 });
 
+//This function processes the sign up form.
 app.post("/sign-up-process", function(req, res){
-	//console.log((req.body));
-	var temp;
 	db.signUp(req.body, function(result){
-		temp= result;
+		res.send(result);
 	});
-
-	res.send(temp.toString);
 });
 
+//Handle invalid URLs.
 app.all('*', function(req, res) {
-    	res.send("Bad response");
+    	res.send("Bad request");
 })
 
+//Starts a server.
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })

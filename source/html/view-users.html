@@ -7,7 +7,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 
   <!--Jquery for dynamic tables-->
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"> </script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/">Navbar</a>
@@ -32,49 +32,85 @@
   </div>
 </nav>
 
+<meta charset="UTF-8">
+
+	<!-- CSS FOR STYLING THE PAGE -->
+	<style>
+		table {
+			margin: 0 auto;
+			font-size: large;
+			border: 1px solid black;
+		}
+
+		h1 {
+			text-align: center;
+			color: #006600;
+			font-size: xx-large;
+			font-family: 'Gill Sans',
+				'Gill Sans MT', ' Calibri',
+				'Trebuchet MS', 'sans-serif';
+		}
+
+		td {
+			background-color: #E4F5D4;
+			border: 1px solid black;
+		}
+
+		th,
+		td {
+			font-weight: bold;
+			border: 1px solid black;
+			padding: 10px;
+			text-align: center;
+		}
+
+		td {
+			font-weight: lighter;
+		}
+	</style>
+
+
 </head>
 <body>
 
-    <script>
-    
-        $(function() {
-    
-    
-       var people = [];
-    
-       $.getJSON('data.json', function(data) {
-           $.each(data.person, function(i, f) {
-              var tblRow = "<tr>" + "<td>" + f.firstName + "</td>" +
-               "<td>" + f.lastName + "</td>" + "<td>" + f.job + "</td>" + "<td>" + f.roll + "</td>" + "</tr>"
-               $(tblRow).appendTo("#userdata tbody");
-         });
-    
-       });
-    
-    });
-    </script>
-    </head>
-    
-    <body>
-    
-    <div class="wrapper">
-    <div class="profile">
-       <table id= "userdata" border="2">
-      <thead>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email Address</th>
-                <th>City</th>
-            </thead>
-          <tbody>
-    
-           </tbody>
-       </table>
-    
-    </div>
-    </div>
-    
- 
+	<section>
+		<h1>Users</h1>
+
+		<!-- TABLE CONSTRUCTION-->
+		<table id='table'>
+			<!-- HEADING FORMATION -->
+			<tr>
+				<th>Email</th>
+				<th>First Name</th>
+				<th>Age</th>
+			</tr>
+
+			<script>
+				$(document).ready(function () {
+
+				  // FETCHING DATA FROM JSON FILE
+					$.getJSON("data.json",function (data) {
+
+					var student = '';
+
+					// ITERATING THROUGH OBJECTS
+					$.each(data, function (key, value) {
+
+						//CONSTRUCTION OF ROWS HAVING
+						// DATA FROM JSON OBJECT
+						student += '<tr>';
+						student += '<td>' + value.email + '</td>';
+						student += '<td>' + value.first_name + '</td>';
+						student += '<td>' + value.age + '</td>';
+						student += '</tr>';
+						});
+						
+						//INSERTING ROWS INTO TABLE
+						$('#table').append(student);
+					});
+				});
+			</script>
+	</section>
 
 </body>
 </html>
