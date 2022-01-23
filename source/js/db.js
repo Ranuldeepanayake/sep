@@ -1,6 +1,7 @@
 const sql = require("mysql2");
 
 var connection;
+var result_set= null;
 
 function createDbConnection() {
 	//console.log("Entered the function>");
@@ -24,7 +25,7 @@ function createDbConnection() {
 	
 }
 
-function signUp(request) {
+function signUp(request, callback) {
 	var query;
 	var values;
 
@@ -33,31 +34,58 @@ function signUp(request) {
 	query= `insert into user(email, first_name, age, password) values (?, ?, ?, ?)`;
 	values= [request.email, request.firstName, request.age, request.password];
 
-	//console.log('Prepping query...');
 	connection.query(query, values, (err, result)=>{
 		if(err){
-			console.log(error);
+			return callback("failure");
+		}else{
+			//console.log("Record inserted with ID: " + JSON.stringify(result));
+			return callback("success");
+		}
+	});
+	connection.end();
+	console.log("Connection ended");
+}
+
+function signIn(request, callback) {
+	var query;
+
+	//console.log(request.email + request.firstName + request.age + request.password);
+	createDbConnection();
+	query= `select email, password from user`;
+	connection.query(query,function(err, result, fields) {
+		  //console.log(results); // results contains rows returned by server
+		  //console.log(fields); // fields contains extra meta data about results, if available
+		if(err){
+			return callback("failure");
 
 		}else{
-			console.log("Record inserted with ID: " + JSON.stringify(result)); 
+			//console.log("Record inserted with ID: " + JSON.stringify(result));
+			return callback("success");
 		}
 	});
 	connection.end();
 }
 
-function showUsers() {
+async function showUsers(callback) {
 	var query;
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
 	query= `select first_name, email, age from user`;
-	connection.query(query,function(err, results, fields) {
-		  console.log(results); // results contains rows returned by server
+	connection.query(query,function(err, result, fields) {
+		  //console.log(results); // results contains rows returned by server
 		  //console.log(fields); // fields contains extra meta data about results, if available
+		if(err){
+			return callback("failure");
+
+		}else{
+			//console.log("Record inserted with ID: " + JSON.stringify(result));
+			return callback(result);
 		}
-	);
+	});
 	connection.end();
 }
 
 module.exports.signUp= signUp;
+module.exports.signIn= signIn;
 module.exports.showUsers= showUsers;
