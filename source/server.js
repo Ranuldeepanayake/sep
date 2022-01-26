@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const path= require('path');
 const file = require('fs');
 const db = require('./js/db.js');
+var session = require('express-session');
 
 //Global constants.
 const app = express();
@@ -14,6 +15,12 @@ const htmlPath= path.join(__dirname, '/html/');
 const filePath= path.join(__dirname, '/html/'); 
 
 //Use declarations.
+//For session management.
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -32,6 +39,26 @@ app.get('/sign-up', function (req, res){
 
 //This function processes the login form.
 app.post("/sign-in-process", function(req, res){
+	db.signIn(req.body, function (result){
+		console.log(result);
+		if(result.loggedIn== true){
+			res.sendFile(htmlPath + "index.html");
+			console.log("Logged in!")
+		}else if(result.loggedIn== false){
+			res.send('Invalid credentials!');
+			console.log("Invalid credentials!")
+		}
+	});
+});
+
+//This function processes the sign up form.
+app.post("/sign-up-process", function(req, res){
+	db.signUp(req.body, function(result){
+		res.send(result);
+	});
+});
+
+app.get('/view-users', function (req, res){
 	//Below is a callback function since node.js doesn't support returning values from functions.
 	db.showUsers(function (result){
 		console.log(result);
@@ -47,16 +74,9 @@ app.post("/sign-in-process", function(req, res){
 	});
 });
 
-//This function processes the sign up form.
-app.post("/sign-up-process", function(req, res){
-	db.signUp(req.body, function(result){
-		res.send(result);
-	});
-});
-
 //Handle invalid URLs.
 app.all('*', function(req, res) {
-    	res.send("Bad request");
+    	res.send('Bad request');
 })
 
 //Starts a server.

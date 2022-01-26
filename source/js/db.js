@@ -43,18 +43,28 @@ function signUp(request, callback) {
 
 function signIn(request, callback) {
 	var query;
+	var values;
+	var email= request.email;
+	var password= request.password;
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
-	query= `select email, password from user`;
-	connection.query(query,function(err, result, fields) {
+	query= `select email, password from user where email= ? and password= ?`;
+	values= [email, password];
+
+	connection.query(query, values,function(err, result, fields) {
 		if(err){
 			connection.end();
 			return callback("failure");
 
 		}else{
-			connection.end();
-			return callback("success");
+			if (result.length > 0) {
+				connection.end();
+				return callback (JSON.stringify({'loggedIn' : true, 'userName': email}));
+			} else {
+				connection.end();
+				return callback(JSON.stringify({'loggedIn' : false}));
+			}
 		}
 	});
 }
