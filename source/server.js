@@ -89,11 +89,18 @@ app.post("/sign-up-process", function(req, res){
 	});
 });
 
-app.get('/view-users', function (req, res){
+app.get('/view-users.html', function(req, res) {
+	res.sendFile(htmlPath + "view-users.html");
+})
+
+app.get('/view-users-process', function (req, res){
 	//Below is a callback function since node.js doesn't support returning values from functions.
+	//Add session authentication as well.
 	db.showUsers(function (result){
 		console.log(result);
+		res.json(result);	//An API which sends data to the requester 
 
+		/*
 		//Send the database result set to Ranga's front end using REST (JSON).
 		//Write to a JSON file to be read by an HTML page.
 		file.writeFile(filePath + "data.json", JSON.stringify(result), (err) => {
@@ -102,7 +109,12 @@ app.get('/view-users', function (req, res){
 
 			//Direct to an HTML file.
 			res.sendFile(htmlPath + "view-users.html");
-		});
+			console.log('sendFile');
+
+			//Send JSON
+			res.json(result);
+			console.log('sendJSON');
+		});*/
 	});
 });
 
