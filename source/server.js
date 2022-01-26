@@ -41,12 +41,20 @@ app.get('/sign-up', function (req, res){
 app.post("/sign-in-process", function(req, res){
 	db.signIn(req.body, function (result){
 		console.log(result);
-		if(result.loggedIn== true){
-			res.sendFile(htmlPath + "index.html");
+
+		if(result.loggedIn== "true"){
 			console.log("Logged in!")
-		}else if(result.loggedIn== false){
+
+			//Session creation.
+			request.session.loggedIn = "true";
+			request.session.userName = result.userName;
+			response.redirect('/home');
+
+			res.send("Logged in as: " + result.userName);
+
+		}else {
+			console.log("Invalid credentials!");
 			res.send('Invalid credentials!');
-			console.log("Invalid credentials!")
 		}
 	});
 });
@@ -83,3 +91,18 @@ app.all('*', function(req, res) {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
+
+/*	//Create a JS object.
+	var object = {loggedIn : "", userName : "" }
+
+	//Assign variables to the object.
+	object.loggedIn= "true";
+	object.userName= "Gehan";
+	
+	//Turn the object into JSON string.
+	var jason= JSON.stringify(object);
+
+	//Turn JSON string back to an object to be accessed.
+	console.log(JSON.parse(jason));
+	console.log(JSON.parse(jason).loggedIn);
+*/

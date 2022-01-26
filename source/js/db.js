@@ -59,11 +59,27 @@ function signIn(request, callback) {
 
 		}else{
 			if (result.length > 0) {
-				connection.end();
-				return callback (JSON.stringify({'loggedIn' : true, 'userName': email}));
+				//connection.end();
+				console.log('DB authenticated: '+ JSON.stringify(result));
+
+				var authObject = {loggedIn : "", userName : "" }
+				authObject.loggedIn= "true";
+				authObject.userName= result[0].email;
+				
+				console.log(authObject);
+				return callback(authObject);
 			} else {
-				connection.end();
-				return callback(JSON.stringify({'loggedIn' : false}));
+				//connection.end();
+				console.log('DB authentication failure: '+ result);
+
+				var field1 = "loggedIn";
+				var field2 = "userName";
+
+				var object = {};
+				object[field1] = 'false';
+				var myJSON = JSON.stringify(object);
+				return callback(myJSON);
+				//return callback(JSON.stringify({'loggedIn' : false}));
 			}
 		}
 	});
