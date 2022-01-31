@@ -1,5 +1,5 @@
 /*
-This class is a generic back end class which can be used as a template.
+This class provides back end functionality to the user class.
 */
 const sql = require("mysql2");
 
@@ -109,8 +109,3 @@ function showUsers(callback) {
 module.exports.signUp= signUp;
 module.exports.signIn= signIn;
 module.exports.showUsers= showUsers;
-
-//module.exports.searchForMedicine= searchForMedicine; 
-//module.exports.placeOrder= placeOrder;
-//module.exports.reviewPrescriptions= reviewPrescriptions;
-

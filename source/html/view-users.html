@@ -16,7 +16,8 @@
 function show(data) {
     let tab = `<tr><th>First Name</th><th>Email</th><th>Age</th></tr>`;
     
-    // Loop to access all rows 
+    // Loop to access all rows
+    //////There is an error when iterating through this list.
     for (let r of data.list) {
         tab += `<tr><td>${r.first_name} </td><td>${r.email}</td><td>${r.age}</td></tr>`;
     }

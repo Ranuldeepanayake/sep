@@ -3,7 +3,10 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const path= require('path');
 const file = require('fs');
-const db = require('./js/db.js');
+
+//const db = require('./js/db.js');
+const user = require('./js/user.js');
+
 var session = require('express-session');
 const cookieParser = require("cookie-parser");
 const { Session } = require('express-session');
@@ -53,7 +56,7 @@ app.post("/sign-in-process", function(req, res){
 	//Delete any existing session.
 	//req.session.destroy(); Didn't work??
 
-	db.signIn(req.body, function (result){
+	user.signIn(req.body, function (result){
 		console.log(result);
 
 		if(result.loggedIn== "true"){
@@ -83,7 +86,7 @@ app.get("/logout-process", function(req, res){
 
 //This function processes the sign up form.
 app.post("/sign-up-process", function(req, res){
-	db.signUp(req.body, function(result){
+	user.signUp(req.body, function(result){
 		res.send(result);
 		//Send result data to Ranga's front end using REST (JSON).
 	});
@@ -96,7 +99,7 @@ app.get('/view-users.html', function(req, res) {
 app.get('/view-users-process', function (req, res){
 	//Below is a callback function since node.js doesn't support returning values from functions.
 	//Add session authentication as well.
-	db.showUsers(function (result){
+	user.showUsers(function (result){
 		console.log(result);
 		res.json(result);	//An API which sends data to the requester 
 
