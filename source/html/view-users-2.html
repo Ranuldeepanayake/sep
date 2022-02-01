@@ -13,6 +13,23 @@
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="jPut-master/js/jput.min.js"></script>
 
+
+<style>
+        th, td, p, input {
+            font:14px Verdana;
+        }
+        table, th, td 
+        {
+            border: solid 1px #DDD;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+        th {
+            font-weight:bold;
+        }
+</style>
+
 <script>
 	const api_url = "http://localhost:3000/view-users-process";
 
@@ -32,10 +49,47 @@
                     var data= JSON.parse(this.responseText);
                     console.log(data);
 
+////////////////////////////////////////////////////////////////////////////////
+                    var col = [];
+                    for (var i = 0; i < data.length; i++) {
+                        for (var key in data[i]) {
+                            if (col.indexOf(key) === -1) {
+                                col.push(key);
+                            }
+                        }
+                    }
 
-                    jPut.users.data=data;
+                    // CREATE DYNAMIC TABLE.
+                    var table = document.createElement("table");
+
+                    // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+                    var tr = table.insertRow(-1);                   // TABLE ROW.
+
+                    for (var i = 0; i < col.length; i++) {
+                        var th = document.createElement("th");      // TABLE HEADER.
+                        th.innerHTML = col[i];
+                        tr.appendChild(th);
+                    }
+
+                    // ADD JSON DATA TO THE TABLE AS ROWS.
+                    for (var i = 0; i < data.length; i++) {
+                        tr = table.insertRow(-1);
+                        
+                        for (var j = 0; j < col.length; j++) {
+                            var tabCell = tr.insertCell(-1);
+                            tabCell.innerHTML = data[i][col[j]];
+                        }
+                    }
+
+                    // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+                    var divContainer = document.getElementById("showData");
+                    divContainer.innerHTML = "";
+                    divContainer.appendChild(table);
                 }
         }
+/////////////////////////////////////////////////////////////////////////////////
+
     //call send
     xhr.send();
     //Common Types of HTTP Statuses
@@ -48,25 +102,8 @@
 </head>
 <body>
 
-    <ul jput="users">
-        <li>{{json.email}}</li>
-</ul> 
 
-    <table jput="t_template">
-        <tbody jput="tbody_template">
-            <tr>
-                <td>{{email}}</td>
-                <td>{{first_name}}</td>
-            </tr>
-        </tbody>
-       </table>
-       
-       <table>
-        <tbody id="tbody">
-        </tbody>
-       </table>
-
-
+    <p id="showData"></p>
 
 <!-- Here a loader is created which 
              loads till response comes -->
