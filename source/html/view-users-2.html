@@ -1,0 +1,84 @@
+<html>
+<head>
+	<title>View Users</title>
+
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="jPut-master/js/jput.min.js"></script>
+
+<script>
+	const api_url = "http://localhost:3000/view-users-process";
+
+     //Create the XHR Object
+     let xhr = new XMLHttpRequest;
+    //Call the open function, GET-type of request, url, true-asynchronous
+    xhr.open('GET', 'http://localhost:3000/view-users-process', true)
+    //call the onload 
+    xhr.onload = function() 
+        {
+            //check if the status is 200(means everything is okay)
+            if (this.status === 200) 
+                {
+                    //return server response as an object with JSON.parse
+                    //console.log(JSON.parse(this.responseText));
+
+                    var data= JSON.parse(this.responseText);
+                    console.log(data);
+
+
+                    jPut.users.data=data;
+                }
+        }
+    //call send
+    xhr.send();
+    //Common Types of HTTP Statuses
+    // 200: OK
+    // 404: ERROR
+    // 403: FORBIDDEN  
+</script> 
+
+
+</head>
+<body>
+
+    <ul jput="users">
+        <li>{{json.email}}</li>
+</ul> 
+
+    <table jput="t_template">
+        <tbody jput="tbody_template">
+            <tr>
+                <td>{{email}}</td>
+                <td>{{first_name}}</td>
+            </tr>
+        </tbody>
+       </table>
+       
+       <table>
+        <tbody id="tbody">
+        </tbody>
+       </table>
+
+
+
+<!-- Here a loader is created which 
+             loads till response comes -->
+			 <div class="d-flex justify-content-center">
+				<div class="spinner-border" 
+					 role="status" id="loading">
+					<span class="sr-only">Loading...</span>
+				</div>
+			</div>
+			<h1>Registered Employees</h1>
+			<!-- table for showing data -->
+			<table id="employees"></table>
+
+</body>
+</html>

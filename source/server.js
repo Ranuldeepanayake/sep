@@ -92,8 +92,8 @@ app.post("/sign-up-process", function(req, res){
 	});
 });
 
-app.get('/view-users.html', function(req, res) {
-	res.sendFile(htmlPath + "view-users.html");
+app.get('/view-users-2.html', function(req, res) {
+	res.sendFile(htmlPath + "view-users-2.html");
 })
 
 app.get('/view-users-process', function (req, res){
