@@ -1,18 +1,14 @@
 <html>
 <head>
-	<title>View Users</title>
+<title>View Users</title>
 
-	<meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
-
-
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="jPut-master/js/jput.min.js"></script>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
 <style>
         th, td, p, input {
@@ -31,113 +27,109 @@
 </style>
 
 <script>
-	const api_url = "http://localhost:3000/view-users-process";
 
-     //Create the XHR Object
-     let xhr = new XMLHttpRequest;
-    //Call the open function, GET-type of request, url, true-asynchronous
-    xhr.open('GET', 'http://localhost:3000/view-users-process', true)
-    //call the onload 
-    xhr.onload = function() 
-        {
-            //check if the status is 200(means everything is okay)
-            if (this.status === 200) 
-                {
-                    //return server response as an object with JSON.parse
-                    //console.log(JSON.parse(this.responseText));
+//URL of the API.
+const api_url = 'http://localhost:3000/view-users-process';
 
-                    var data= JSON.parse(this.responseText);
-                    console.log(data);
+//Create an XMLHttpRequest Object.
+var request = new XMLHttpRequest;
 
-////////////////////////////////////////////////////////////////////////////////
-                    var col = [];
-                    for (var i = 0; i < data.length; i++) {
-                        for (var key in data[i]) {
-                            if (col.indexOf(key) === -1) {
-                                col.push(key);
-                            }
-                        }
-                    }
+//Call the open function, GET-type of request, url, true-asynchronous
+request.open('GET', api_url, true);
 
-                    // CREATE DYNAMIC TABLE.
-                    var table = document.createElement("table");
+//Execute when the request is sent.
+request.onload = function() {
 
-                    // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+//check if the HTTP response is 200 (ok).
+  if (this.status === 200) {
+    //return server response as an object with JSON.parse
+    var data= JSON.parse(this.responseText);
+    console.log(data);
 
-                    var tr = table.insertRow(-1);                   // TABLE ROW.
-
-                    for (var i = 0; i < col.length; i++) {
-                        var th = document.createElement("th");      // TABLE HEADER.
-                        th.innerHTML = col[i];
-                        tr.appendChild(th);
-                    }
-
-                    // ADD JSON DATA TO THE TABLE AS ROWS.
-                    for (var i = 0; i < data.length; i++) {
-                        tr = table.insertRow(-1);
-                        
-                        for (var j = 0; j < col.length; j++) {
-                            var tabCell = tr.insertCell(-1);
-                            tabCell.innerHTML = data[i][col[j]];
-                        }
-                    }
-
-                    // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
-                    var divContainer = document.getElementById("showData");
-                    divContainer.innerHTML = "";
-                    divContainer.appendChild(table);
-                }
+    //Enumerate the number of columns for the table.
+    var col = [];
+    for (var i = 0; i < data.length; i++) {
+        for (var key in data[i]) {
+            if (col.indexOf(key) === -1) {
+                col.push(key);
+            }
         }
-/////////////////////////////////////////////////////////////////////////////////
+    }
 
-    //call send
-    xhr.send();
-    //Common Types of HTTP Statuses
-    // 200: OK
-    // 404: ERROR
-    // 403: FORBIDDEN  
+    //Create a table element.
+    var table = document.createElement("table");
+
+    //Create a table header row with the enumerated columns.
+    var tr = table.insertRow(-1);                   //Table header row.
+    for (var i = 0; i < col.length; i++) {
+        var th = document.createElement("th");      //Table headers.
+        th.innerHTML = col[i];
+        tr.appendChild(th);
+    }
+
+    //Add JSON data to the table as rows.
+    for (var i = 0; i < data.length; i++) {
+        tr = table.insertRow(-1);
+        
+        for (var j = 0; j < col.length; j++) {
+            var tabCell = tr.insertCell(-1);
+            tabCell.innerHTML = data[i][col[j]];
+        }
+    }
+
+    //Render the table inside a container.
+    var divContainer = document.getElementById("showData");
+    divContainer.innerHTML = "";
+    divContainer.appendChild(table);
+
+    //Stop displaying the loading animation.
+    document.getElementById('loading').style.display = 'none';
+  }
+}
+
+//Make the API call.
+request.send();
+
 </script> 
-
 
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="sign-in">Sign In</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="sign-up">Sign Up</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="view-users">Users</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="logout-process">Log Out</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="sign-in">Sign In</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="sign-up">Sign Up</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="view-users">Users</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="logout-process">Log Out</a>
+      </li>
+    </ul>
+  </div>
+</nav>
 
-    <p id="showData"></p>
+<!-- Space for the dynamically generated table -->
+<p id="showData"></p>
 
-<!-- Here a loader is created which 
-             loads till response comes -->
-			 <div class="d-flex justify-content-center">
-				<div class="spinner-border" 
-					 role="status" id="loading">
-					<span class="sr-only">Loading...</span>
-				</div>
-			</div>
+<!-- Here a loading animation is created which runs till the response comes -->
+<div class="d-flex justify-content-center">
+  <div class="spinner-border" role="status" id="loading">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
 
 </body>
 </html>
