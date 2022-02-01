@@ -37,7 +37,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.get('/', function (req, res){
 	if(req.session.loggedIn== 'true'){
 		//Send session data to Ranga's front end using REST (JSON).
-		res.send("Welcome " + req.session.userName);
+		res.send("Welcome " + req.session.firstName + " " + req.session.email);
 	}else{
 		res.sendFile(htmlPath + "index.html");
 	}
@@ -64,7 +64,10 @@ app.post("/sign-in-process", function(req, res){
 
 			//Session creation.
 			req.session.loggedIn = "true";
-			req.session.userName = result.userName;
+			req.session.userId = result.userId;
+			req.session.email = result.email;
+			req.session.firstName = result.firstName;
+
 			res.redirect('/');
 			//res.send("Logged in as: " + result.userName);
 			//Send session data to Ranga's front end using REST (JSON).
@@ -96,28 +99,13 @@ app.get('/view-users', function(req, res) {
 	res.sendFile(htmlPath + "view-users.html");
 })
 
+//An API which sends data to the caller.
 app.get('/view-users-process', function (req, res){
 	//Below is a callback function since node.js doesn't support returning values from functions.
 	//Add session authentication as well.
 	user.showUsers(function (result){
 		console.log(result);
-		res.json(result);	//An API which sends data to the requester 
-
-		/*
-		//Send the database result set to Ranga's front end using REST (JSON).
-		//Write to a JSON file to be read by an HTML page.
-		file.writeFile(filePath + "data.json", JSON.stringify(result), (err) => {
-			if (err) throw err;
-			console.log('Data written to JSON file');
-
-			//Direct to an HTML file.
-			res.sendFile(htmlPath + "view-users.html");
-			console.log('sendFile');
-
-			//Send JSON
-			res.json(result);
-			console.log('sendJSON');
-		});*/
+		res.json(result);	
 	});
 });
 

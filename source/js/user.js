@@ -55,7 +55,7 @@ function signIn(request, callback) {
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
-	query= `select email, password from user where email= ? and password= ?`;
+	query= `select user_id, email, first_name from user where email= ? and password= ?`;
 	values= [email, password];
 
 	connection.query(query, values,function(err, result, fields) {
@@ -67,9 +67,11 @@ function signIn(request, callback) {
 			if (result.length > 0) {
 				connection.end();
 
-				var authObject = {loggedIn : "", userName : "" }
+				var authObject = {loggedIn : "", userId: "", email : "" , firstName: ""}
 				authObject.loggedIn= "true";
-				authObject.userName= result[0].email;
+				authObject.userId= result[0].user_id;
+				authObject.email= result[0].email;
+				authObject.firstName= result[0].first_name;
 				
 				console.log(authObject);
 				return callback(authObject);
@@ -90,7 +92,7 @@ function showUsers(callback) {
 	var query;
 
 	createDbConnection();
-	query= `select first_name, email, age from user`;
+	query= `select user_id, email, first_name, age from user`;
 	connection.query(query,function(err, result, fields) {
 		  //console.log(results); // Results contains rows returned by server.
 		  //console.log(fields); // Fields contains extra meta data about results, if available.
