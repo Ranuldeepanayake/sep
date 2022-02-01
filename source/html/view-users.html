@@ -9,50 +9,126 @@
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 
+
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="jPut-master/js/jput.min.js"></script>
+
+
+<style>
+        th, td, p, input {
+            font:14px Verdana;
+        }
+        table, th, td 
+        {
+            border: solid 1px #DDD;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+        th {
+            font-weight:bold;
+        }
+</style>
+
 <script>
 	const api_url = "http://localhost:3000/view-users-process";
 
-// Function to define innerHTML for HTML table
-function show(data) {
-    let tab = `<tr><th>First Name</th><th>Email</th><th>Age</th></tr>`;
-    
-    // Loop to access all rows
-    //////There is an error when iterating through this list.
-    for (let r of data.list) {
-        tab += `<tr><td>${r.first_name} </td><td>${r.email}</td><td>${r.age}</td></tr>`;
-    }
-	
-    // Setting innerHTML as tab variable
-    document.getElementById("employees").innerHTML = tab;
-}
+     //Create the XHR Object
+     let xhr = new XMLHttpRequest;
+    //Call the open function, GET-type of request, url, true-asynchronous
+    xhr.open('GET', 'http://localhost:3000/view-users-process', true)
+    //call the onload 
+    xhr.onload = function() 
+        {
+            //check if the status is 200(means everything is okay)
+            if (this.status === 200) 
+                {
+                    //return server response as an object with JSON.parse
+                    //console.log(JSON.parse(this.responseText));
 
-function hideloader() {
-    document.getElementById('loading').style.display = 'none';
-}
-  
-// Defining async function
-async function getapi(url) {
-    // Storing response
-    const response = await fetch(url);
-    
-    // Storing data in form of JSON
-    var data = await response.json();
-    console.log(data);
-    if (response) {
-        hideloader();
-    }
-    show(data);
-}
+                    var data= JSON.parse(this.responseText);
+                    console.log(data);
 
-// Calling that async function
-getapi(api_url);
-  
-// Function to hide the loader
-</script>
+////////////////////////////////////////////////////////////////////////////////
+                    var col = [];
+                    for (var i = 0; i < data.length; i++) {
+                        for (var key in data[i]) {
+                            if (col.indexOf(key) === -1) {
+                                col.push(key);
+                            }
+                        }
+                    }
+
+                    // CREATE DYNAMIC TABLE.
+                    var table = document.createElement("table");
+
+                    // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+                    var tr = table.insertRow(-1);                   // TABLE ROW.
+
+                    for (var i = 0; i < col.length; i++) {
+                        var th = document.createElement("th");      // TABLE HEADER.
+                        th.innerHTML = col[i];
+                        tr.appendChild(th);
+                    }
+
+                    // ADD JSON DATA TO THE TABLE AS ROWS.
+                    for (var i = 0; i < data.length; i++) {
+                        tr = table.insertRow(-1);
+                        
+                        for (var j = 0; j < col.length; j++) {
+                            var tabCell = tr.insertCell(-1);
+                            tabCell.innerHTML = data[i][col[j]];
+                        }
+                    }
+
+                    // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+                    var divContainer = document.getElementById("showData");
+                    divContainer.innerHTML = "";
+                    divContainer.appendChild(table);
+                }
+        }
+/////////////////////////////////////////////////////////////////////////////////
+
+    //call send
+    xhr.send();
+    //Common Types of HTTP Statuses
+    // 200: OK
+    // 404: ERROR
+    // 403: FORBIDDEN  
+</script> 
 
 
 </head>
 <body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="sign-in">Sign In</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="sign-up">Sign Up</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="view-users">Users</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="logout-process">Log Out</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+    <p id="showData"></p>
 
 <!-- Here a loader is created which 
              loads till response comes -->
@@ -62,9 +138,6 @@ getapi(api_url);
 					<span class="sr-only">Loading...</span>
 				</div>
 			</div>
-			<h1>Registered Employees</h1>
-			<!-- table for showing data -->
-			<table id="employees"></table>
 
 </body>
 </html>
