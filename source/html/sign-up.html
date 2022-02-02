@@ -41,41 +41,45 @@
   </nav>
   
   <script>
-    //Script to get session data.
-    //URL of the API.
-    const api_url = 'http://localhost:3000/get-session';
+    loadData("http://localhost:3000/get-session", getSession);
+    
+      //Function for AJAX calls.
+    function loadData(url, callbackFunction){
+      //Create an XMLHttpRequest Object.
+      const request = new XMLHttpRequest;
   
-    //Create an XMLHttpRequest Object.
-    var request = new XMLHttpRequest;
+      //Execute when the response is received.
+      request.onload = function(){
+        callbackFunction(this);
+      }
   
-    //Call the open function, GET-type of request, url, true-asynchronous
-    request.open('GET', api_url, true);
+      //Call the open function, GET-type of request, url, true-asynchronous.
+      request.open('GET', url, true);
   
-    //Execute when the request is sent.
-    request.onload = function() {
-  
-    //check if the HTTP response is 200 (ok).
-        if (this.status === 200) {
-            //return server response as an object with JSON.parse
-            var data= JSON.parse(this.responseText);
-            console.log(data);
-  
-            if(data.loggedIn == null){
-            console.log('Session not created. Please log in.');
-            document.getElementById('logoutButton').style.display = 'none';
-            }else if(data.loggedIn == 'true'){
-            console.log(data.email);
-            document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
-            }else{
-            console.log('Unknown error!');
-            }
-        }
+      //Make the API call.
+      request.send();
     }
   
-    //Make the API call.
-    request.send();
+  //Function to get session data.
+  function getSession(response){
+    if (response.status === 200) {
+      //return server response as an object with JSON.parse
+      var data= JSON.parse(response.responseText);
+      console.log(data);
+  
+      if(data.loggedIn == null){
+        console.log('Session not created. Please log in.');
+        document.getElementById('logoutButton').style.display = 'none';
+      }else if(data.loggedIn == 'true'){
+        console.log(data.email);
+        document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
+      }else{
+        console.log('Unknown error!');
+      }
+    }
+  }
   </script>
-
+  
 </head>
 <body>
 
