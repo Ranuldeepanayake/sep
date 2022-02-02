@@ -1,0 +1,141 @@
+<html>
+<head>
+	<title>Add Item</title>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="nav navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="sign-in">Sign In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="sign-up">Sign Up</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="view-users">Users</a>
+        </li>
+      </ul>
+  
+      <ul class="nav navbar-nav navbar-right">
+        <li id= "logoutButton"class="nav-item">
+          <a class="nav-link" href="logout-process">Log Out</a>
+        </li>
+        <li class="nav-item">
+          <a id= "firstNameField" class="nav-link" href="#"></a>
+        </li>
+      </ul>
+  
+    </div>
+  </nav>
+  
+  <script>
+    loadData("http://localhost:3000/get-session", getSession);
+    
+      //Function for AJAX calls.
+    function loadData(url, callbackFunction){
+      //Create an XMLHttpRequest Object.
+      const request = new XMLHttpRequest;
+  
+      //Execute when the response is received.
+      request.onload = function(){
+        callbackFunction(this);
+      }
+  
+      //Call the open function, GET-type of request, url, true-asynchronous.
+      request.open('GET', url, true);
+  
+      //Make the API call.
+      request.send();
+    }
+  
+  //Function to get session data.
+  function getSession(response){
+    if (response.status === 200) {
+      //return server response as an object with JSON.parse
+      var data= JSON.parse(response.responseText);
+      console.log(data);
+  
+      if(data.loggedIn == null){
+        console.log('Session not created. Please log in.');
+        document.getElementById('logoutButton').style.display = 'none';
+      }else if(data.loggedIn == 'true'){
+        console.log(data.email);
+        document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
+      }else{
+        console.log('Unknown error!');
+      }
+    }
+  }
+
+  function submitForm(){
+    console.log("Submit button pressed!");
+    sendData("http://localhost:3000/add-item-process", addItemResult);
+  }
+
+  //Function to submit a form through AJAX.
+  function sendData(url, callbackFunction){
+      //Create an XMLHttpRequest Object.
+      const request = new XMLHttpRequest;
+  
+      //Execute when the response is received.
+      request.onload = function(){
+        callbackFunction(this);
+      }
+  
+      //Call the open function, GET-type of request, url, true-asynchronous.
+      request.open('POST', url, true);
+
+      //Set the request headers to prepare for POST form content.
+      request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+      var formElement= document.getElementById("form");
+      var formData= new FormData(formElement);
+
+      //Make the API call.
+      request.send(formData);
+    }
+
+    //Show the result of submitting the form.
+    function addItemResult(response){
+        //Handle the response.
+    }
+  </script>
+  
+</head>
+<body>
+
+<form id= "form" action="add-item-process" method="POST"> 
+  <div class="form-group">
+    <label for="text">Item Category</label>
+    <input type="text" class="form-control" id="itemCategory" placeholder="Item Category" name= "itemCategory">
+  </div>
+  <div class="form-group">
+    <label for="itemName">Item Name</label>
+    <input type="text" class="form-control" id="itemName" placeholder="Item Name" name= "itemName">
+  </div>
+  <div class="form-group">
+    <label for="itemDescription">Item Description</label>
+    <input type="text" class="form-control" id="itemDescription" placeholder="Item Description" name= "itemDescription">
+  </div>
+  <div class="form-group">
+    <label for="itemQuanity">Quantity</label>
+    <input type="text" class="form-control" id="itemQuantity" placeholder="Quantity" name= "itemQuantity">
+  </div>
+  <button onclick="submitForm()" type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+</body>
+</html>

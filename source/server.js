@@ -122,6 +122,17 @@ app.get('/get-session', function(req, res) {
 	res.json(object);
 })
 
+//This function delivers the add item form.
+app.get('/add-item', function(req, res) {
+	res.sendFile(htmlPath + "add-item.html");
+})
+
+//An API which processes adding item information.
+app.post('/add-item-process', function(req, res) {
+	console.log("Form received!");
+	console.log(req.body.itemName);
+})
+
 //Handle invalid URLs.
 app.all('*', function(req, res) {
     	res.send('Bad request');
