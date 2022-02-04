@@ -4,12 +4,18 @@ const bodyParser = require("body-parser");
 const path= require('path');
 const file = require('fs');
 
+//////////////////////////////////////////////////////////////////////////
+const multer  = require('multer');
+const upload = multer({ dest: './html/uploads' });
+//////////////////////////////////////////////////////////////////////////
+
 //const db = require('./js/db.js');
 const user = require('./js/user.js');
 
 var session = require('express-session');
 const cookieParser = require("cookie-parser");
 const { Session } = require('express-session');
+const { serialize } = require('v8');
 
 //Global constants.
 const app = express();
@@ -32,6 +38,7 @@ app.use(session({
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
 
 //This function delivers the home page.
 app.get('/', function (req, res){
@@ -128,9 +135,15 @@ app.get('/add-item', function(req, res) {
 })
 
 //An API which processes adding item information.
-app.post('/add-item-process', function(req, res) {
+app.post('/add-item-process', upload.single('itemImage'), function(req, res) {
 	console.log("Form received!");
+	// req.file is the name of your file in the form above, here 'uploaded_file'
+	// req.body will hold the text fields, if there were any 
+	console.log(req.file, req.body);
 	console.log(req.body.itemName);
+
+	//Handle other file types and limit the maximum file size.
+	file.renameSync('./html/uploads/' + req.file.filename, './html/uploads/' + req.file.filename + '.jpg');
 })
 
 //Handle invalid URLs.
