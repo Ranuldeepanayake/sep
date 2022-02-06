@@ -69,7 +69,7 @@ function getSession(response){
     var data= JSON.parse(response.responseText);
     console.log(data);
 
-    if(data.loggedIn == null){
+    if(data.loggedIn == 'false'){
       console.log('Session not created. Please log in.');
       document.getElementById('logoutButton').style.display = 'none';
     }else if(data.loggedIn == 'true'){

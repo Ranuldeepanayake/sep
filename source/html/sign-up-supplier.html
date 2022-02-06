@@ -41,7 +41,7 @@
   </nav>
   
   <script>
-    //loadData("http://localhost:3000/get-session", getSession);
+    loadData("http://localhost:3000/get-session", getSession);
     
       //Function for AJAX calls.
     function loadData(url, callbackFunction){
@@ -62,22 +62,22 @@
   
   //Function to get session data.
   function getSession(response){
-    if (response.status === 200) {
-      //return server response as an object with JSON.parse
-      var data= JSON.parse(response.responseText);
-      console.log(data);
-  
-      if(data.loggedIn == null){
-        console.log('Session not created. Please log in.');
-        document.getElementById('logoutButton').style.display = 'none';
-      }else if(data.loggedIn == 'true'){
-        console.log(data.email);
-        document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
-      }else{
-        console.log('Unknown error!');
-      }
+  if (response.status === 200) {
+    //return server response as an object with JSON.parse
+    var data= JSON.parse(response.responseText);
+    console.log(data);
+
+    if(data.loggedIn == 'false'){
+      console.log('Session not created. Please log in.');
+      document.getElementById('logoutButton').style.display = 'none';
+    }else if(data.loggedIn == 'true'){
+      console.log(data.email);
+      document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
+    }else{
+      console.log('Unknown error!');
     }
   }
+}
   </script>
   
 </head>

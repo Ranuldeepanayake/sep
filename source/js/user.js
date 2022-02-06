@@ -31,8 +31,8 @@ function signUp(request, callback) {
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
-	query= `insert into user(email, first_name, age, password) values (?, ?, ?, ?)`;
-	values= [request.email, request.firstName, request.age, request.password];
+	query= `insert into user(type, email, first_name, last_name, street, city, password) values (?, ?, ?, ?, ?, ?, ?)`;
+	values= ['customer', request.email, request.firstName, request.lastName, request.street, request.city, request.password];
 
 	connection.query(query, values, (err, result)=>{
 		if(err){
@@ -55,7 +55,8 @@ function signIn(request, callback) {
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
-	query= `select user_id, email, first_name from user where email= ? and password= ?`;
+	query= `select user_id, type, email, first_name, last_name, street, city from user where email= ? and password= ?
+	and type!= 'supplier'`;
 	values= [email, password];
 
 	connection.query(query, values,function(err, result, fields) {
@@ -67,11 +68,17 @@ function signIn(request, callback) {
 			if (result.length > 0) {
 				connection.end();
 
-				var authObject = {loggedIn : "", userId: "", email : "" , firstName: ""}
+				var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
+				lastName: "", street: "", city: ""}
+
 				authObject.loggedIn= "true";
 				authObject.userId= result[0].user_id;
+				authObject.userType= result[0].type;
 				authObject.email= result[0].email;
 				authObject.firstName= result[0].first_name;
+				authObject.lastName= result[0].last_name;
+				authObject.street= result[0].street;
+				authObject.city= result[0].city;
 				
 				console.log(authObject);
 				return callback(authObject);
@@ -92,7 +99,7 @@ function showUsers(callback) {
 	var query;
 
 	createDbConnection();
-	query= `select user_id, email, first_name, age from user`;
+	query= `select user_id, type, email, first_name, last_name, street, city from user`;
 	connection.query(query,function(err, result, fields) {
 		  //console.log(results); // Results contains rows returned by server.
 		  //console.log(fields); // Fields contains extra meta data about results, if available.

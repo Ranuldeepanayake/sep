@@ -71,7 +71,9 @@ function signIn(request, callback) {
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
-	query= `select user_id, email, first_name from user where email= ? and password= ?`;
+	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
+	supplier.nmra_registration, supplier.pharmacist_registration from user, supplier where
+	user.user_id= supplier.supplier_id and user.email= ? and user.password= ? and user.type='supplier'`;
 	values= [email, password];
 
 	connection.query(query, values,function(err, result, fields) {
@@ -83,11 +85,19 @@ function signIn(request, callback) {
 			if (result.length > 0) {
 				connection.end();
 
-				var authObject = {loggedIn : "", userId: "", email : "" , firstName: ""}
+				var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
+				lastName: "", street: "", city: "", nmraRegistration: "", pharmacistRegistration: ""}
+
 				authObject.loggedIn= "true";
 				authObject.userId= result[0].user_id;
+				authObject.userType= result[0].type;
 				authObject.email= result[0].email;
 				authObject.firstName= result[0].first_name;
+				authObject.lastName= result[0].last_name;
+				authObject.street= result[0].street;
+				authObject.city= result[0].city;
+				authObject.nmraRegistration= result[0].nmra_registration;
+				authObject.pharmacistRegistration= result[0].pharmacist_registration;
 				
 				console.log(authObject);
 				return callback(authObject);
@@ -104,11 +114,13 @@ function signIn(request, callback) {
 }
 
 //Handles listing all the users.
-function showUsers(callback) {
+function showSuppliers(callback) {
 	var query;
 
 	createDbConnection();
-	query= `select user_id, email, first_name, age from user`;
+	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
+	supplier.nmra_registration, supplier.pharmacist_registration from user, supplier where
+	user.user_id= supplier.supplier_id and user.type= 'supplier'`;
 	connection.query(query,function(err, result, fields) {
 		  //console.log(results); // Results contains rows returned by server.
 		  //console.log(fields); // Fields contains extra meta data about results, if available.
@@ -126,4 +138,4 @@ function showUsers(callback) {
 //Exporting class members to the public.
 module.exports.signUp= signUp;
 module.exports.signIn= signIn;
-module.exports.showUsers= showUsers;
+module.exports.showSuppliers= showSuppliers;

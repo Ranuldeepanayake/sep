@@ -62,22 +62,22 @@
   
   //Function to get session data.
   function getSession(response){
-    if (response.status === 200) {
-      //return server response as an object with JSON.parse
-      var data= JSON.parse(response.responseText);
-      console.log(data);
-  
-      if(data.loggedIn == null){
-        console.log('Session not created. Please log in.');
-        document.getElementById('logoutButton').style.display = 'none';
-      }else if(data.loggedIn == 'true'){
-        console.log(data.email);
-        document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
-      }else{
-        console.log('Unknown error!');
-      }
+  if (response.status === 200) {
+    //return server response as an object with JSON.parse
+    var data= JSON.parse(response.responseText);
+    console.log(data);
+
+    if(data.loggedIn == 'false'){
+      console.log('Session not created. Please log in.');
+      document.getElementById('logoutButton').style.display = 'none';
+    }else if(data.loggedIn == 'true'){
+      console.log(data.email);
+      document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
+    }else{
+      console.log('Unknown error!');
     }
   }
+}
 
   function submitForm(){
     console.log("Submit button pressed!");
@@ -85,6 +85,7 @@
   }
 
   //Function to submit a form through AJAX.
+  //////////The below code does not work. The HTML form is used instead to send the POST request.
   function sendData(url, callbackFunction){
       //Create an XMLHttpRequest Object.
       const request = new XMLHttpRequest;

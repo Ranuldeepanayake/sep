@@ -79,27 +79,65 @@ app.post("/sign-in-process", function(req, res){
 	//Delete any existing session.
 	//req.session.destroy(); Didn't work??
 
-	user.signIn(req.body, function (result){
-		console.log(result);
+	//Check the account type using the form dropdown.
+	if(req.body.userType== 'admin' || req.body.userType== 'customer'){
+		user.signIn(req.body, function (result){
+			console.log(result);
+	
+			if(result.loggedIn== "true"){
+				console.log("Logged in!")
+	
+				//Session creation.
+				req.session.loggedIn = "true";
+				req.session.userId = result.userId;
+				req.session.userType = result.userType;
+				req.session.email = result.email;
+				req.session.firstName = result.firstName;
+				req.session.lastName = result.lastName;
+				req.session.street = result.street;
+				req.session.city = result.city;
+	
+				res.redirect('/');
+				//res.send("Logged in as: " + result.userName);
+				//Send session data to Ranga's front end using REST (JSON).
+	
+			}else {
+				req.session.loggedIn = "false";
+				console.log("Invalid credentials!");
+				res.send('Invalid credentials!');
+			}
+		});
 
-		if(result.loggedIn== "true"){
-			console.log("Logged in!")
-
-			//Session creation.
-			req.session.loggedIn = "true";
-			req.session.userId = result.userId;
-			req.session.email = result.email;
-			req.session.firstName = result.firstName;
-
-			res.redirect('/');
-			//res.send("Logged in as: " + result.userName);
-			//Send session data to Ranga's front end using REST (JSON).
-
-		}else {
-			console.log("Invalid credentials!");
-			res.send('Invalid credentials!');
-		}
-	});
+	}else if(req.body.userType== 'supplier'){
+		supplier.signIn(req.body, function (result){
+			console.log(result);
+	
+			if(result.loggedIn== "true"){
+				console.log("Logged in!")
+	
+				//Session creation.
+				req.session.loggedIn = "true";
+				req.session.userId = result.userId;
+				req.session.userType = result.userType;
+				req.session.email = result.email;
+				req.session.firstName = result.firstName;
+				req.session.lastName = result.lastName;
+				req.session.street = result.street;
+				req.session.city = result.city;
+				req.session.nmraRegistration = result.nmraRegistration;
+				req.session.pharmacistRegistration = result.pharmacistRegistration;
+	
+				res.redirect('/');
+				//res.send("Logged in as: " + result.userName);
+				//Send session data to Ranga's front end using REST (JSON).
+	
+			}else {
+				req.session.loggedIn = "false";
+				console.log("Invalid credentials!");
+				res.send('Invalid credentials!');
+			}
+		});
+	}	
 });
 
 //This function processes the logout form.
@@ -113,7 +151,7 @@ app.get("/logout-process", function(req, res){
 //This function delivers a sample data presentation page.
 app.get('/view-users', function(req, res) {
 	res.sendFile(htmlPath + "view-users.html");
-})
+});
 
 //An API which sends user data to the caller.
 app.get('/view-users-process', function (req, res){
@@ -127,8 +165,22 @@ app.get('/view-users-process', function (req, res){
 
 //An API which sends session data to the caller.
 app.get('/get-session', function(req, res) {
-	var object= {loggedIn: req.session.loggedIn, userId: req.session.userId, email: req.session.email, 
-		firstName: req.session.firstName}
+
+	var object;
+
+	if(req.session.loggedIn== 'false'){
+		res.json({loggedIn: 'false'});
+	}else if(req.session.loggedIn== 'true' && (req.session.userType== 'admin' || req.session.userType== 'customer')){
+		object= {loggedIn: req.session.loggedIn, userId: req.session.userId, userType: req.session.userType,
+			email: req.session.email, firstName: req.session.firstName, lastName: req.session.lastName, 
+			street: req.session.street, city: req.session.city}
+	}else if(req.session.loggedIn== 'true' && req.session.userType== 'supplier'){
+		object= {loggedIn: req.session.loggedIn, userId: req.session.userId, userType: req.session.userType,
+			email: req.session.email, firstName: req.session.firstName, lastName: req.session.lastName, 
+			street: req.session.street, city: req.session.city, nmraRegistration: req.session.nmraRegistration, 
+			pharmacistRegistration: req.session.pharmacistRegistration}
+	}
+	
 	console.log(object);
 	res.json(object);
 })
@@ -165,6 +217,21 @@ app.post('/sign-up-process-supplier', function(req, res) {
 	supplier.signUp(req.body, function(result){
 		res.end(result);
 		//Send result data to Ranga's front end using REST (JSON).
+	});
+});
+
+//This function delivers a page with a data table.
+app.get('/view-suppliers', function(req, res) {
+	res.sendFile(htmlPath + "view-suppliers.html");
+})
+
+//An API which sends supplier data to the caller.
+app.get('/view-suppliers-process', function (req, res){
+	//Below is a callback function since node.js doesn't support returning values from functions.
+	//Add session authentication as well.
+	supplier.showSuppliers(function (result){
+		console.log(result);
+		res.json(result);	
 	});
 });
 
