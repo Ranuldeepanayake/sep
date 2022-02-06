@@ -11,6 +11,7 @@ const upload = multer({ dest: './html/uploads' });
 
 //const db = require('./js/db.js');
 const user = require('./js/user.js');
+const supplier = require('./js/supplier.js');
 
 var session = require('express-session');
 const cookieParser = require("cookie-parser");
@@ -52,14 +53,25 @@ app.get('/', function (req, res){
 	}*/
 });
 
-//This function delivers the sign in form.
-app.get('/sign-in', function (req, res){
-	res.sendFile(htmlPath + "sign-in.html");
-});
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Customer and admin
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //This function delivers the sign up form.
 app.get('/sign-up', function (req, res){
 	res.sendFile(htmlPath + "sign-up.html");
+});
+
+//This function processes the sign up form.
+app.post("/sign-up-process", function(req, res){
+	user.signUp(req.body, function(result){
+		res.send(result);
+		//Send result data to Ranga's front end using REST (JSON).
+	});
+});
+
+//This function delivers the sign in form.
+app.get('/sign-in', function (req, res){
+	res.sendFile(htmlPath + "sign-in.html");
 });
 
 //This function processes the login form.
@@ -98,14 +110,6 @@ app.get("/logout-process", function(req, res){
     res.redirect('/');
 });
 
-//This function processes the sign up form.
-app.post("/sign-up-process", function(req, res){
-	user.signUp(req.body, function(result){
-		res.send(result);
-		//Send result data to Ranga's front end using REST (JSON).
-	});
-});
-
 //This function delivers a sample data presentation page.
 app.get('/view-users', function(req, res) {
 	res.sendFile(htmlPath + "view-users.html");
@@ -129,6 +133,9 @@ app.get('/get-session', function(req, res) {
 	res.json(object);
 })
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Item
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //This function delivers the add item form.
 app.get('/add-item', function(req, res) {
 	res.sendFile(htmlPath + "add-item.html");
@@ -145,6 +152,23 @@ app.post('/add-item-process', upload.single('itemImage'), function(req, res) {
 	//Handle other file types and limit the maximum file size.
 	file.renameSync('./html/uploads/' + req.file.filename, './html/uploads/' + req.file.filename + '.jpg');
 })
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Supplier
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+app.get('/sign-up-supplier', function(req, res) {
+	res.sendFile(htmlPath + "sign-up-supplier.html");
+});
+
+app.post('/sign-up-process-supplier', function(req, res) {
+	supplier.signUp(req.body, function(result){
+		res.end(result);
+		//Send result data to Ranga's front end using REST (JSON).
+	});
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Handle invalid URLs.
 app.all('*', function(req, res) {
