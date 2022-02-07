@@ -53,16 +53,21 @@ app.get('/', function (req, res){
 	}*/
 });
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Customer and admin
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//This function delivers the sign up form.
+//Deliver the common sign up page.
 app.get('/sign-up', function (req, res){
 	res.sendFile(htmlPath + "sign-up.html");
 });
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Customer and admin
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//This function delivers the sign up form.
+app.get('/sign-up-customer', function (req, res){
+	res.sendFile(htmlPath + "sign-up-customer.html");
+});
+
 //This function processes the sign up form.
-app.post("/sign-up-process", function(req, res){
+app.post("/sign-up-customer-process", function(req, res){
 	user.signUp(req.body, function(result){
 		res.send(result);
 		//Send result data to Ranga's front end using REST (JSON).
@@ -213,7 +218,7 @@ app.get('/sign-up-supplier', function(req, res) {
 	res.sendFile(htmlPath + "sign-up-supplier.html");
 });
 
-app.post('/sign-up-process-supplier', function(req, res) {
+app.post('/sign-up-supplier-process', function(req, res) {
 	supplier.signUp(req.body, function(result){
 		res.end(result);
 		//Send result data to Ranga's front end using REST (JSON).

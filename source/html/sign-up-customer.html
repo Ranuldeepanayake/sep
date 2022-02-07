@@ -62,28 +62,28 @@
   
   //Function to get session data.
   function getSession(response){
-  if (response.status === 200) {
-    //return server response as an object with JSON.parse
-    var data= JSON.parse(response.responseText);
-    console.log(data);
-
-    if(data.loggedIn == 'false'){
-      console.log('Session not created. Please log in.');
-      document.getElementById('logoutButton').style.display = 'none';
-    }else if(data.loggedIn == 'true'){
-      console.log(data.email);
-      document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
-    }else{
-      console.log('Unknown error!');
+    if (response.status === 200) {
+      //return server response as an object with JSON.parse
+      var data= JSON.parse(response.responseText);
+      console.log(data);
+  
+      if(data.loggedIn == null){
+        console.log('Session not created. Please log in.');
+        document.getElementById('logoutButton').style.display = 'none';
+      }else if(data.loggedIn == 'true'){
+        console.log(data.email);
+        document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
+      }else{
+        console.log('Unknown error!');
+      }
     }
   }
-}
   </script>
   
 </head>
 <body>
 
-<form action="sign-up-supplier-process" method="POST"> 
+<form action="sign-up-customer-process" method="POST"> 
 
   <div class="form-group">
     <label for="email">Email address</label>
@@ -95,7 +95,6 @@
     <label for="firstName">First Name</label>
     <input type="text" class="form-control" id="firstName" placeholder="First Name" name= "firstName">
   </div>
-
   <div class="form-group">
     <label for="lastName">Last Name</label>
     <input type="text" class="form-control" id="lastName" placeholder="Last Name" name= "lastName">
@@ -109,16 +108,6 @@
   <div class="form-group">
     <label for="city">City</label>
     <input type="text" class="form-control" id="city" placeholder="City" name= "city">
-  </div>
-
-  <div class="form-group">
-    <label for="nmraRegistration">NMRA Registration</label>
-    <input type="text" class="form-control" id="nmraRegistration" placeholder="NMRA Registration" name= "nmraRegistration">
-  </div>
-
-  <div class="form-group">
-    <label for="pharmacistRegistration">Pharmacist Registration</label>
-    <input type="text" class="form-control" id="pharmacistRegistration" placeholder="Pharmacist Registration" name= "pharmacistRegistration">
   </div>
 
   <div class="form-group">
