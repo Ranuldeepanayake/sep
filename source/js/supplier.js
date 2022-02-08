@@ -135,7 +135,44 @@ function showSuppliers(callback) {
 	});
 }
 
+//Handles adding items.
+function addItem(request, imagePath, supplierId, callback) {
+	var query;
+	var values;
+	var itemPrescribed;
+
+	console.log(request);
+	console.log(imagePath);
+
+	//Handle the null 'item prescribed' check box value received from the form when the checkbox is unchecked.
+	if(typeof request.itemPrescribed== 'undefined'){
+		itemPrescribed= 'false';
+	}else{
+		itemPrescribed= request.itemPrescribed;
+	}
+
+	console.log(itemPrescribed);
+
+	createDbConnection();
+	query= `insert into item(type, name, description, prescribed, quantity, image, supplier_id) 
+	values (?, ?, ?, ?, ?, ?, ?)`;
+	values= [request.itemCategory, request.itemName, request.itemDescription, itemPrescribed, 
+		request.itemQuantity, imagePath, supplierId];
+
+	connection.query(query, values, (err, result)=>{
+		if(err){
+			console.log(err);
+			connection.end();
+			return callback("failure");
+		}else{
+			connection.end();
+			return callback("success");
+		}
+	});
+}
+
 //Exporting class members to the public.
 module.exports.signUp= signUp;
 module.exports.signIn= signIn;
 module.exports.showSuppliers= showSuppliers;
+module.exports.addItem= addItem;

@@ -61,7 +61,7 @@
     }
   
   //Function to get session data.
-  function getSession(response){
+function getSession(response){
   if (response.status === 200) {
     //return server response as an object with JSON.parse
     var data= JSON.parse(response.responseText);
@@ -69,15 +69,44 @@
 
     if(data.loggedIn == 'false'){
       console.log('Session not created. Please log in.');
+
+      //$("customerMenu").hide();
+
+      //Hide the following elements if the user is not logged in.
       document.getElementById('logoutButton').style.display = 'none';
+      console.log('Log out button hidden.');
+      //document.getElementById('customerMenu').style.display = 'none';
+      //document.getElementById('supplierMenu').style.display = 'none';
+
     }else if(data.loggedIn == 'true'){
       console.log(data.email);
+
+      //Hide the following elements if the user is not logged in.
+      //document.getElementById('signInButton').style.display = 'none';
+      //document.getElementById('signUpButton').style.display = 'none';
+
+      //Show the user's name if logged in.
       document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
+
+      if(data.userType== 'customer'){
+        console.log(data.userType);
+        //document.getElementById('supplierMenu').style.display = 'none';
+      }else if(data.userType== 'supplier'){
+        console.log(data.userType);
+        //document.getElementById('customerMenu').style.display = 'none';
+      }
+
     }else{
       console.log('Unknown error!');
+      document.getElementById('logoutButton').style.display = 'none';
+
+      //$("customerMenu").hide();
+      //document.getElementById('customerMenu').style.display = 'none';
+      //document.getElementById('supplierMenu').style.display = 'none';
     }
   }
 }
+
 
   function submitForm(){
     console.log("Submit button pressed!");

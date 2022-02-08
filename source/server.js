@@ -196,7 +196,7 @@ app.get('/get-session', function(req, res) {
 //This function delivers the add item form.
 app.get('/add-item', function(req, res) {
 	res.sendFile(htmlPath + "add-item.html");
-})
+});
 
 //An API which processes adding item information.
 app.post('/add-item-process', upload.single('itemImage'), function(req, res) {
@@ -208,8 +208,11 @@ app.post('/add-item-process', upload.single('itemImage'), function(req, res) {
 
 	//Handle other file types and limit the maximum file size.
 	file.renameSync('./html/uploads/' + req.file.filename, './html/uploads/' + req.file.filename + '.jpg');
-})
 
+	supplier.addItem(req.body, './html/uploads/' + req.file.filename + '.jpg', req.session.userId, function(result){
+		res.send(result);
+	});
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Supplier
@@ -228,7 +231,7 @@ app.post('/sign-up-supplier-process', function(req, res) {
 //This function delivers a page with a data table.
 app.get('/view-suppliers', function(req, res) {
 	res.sendFile(htmlPath + "view-suppliers.html");
-})
+});
 
 //An API which sends supplier data to the caller.
 app.get('/view-suppliers-process', function (req, res){
@@ -245,12 +248,12 @@ app.get('/view-suppliers-process', function (req, res){
 //Handle invalid URLs.
 app.all('*', function(req, res) {
     	res.send('Bad request');
-})
+});
 
 //Starts a nodejs server instance.
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
-})
+});
 
 /*	//Create a JS object.
 	var object = {loggedIn : "", userName : "" }
