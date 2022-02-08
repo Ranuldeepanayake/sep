@@ -42,6 +42,21 @@
   </div>
 </nav>
 
+  <ul id="customerMenu">
+    <li class="nav-item">
+      <a class="nav-link" href="#">Products</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Cart</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Orders</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Pharmacies</a>
+    </li>
+  </ul>
+
 <script>
   loadData("http://localhost:3000/get-session", getSession);
   
@@ -71,16 +86,47 @@ function getSession(response){
 
     if(data.loggedIn == 'false'){
       console.log('Session not created. Please log in.');
+
+      $("customerMenu").hide();
+
       document.getElementById('logoutButton').style.display = 'none';
+      document.getElementById('customerMenu').style.display = 'none';
+      //document.getElementById('supplierMenu').style.display = 'none';
+
     }else if(data.loggedIn == 'true'){
       console.log(data.email);
       document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
+
+      if(data.userType== 'customer'){
+        //document.getElementById('supplierMenu').style.display = 'none';
+      }else if(data.userType= 'supplier'){
+        document.getElementById('customerMenu').style.display = 'none';
+      }
+
     }else{
       console.log('Unknown error!');
+      document.getElementById('logoutButton').style.display = 'none';
+
+      $("customerMenu").hide();
+
+      document.getElementById('customerMenu').style.display = 'none';
+      //document.getElementById('supplierMenu').style.display = 'none';
     }
   }
 }
+
+
+/*Render the table inside a container.
+    var divContainer = document.getElementById("showData");
+    divContainer.innerHTML = "";
+    divContainer.appendChild(table);
+
+    //Stop displaying the loading animation.
+    document.getElementById('loading').style.display = 'none';
+    */
+
 </script>
  
 </body>
 </html>
+
