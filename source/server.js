@@ -69,7 +69,8 @@ app.get('/sign-up-customer', function (req, res){
 //This function processes the sign up form.
 app.post("/sign-up-customer-process", function(req, res){
 	user.signUp(req.body, function(result){
-		res.send(result);
+		res.sendFile(htmlPath + result + '.html');
+		//res.end(result);
 		//Send result data to Ranga's front end using REST (JSON).
 	});
 });
@@ -109,7 +110,8 @@ app.post("/sign-in-process", function(req, res){
 			}else {
 				req.session.loggedIn = "false";
 				console.log("Invalid credentials!");
-				res.send('Invalid credentials!');
+				//res.send('Invalid credentials!');
+				res.sendFile(htmlPath + 'invalid-credentials.html');
 			}
 		});
 
@@ -139,7 +141,8 @@ app.post("/sign-in-process", function(req, res){
 			}else {
 				req.session.loggedIn = "false";
 				console.log("Invalid credentials!");
-				res.send('Invalid credentials!');
+				//res.send('Invalid credentials!');
+				res.sendFile(htmlPath + 'invalid-credentials.html');
 			}
 		});
 	}	
@@ -210,7 +213,7 @@ app.post('/add-item-process', upload.single('itemImage'), function(req, res) {
 	file.renameSync('./html/uploads/' + req.file.filename, './html/uploads/' + req.file.filename + '.jpg');
 
 	supplier.addItem(req.body, './html/uploads/' + req.file.filename + '.jpg', req.session.userId, function(result){
-		res.send(result);
+		res.sendFile(htmlPath + result + '.html');
 	});
 });
 
@@ -223,7 +226,8 @@ app.get('/sign-up-supplier', function(req, res) {
 
 app.post('/sign-up-supplier-process', function(req, res) {
 	supplier.signUp(req.body, function(result){
-		res.end(result);
+		res.sendFile(htmlPath + result + '.html');
+		//res.end(result);
 		//Send result data to Ranga's front end using REST (JSON).
 	});
 });
