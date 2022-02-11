@@ -154,10 +154,10 @@ function addItem(request, imagePath, supplierId, callback) {
 	console.log(itemPrescribed);
 
 	createDbConnection();
-	query= `insert into item(type, name, description, prescribed, quantity, image, supplier_id) 
-	values (?, ?, ?, ?, ?, ?, ?)`;
+	query= `insert into item(type, name, description, prescribed, quantity, unit_price, image, supplier_id) 
+	values (?, ?, ?, ?, ?, ?, ?, ?)`;
 	values= [request.itemCategory, request.itemName, request.itemDescription, itemPrescribed, 
-		request.itemQuantity, imagePath, supplierId];
+		request.itemQuantity, request.itemUnitPrice, imagePath, supplierId];
 
 	connection.query(query, values, (err, result)=>{
 		if(err){
