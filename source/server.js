@@ -27,6 +27,7 @@ const sessionSecret= 'sepprojectsessionsecret'
 //Path preparation.
 const htmlPath= path.join(__dirname, '/html/');
 const filePath= path.join(__dirname, '/html/'); 
+const rangaLogin= path.join(__dirname, '/Medi2Door/');
 
 //Use declarations.
 //For session management. Please change the session string.
@@ -36,6 +37,7 @@ app.use(session({
 	resave: true,
 	saveUninitialized: true
 }));
+app.use(express.static(__dirname + '/Medi2Door/'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -43,7 +45,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //This function delivers the home page.
 app.get('/', function (req, res){
-	res.sendFile(htmlPath + "index.html");
+	res.sendFile(rangaLogin + "Login.html");
 	//Below code is as a reference for session checking.
 	/*if(req.session.loggedIn== 'true'){
 		//Send session data to Ranga's front end using REST (JSON).
@@ -82,6 +84,7 @@ app.get('/sign-in', function (req, res){
 
 //This function processes the login form.
 app.post("/sign-in-process", function(req, res){
+	//console.log(req.body);
 	//Delete any existing session.
 	//req.session.destroy(); Didn't work??
 
@@ -103,7 +106,8 @@ app.post("/sign-in-process", function(req, res){
 				req.session.street = result.street;
 				req.session.city = result.city;
 	
-				res.redirect('/');
+				res.sendFile(htmlPath + 'success.html');
+				//res.redirect('/');
 				//res.send("Logged in as: " + result.userName);
 				//Send session data to Ranga's front end using REST (JSON).
 	

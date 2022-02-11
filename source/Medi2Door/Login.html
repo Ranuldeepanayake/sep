@@ -103,11 +103,19 @@
                     <div class="col-lg-4 col-12 mb-40">
                         <div class="login-register-form-wrap">
                             <h3>Login</h3>
-                            <form action="#" class="mb-30">
+                            <form action="sign-in-process" method="post" class="mb-30">
                                 <div class="row">
-                                    <div class="col-12 mb-15"><input type="text" placeholder="Username or Email"></div>
-                                    <div class="col-12 mb-15"><input type="password" placeholder="Password"></div>
-                                    <div class="col-12"><input type="submit" value="Login"></div>
+                                    <div class="col-12 mb-15"><input name="email" type="text" placeholder="Email"></div>
+                                    <div class="col-12 mb-15"><input name="password" type="password" placeholder="Password"></div>
+                                    <div class="col-12 mb-15">
+                                        <select name="userType" id="userType">
+                                            <option value="0">Select Type</option>
+                                        <option value="customer">Customer</option>
+                                        <option value="supplier">Supplier</option>
+                                        <option value="admin">Admin</option>
+                                      </select>
+                                    </div>
+                                    <div class="col-12"><button type="submit" value="Login"></div>
                                 </div>
                             </form>
                         </div>
@@ -122,6 +130,13 @@
                             <h3>Register</h3>
                             <form action="#">
                                 <div class="row">
+                                    <div class="col-md-12 col-12 mb-15">
+                                        <select name="userType2" id="userType2">
+                                            <option value="0">Select User Type</option>
+                                            <option value="customer">Customer</option>
+                                            <option value="supplier">Supplier</option>
+                                      </select>
+                                    </div>
                                     <div class="col-md-6 col-12 mb-15"><input type="text" placeholder="First Name"></div>
                                     <div class="col-md-6 col-12 mb-15"><input type="text" placeholder="Last Name"></div>
                                     <div class="col-md-6 col-12 mb-15"><input type="text" placeholder="Address"></div>
@@ -134,6 +149,8 @@
                                     <div class="col-md-6 col-12 mb-15"><input type="email" placeholder="Email"></div>
                                     <div class="col-md-6 col-12 mb-15"><input type="password" placeholder="Password"></div>
                                     <div class="col-md-6 col-12 mb-15"><input type="password" placeholder="Confirm Password"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input type="password" placeholder="NMRA ID"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input type="password" placeholder="Pharmacist ID"></div>
                                     <div class="col-md-12 col-12"><input type="submit" value="Register"></div>
                                 </div>
                             </form>
