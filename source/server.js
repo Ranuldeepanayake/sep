@@ -37,7 +37,7 @@ app.use(session({
 	resave: true,
 	saveUninitialized: true
 }));
-app.use(express.static(__dirname + '/Medi2Door/'));
+app.use(express.static(__dirname + '/Medi2Door/'));	//Use Ranga's static resources.
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -59,27 +59,54 @@ app.get('/', function (req, res){
 
 //This function processes the sign up form.
 app.post("/sign-up-process", function(req, res){
-	console.log('***Received sign up form data>');
+	console.log('**************Received sign up form data>');
 	console.log(req.body);
 
-	//Check if a customer or supplier is registering.
-	if(req.body.password != req.body.confirmPassword){
-		res.send('Passwords do not match!');
+	//Bad input sanitization.
+	if(req.body.userType== 'null'){
+		res.json({'result' : 'Please select a user type!'});
+		return;
 	}
 
-	if(req.body.userType== 'null'){
-		res.send('Please select a user type!');
-	}else if(req.body.userType== 'customer'){
+	//Check for empty fields if the user type is 'customer'.
+	if((req.body.userType== 'customer') && (req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
+	req.body.street== '' || req.body.city== 'null' || req.body.password== '' || req.body.confirmPassword== '')){
+		res.json({'result' : 'Fields are empty!'});
+		return;
+	}
+
+	//Check for empty fields if the user type is 'supplier'.
+	if((req.body.userType== 'supplier') && (req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
+	req.body.street== '' || req.body.city== 'null' || req.body.password== '' || req.body.confirmPassword== '' || 
+	req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '')){
+		res.json({'result' : 'Fields are empty!'});
+		return;
+	}
+
+	//Check if passwords are matching.
+	if(req.body.password != req.body.confirmPassword){
+		res.json({'result' : 'Passwords do not match!'});
+		return;
+	}
+
+	if(req.body.userType== 'customer'){
+		//Save data in the database.
 		customer.signUp(req.body, function(result){
-			res.sendFile(htmlPath + result + '.html');
+			//res.sendFile(htmlPath + result + '.html');
 			//res.end(result);
-			//Send result data to Ranga's front end using REST (JSON).
+			res.json({'result' : result});
+			return;
 		});
-	}else if(req.body.userType== 'supplier'){
+		
+	}
+
+	if(req.body.userType== 'supplier'){
+		//Save data in the database.
 		supplier.signUp(req.body, function(result){
-			res.sendFile(htmlPath + result + '.html');
-			//res.end(result);
-			//Send result data to Ranga's front end using REST (JSON).
+			//res.sendFile(htmlPath + result + '.html');
+			res.end(result);
+			//res.json({'result' : result}); //This causes the program to crash??
+			return;
 		});
 	}
 });
@@ -87,50 +114,57 @@ app.post("/sign-up-process", function(req, res){
 
 //This function processes the login form.
 app.post("/sign-in-process", function(req, res){
-	//console.log(req.body);
+	console.log('**************Received sign in form data>');
+	console.log(req.body);
+
 	//Delete any existing session.
 	//req.session.destroy(); Didn't work??
 
 	//Check the account type using the form dropdown.
-	if(req.body.userType== 'null'){
-		res.send('Please select a user type!');
+	if(req.body.email== '' || req.body.password== ''){
+		res.json({'result' : 'Fields are empty!'});
+		return;
+	}
 
-	}else if(req.body.userType== 'customer'){
-		customer.signIn(req.body, function (result){
-			console.log(result);
-	
-			if(result.loggedIn== "true"){
-				console.log("Logged in!")
-	
-				//Session creation.
-				req.session.loggedIn = "true";
-				req.session.userId = result.userId;
-				req.session.userType = result.userType;
-				req.session.email = result.email;
-				req.session.firstName = result.firstName;
-				req.session.lastName = result.lastName;
-				req.session.street = result.street;
-				req.session.city = result.city;
-	
-				res.sendFile(htmlPath + 'success.html');
-				//res.redirect('/');
-				//res.send("Logged in as: " + result.userName);
-				//Send session data to Ranga's front end using REST (JSON).
-	
-			}else {
-				req.session.loggedIn = "false";
-				console.log("Invalid credentials!");
-				//res.send('Invalid credentials!');
-				res.sendFile(htmlPath + 'invalid-credentials.html');
-			}
-		});
+	if(req.body.userType== 'null'){
+		res.json({'result' : 'Select user type!'});
+		return;
+	}
+
+	if(req.body.userType== 'customer'){
+	customer.signIn(req.body, function (result){
+		console.log(result);
+
+		if(result.loggedIn== "true"){
+			console.log("**************Logged in!")
+
+			//Session creation.
+			req.session.loggedIn = "true";
+			req.session.userId = result.userId;
+			req.session.userType = result.userType;
+			req.session.email = result.email;
+			req.session.firstName = result.firstName;
+			req.session.lastName = result.lastName;
+			req.session.street = result.street;
+			req.session.city = result.city;
+
+			res.sendFile(htmlPath + 'success.html');
+			//res.redirect('/');
+
+		}else {
+			req.session.loggedIn = "false";
+			console.log("**************Invalid credentials!");
+			res.json({'result' : 'Invalid credentials!'});
+			//res.sendFile(htmlPath + 'invalid-credentials.html');
+		}
+	});
 
 	}else if(req.body.userType== 'supplier'){
 		supplier.signIn(req.body, function (result){
 			console.log(result);
 	
 			if(result.loggedIn== "true"){
-				console.log("Logged in!")
+				console.log("**************Logged in!")
 	
 				//Session creation.
 				req.session.loggedIn = "true";
@@ -144,15 +178,14 @@ app.post("/sign-in-process", function(req, res){
 				req.session.nmraRegistration = result.nmraRegistration;
 				req.session.pharmacistRegistration = result.pharmacistRegistration;
 	
-				res.redirect('/');
-				//res.send("Logged in as: " + result.userName);
-				//Send session data to Ranga's front end using REST (JSON).
+				res.sendFile(htmlPath + 'success.html');
+				//res.redirect('/');
 	
-			}else {
+			}else{
 				req.session.loggedIn = "false";
-				console.log("Invalid credentials!");
-				//res.send('Invalid credentials!');
-				res.sendFile(htmlPath + 'invalid-credentials.html');
+				console.log("**************Invalid credentials!");
+				res.json({'result' : 'Invalid credentials!'});
+				//res.sendFile(htmlPath + 'invalid-credentials.html');
 			}
 		});
 	}	
@@ -162,7 +195,7 @@ app.post("/sign-in-process", function(req, res){
 app.get("/logout-process", function(req, res){
 	//Destroying the session.
 	req.session.destroy();
-	console.log("Logged out!");
+	console.log("**************Logged out!");
     res.redirect('/');
 });
 
@@ -214,7 +247,7 @@ app.get('/get-session', function(req, res) {
 
 	if(req.session.loggedIn== 'false'){
 		res.json({loggedIn: 'false'});
-	}else if(req.session.loggedIn== 'true' && (req.session.userType== 'admin' || req.session.userType== 'customer')){
+	}else if(req.session.loggedIn== 'true' && (req.session.userType== 'customer')){
 		object= {loggedIn: req.session.loggedIn, userId: req.session.userId, userType: req.session.userType,
 			email: req.session.email, firstName: req.session.firstName, lastName: req.session.lastName, 
 			street: req.session.street, city: req.session.city}
