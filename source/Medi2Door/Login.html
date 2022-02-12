@@ -97,6 +97,8 @@
                 </div>
             </div>
         </div>
+
+        <!--Form for signing in-->
         <div class="page-section section section-padding">
             <div class="container">
                 <div class="row mbn-40">
@@ -109,10 +111,10 @@
                                     <div class="col-12 mb-15"><input name="password" type="password" placeholder="Password"></div>
                                     <div class="col-12 mb-15">
                                         <select name="userType" id="userType">
-                                            <option value="0">Select Type</option>
-                                        <option value="customer">Customer</option>
-                                        <option value="supplier">Supplier</option>
-                                        <option value="admin">Admin</option>
+                                            <option value="null">Select Type</option>
+                                            <option value="customer">Customer</option>
+                                            <option value="supplier">Supplier</option>
+                                            <option value="admin">Admin</option>
                                       </select>
                                     </div>
                                     <div class="col-12"><button type="submit" value="Login"></div>
@@ -125,32 +127,34 @@
                         <span class="login-register-separator"></span>
                     </div>
 
+                    <!--Form for signing up-->
                     <div class="col-lg-7 col-12 mb-40 ml-auto">
                         <div class="login-register-form-wrap">
                             <h3>Register</h3>
-                            <form action="#">
+                            <form action="sign-up-process" method="post">
                                 <div class="row">
                                     <div class="col-md-12 col-12 mb-15">
-                                        <select name="userType2" id="userType2">
-                                            <option value="0">Select User Type</option>
+                                        <select name="userType" id="userType">
+                                            <option value="null">Select User Type</option>
                                             <option value="customer">Customer</option>
                                             <option value="supplier">Supplier</option>
                                       </select>
                                     </div>
                                     <div class="col-md-6 col-12 mb-15"><input name="firstName" type="text" placeholder="First Name"></div>
                                     <div class="col-md-6 col-12 mb-15"><input name="lastName" type="text" placeholder="Last Name"></div>
-                                    <div class="col-md-6 col-12 mb-15"><input name="address type="text" placeholder="Address"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input name="street" type="text" placeholder="Address"></div>
                                     <div class="col-md-6 col-12 mb-15">
                                         <select id="city" name="city">
-                                            <option value="">Nearest City</option>
+                                            <option value="null">Nearest City</option>
+                                            <option value="Kottawa">Kottawa</option>
+                                            <option value="Rajagiriya">Rajagiriya</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6 col-12 mb-15"><input name="contactNo" type="number" placeholder="Contact No."></div>
-                                    <div class="col-md-6 col-12 mb-15"><input name="emailAddress" type="email" placeholder="Email"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input name="email" type="email" placeholder="Email"></div>
                                     <div class="col-md-6 col-12 mb-15"><input name="password" type="password" placeholder="Password"></div>
                                     <div class="col-md-6 col-12 mb-15"><input name="confirmPassword" type="password" placeholder="Confirm Password"></div>
-                                    <div class="col-md-6 col-12 mb-15"><input name="NMRA" type="text" placeholder="NMRA ID"></div>
-                                    <div class="col-md-6 col-12 mb-15"><input name="pharmacistID" type="text" placeholder="Pharmacist ID"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input name="nmraRegistration" type="text" placeholder="NMRA ID"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input name="pharmacistRegistration" type="text" placeholder="Pharmacist ID"></div>
                                     <div class="col-md-12 col-12"><input type="submit" value="Register"></div>
                                 </div>
                             </form>
