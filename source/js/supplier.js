@@ -36,6 +36,7 @@ function signUp(request, callback) {
 
 	connection.query(query, values, (err, result)=>{
 		if(err){
+			console.log(err.message);
 			connection.end();
 			return callback("failure");
 		}else{
@@ -48,6 +49,7 @@ function signUp(request, callback) {
 
             connection.query(query, values, (err, result)=>{
                 if(err){
+					console.log(err.message);
                     connection.end();
                     return callback("failure");
                 }else{
@@ -78,6 +80,7 @@ function signIn(request, callback) {
 
 	connection.query(query, values,function(err, result, fields) {
 		if(err){
+			console.log(err.message);
 			connection.end();
 			return callback("failure");
 
@@ -113,8 +116,8 @@ function signIn(request, callback) {
 	});
 }
 
-//Handles listing all the users.
-function showSuppliers(callback) {
+//Lists all suppliers.
+function showSuppliersVisitor(callback) {
 	var query;
 
 	createDbConnection();
@@ -125,6 +128,31 @@ function showSuppliers(callback) {
 		  //console.log(results); // Results contains rows returned by server.
 		  //console.log(fields); // Fields contains extra meta data about results, if available.
 		if(err){
+			console.log(err.message);
+			connection.end();
+			return callback("failure");
+
+		}else{
+			connection.end();
+			return callback(result);
+		}
+	});
+}
+
+//Lists all suppliers in the specified city.
+function showSuppliersCustomer(city, callback) {
+	var query;
+	values= [city];
+
+	createDbConnection();
+	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
+	supplier.nmra_registration, supplier.pharmacist_registration from user, supplier where
+	user.user_id= supplier.supplier_id and user.type= 'supplier' and user.city like ?`;
+	connection.query(query, values,function(err, result, fields) {
+		  //console.log(results); // Results contains rows returned by server.
+		  //console.log(fields); // Fields contains extra meta data about results, if available.
+		if(err){
+			console.log(err.message);
 			connection.end();
 			return callback("failure");
 
@@ -161,7 +189,7 @@ function addItem(request, imagePath, supplierId, callback) {
 
 	connection.query(query, values, (err, result)=>{
 		if(err){
-			console.log(err);
+			console.log(err.message);
 			connection.end();
 			return callback("failure");
 		}else{
@@ -174,5 +202,6 @@ function addItem(request, imagePath, supplierId, callback) {
 //Exporting class members to the public.
 module.exports.signUp= signUp;
 module.exports.signIn= signIn;
-module.exports.showSuppliers= showSuppliers;
+module.exports.showSuppliersVisitor= showSuppliersVisitor;
+module.exports.showSuppliersCustomer= showSuppliersCustomer;
 module.exports.addItem= addItem;

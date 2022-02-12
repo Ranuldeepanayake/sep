@@ -36,6 +36,7 @@ function signUp(request, callback) {
 
 	connection.query(query, values, (err, result)=>{
 		if(err){
+			console.log(err.message);
 			connection.end();
 			return callback("failure");
 		}else{
@@ -61,6 +62,7 @@ function signIn(request, callback) {
 
 	connection.query(query, values,function(err, result, fields) {
 		if(err){
+			console.log(err.message);
 			connection.end();
 			return callback("failure");
 
@@ -104,6 +106,7 @@ function showUsers(callback) {
 		  //console.log(results); // Results contains rows returned by server.
 		  //console.log(fields); // Fields contains extra meta data about results, if available.
 		if(err){
+			console.log(err.message);
 			connection.end();
 			return callback("failure");
 
@@ -114,7 +117,31 @@ function showUsers(callback) {
 	});
 }
 
+//Updates customer data.
+function editProfile(request, callback) {
+	var query;
+	var values;
+
+	//console.log(request.email + request.firstName + request.age + request.password);
+	createDbConnection();
+	query= `insert into user(type, email, first_name, last_name, street, city, password) values (?, ?, ?, ?, ?, ?, ?)`;
+	values= ['customer', request.email, request.firstName, request.lastName, request.street, request.city, request.password];
+
+	connection.query(query, values, (err, result)=>{
+		if(err){
+			console.log(err.message);
+			connection.end();
+			return callback("failure");
+		}else{
+			//console.log("Record inserted with ID: " + JSON.stringify(result));
+			connection.end();
+			return callback("success");
+		}
+	});
+}
+
 //Exporting class members to the public.
 module.exports.signUp= signUp;
 module.exports.signIn= signIn;
 module.exports.showUsers= showUsers;
+module.exports.editProfile= editProfile; 
