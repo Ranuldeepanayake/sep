@@ -10,7 +10,7 @@ const upload = multer({ dest: './html/uploads' });
 //////////////////////////////////////////////////////////////////////////
 
 //const db = require('./js/db.js');
-const user = require('./js/user.js');
+const customer = require('./js/customer.js');
 const supplier = require('./js/supplier.js');
 
 var session = require('express-session');
@@ -27,7 +27,7 @@ const sessionSecret= 'sepprojectsessionsecret'
 //Path preparation.
 const htmlPath= path.join(__dirname, '/html/');
 const filePath= path.join(__dirname, '/html/'); 
-const rangaLogin= path.join(__dirname, '/Medi2Door/');
+const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
 
 //Use declarations.
 //For session management. Please change the session string.
@@ -42,10 +42,12 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Common functions for the customer and the supllier.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //This function delivers the home page.
 app.get('/', function (req, res){
-	res.sendFile(rangaLogin + "Login.html");
+	res.sendFile(rangaFrontEnd + "Login.html");
 	//Below code is as a reference for session checking.
 	/*if(req.session.loggedIn== 'true'){
 		//Send session data to Ranga's front end using REST (JSON).
@@ -55,32 +57,33 @@ app.get('/', function (req, res){
 	}*/
 });
 
-//Deliver the common sign up page.
-app.get('/sign-up', function (req, res){
-	res.sendFile(htmlPath + "sign-up.html");
-});
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Customer and admin
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//This function delivers the sign up form.
-app.get('/sign-up-customer', function (req, res){
-	res.sendFile(htmlPath + "sign-up-customer.html");
-});
-
 //This function processes the sign up form.
-app.post("/sign-up-customer-process", function(req, res){
-	user.signUp(req.body, function(result){
-		res.sendFile(htmlPath + result + '.html');
-		//res.end(result);
-		//Send result data to Ranga's front end using REST (JSON).
-	});
+app.post("/sign-up-process", function(req, res){
+	console.log('***Received sign up form data>');
+	console.log(req.body);
+
+	//Check if a customer or supplier is registering.
+	if(req.body.password != req.body.confirmPassword){
+		res.send('Passwords do not match!');
+	}
+
+	if(req.body.userType== 'null'){
+		res.send('Please select a user type!');
+	}else if(req.body.userType== 'customer'){
+		customer.signUp(req.body, function(result){
+			res.sendFile(htmlPath + result + '.html');
+			//res.end(result);
+			//Send result data to Ranga's front end using REST (JSON).
+		});
+	}else if(req.body.userType== 'supplier'){
+		supplier.signUp(req.body, function(result){
+			res.sendFile(htmlPath + result + '.html');
+			//res.end(result);
+			//Send result data to Ranga's front end using REST (JSON).
+		});
+	}
 });
 
-//This function delivers the sign in form.
-app.get('/sign-in', function (req, res){
-	res.sendFile(htmlPath + "sign-in.html");
-});
 
 //This function processes the login form.
 app.post("/sign-in-process", function(req, res){
@@ -89,8 +92,11 @@ app.post("/sign-in-process", function(req, res){
 	//req.session.destroy(); Didn't work??
 
 	//Check the account type using the form dropdown.
-	if(req.body.userType== 'admin' || req.body.userType== 'customer'){
-		user.signIn(req.body, function (result){
+	if(req.body.userType== 'null'){
+		res.send('Please select a user type!');
+
+	}else if(req.body.userType== 'customer'){
+		customer.signIn(req.body, function (result){
 			console.log(result);
 	
 			if(result.loggedIn== "true"){
@@ -160,6 +166,32 @@ app.get("/logout-process", function(req, res){
     res.redirect('/');
 });
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Customer
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//This function delivers the sign up form.
+/*
+app.get('/sign-up-customer', function (req, res){
+	res.sendFile(htmlPath + "sign-up-customer.html");
+});
+
+//This function processes the sign up form.
+app.post("/sign-up-customer-process", function(req, res){
+	customer.signUp(req.body, function(result){
+		res.sendFile(htmlPath + result + '.html');
+		//res.end(result);
+		//Send result data to Ranga's front end using REST (JSON).
+	});
+});
+
+//This function delivers the sign in form.
+
+app.get('/sign-in', function (req, res){
+	res.sendFile(htmlPath + "sign-in.html");
+});
+*/
+
+
 //This function delivers a sample data presentation page.
 app.get('/view-users', function(req, res) {
 	res.sendFile(htmlPath + "view-users.html");
@@ -169,7 +201,7 @@ app.get('/view-users', function(req, res) {
 app.get('/view-users-process', function (req, res){
 	//Below is a callback function since node.js doesn't support returning values from functions.
 	//Add session authentication as well.
-	user.showUsers(function (result){
+	customer.showUsers(function (result){
 		console.log(result);
 		res.json(result);	
 	});
@@ -224,7 +256,7 @@ app.post('/add-item-process', upload.single('itemImage'), function(req, res) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Supplier
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-app.get('/sign-up-supplier', function(req, res) {
+/*app.get('/sign-up-supplier', function(req, res) {
 	res.sendFile(htmlPath + "sign-up-supplier.html");
 });
 
@@ -234,7 +266,7 @@ app.post('/sign-up-supplier-process', function(req, res) {
 		//res.end(result);
 		//Send result data to Ranga's front end using REST (JSON).
 	});
-});
+});*/
 
 //This function delivers a page with a data table.
 app.get('/view-suppliers', function(req, res) {
