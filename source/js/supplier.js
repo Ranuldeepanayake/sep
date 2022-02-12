@@ -89,7 +89,7 @@ function signIn(request, callback) {
 				connection.end();
 
 				var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
-				lastName: "", street: "", city: "", nmraRegistration: "", pharmacistRegistration: ""}
+				lastName: "", street: "", city: "", password: "", nmraRegistration: "", pharmacistRegistration: ""}
 
 				authObject.loggedIn= "true";
 				authObject.userId= result[0].user_id;
@@ -99,6 +99,7 @@ function signIn(request, callback) {
 				authObject.lastName= result[0].last_name;
 				authObject.street= result[0].street;
 				authObject.city= result[0].city;
+				authObject.password= result[0].password;
 				authObject.nmraRegistration= result[0].nmra_registration;
 				authObject.pharmacistRegistration= result[0].pharmacist_registration;
 				

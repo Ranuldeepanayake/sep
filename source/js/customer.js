@@ -56,7 +56,7 @@ function signIn(request, callback) {
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
-	query= `select user_id, type, email, first_name, last_name, street, city from user where email= ? and password= ?
+	query= `select user_id, type, email, first_name, last_name, street, city, password from user where email= ? and password= ?
 	and type!= 'supplier'`;
 	values= [email, password];
 
@@ -71,7 +71,7 @@ function signIn(request, callback) {
 				connection.end();
 
 				var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
-				lastName: "", street: "", city: ""}
+				lastName: "", street: "", city: "", password: ""}
 
 				authObject.loggedIn= "true";
 				authObject.userId= result[0].user_id;
@@ -81,6 +81,7 @@ function signIn(request, callback) {
 				authObject.lastName= result[0].last_name;
 				authObject.street= result[0].street;
 				authObject.city= result[0].city;
+				authObject.password= result[0].password;
 				
 				console.log(authObject);
 				return callback(authObject);
@@ -118,14 +119,14 @@ function showUsers(callback) {
 }
 
 //Updates customer data.
-function editProfile(request, callback) {
+function editProfile(request, userId, callback) {
 	var query;
 	var values;
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
-	query= `insert into user(type, email, first_name, last_name, street, city, password) values (?, ?, ?, ?, ?, ?, ?)`;
-	values= ['customer', request.email, request.firstName, request.lastName, request.street, request.city, request.password];
+	query= `update user set email= ?, first_name= ?, last_name= ?, street= ?, city= ?, password= ? where user_id= ?`;
+	values= [request.email, request.firstName, request.lastName, request.street, request.city, request.password, userId];
 
 	connection.query(query, values, (err, result)=>{
 		if(err){
@@ -133,7 +134,7 @@ function editProfile(request, callback) {
 			connection.end();
 			return callback("failure");
 		}else{
-			//console.log("Record inserted with ID: " + JSON.stringify(result));
+			console.log("Record updated with ID: " + JSON.stringify(result));
 			connection.end();
 			return callback("success");
 		}

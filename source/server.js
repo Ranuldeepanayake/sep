@@ -147,6 +147,7 @@ app.post("/sign-in-process", function(req, res){
 			req.session.lastName = result.lastName;
 			req.session.street = result.street;
 			req.session.city = result.city;
+			req.session.password = result.password;
 
 			res.sendFile(htmlPath + 'success.html');
 			//res.redirect('/');
@@ -175,6 +176,7 @@ app.post("/sign-in-process", function(req, res){
 				req.session.lastName = result.lastName;
 				req.session.street = result.street;
 				req.session.city = result.city;
+				req.session.password = result.password;
 				req.session.nmraRegistration = result.nmraRegistration;
 				req.session.pharmacistRegistration = result.pharmacistRegistration;
 	
@@ -224,6 +226,26 @@ app.get('/sign-in', function (req, res){
 });
 */
 
+//This function processes the form to update customer profile data.
+app.post('/edit-customer-process', function(req, res) {
+	console.log('**************Received edit profile form data>');
+	console.log(req.body);
+
+	//Sanitize form data here.
+	//Check if the new passwords are the same.
+	//Check if the user is trying to use an occupied email. 
+	//Code.
+
+	//Check if session data exists.
+	if(typeof req.session.userId== 'undefined'){
+		res.json({'result' : 'User not logged in!'});
+		return;
+	}
+
+	customer.editProfile(req.body, req.session.userId, function(result){
+		res.json({'result' : result});
+	});
+});
 
 //This function delivers a sample data presentation page.
 app.get('/view-users', function(req, res) {
@@ -240,7 +262,7 @@ app.get('/view-users-process', function (req, res){
 	});
 });
 
-//An API which sends session data to the caller.
+//An API which sends session data to the caller (can be used to render user data and populate forms).
 app.get('/get-session', function(req, res) {
 
 	var object;
@@ -250,12 +272,12 @@ app.get('/get-session', function(req, res) {
 	}else if(req.session.loggedIn== 'true' && (req.session.userType== 'customer')){
 		object= {loggedIn: req.session.loggedIn, userId: req.session.userId, userType: req.session.userType,
 			email: req.session.email, firstName: req.session.firstName, lastName: req.session.lastName, 
-			street: req.session.street, city: req.session.city}
+			street: req.session.street, city: req.session.city, password: req.session.password}
 	}else if(req.session.loggedIn== 'true' && req.session.userType== 'supplier'){
 		object= {loggedIn: req.session.loggedIn, userId: req.session.userId, userType: req.session.userType,
 			email: req.session.email, firstName: req.session.firstName, lastName: req.session.lastName, 
-			street: req.session.street, city: req.session.city, nmraRegistration: req.session.nmraRegistration, 
-			pharmacistRegistration: req.session.pharmacistRegistration}
+			street: req.session.street, city: req.session.city, password: req.session.password,
+			nmraRegistration: req.session.nmraRegistration, pharmacistRegistration: req.session.pharmacistRegistration}
 	}
 	
 	console.log(object);
