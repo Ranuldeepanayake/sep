@@ -1,40 +1,7 @@
-/*-----------------------------------------------------------------------------------
 
-    Template Name: Jadusona - eCommerce Baby shop Bootstrap4 Template
-    Version: 1.0
-
------------------------------------------------------------------------------------
-    
-    CSS INDEX
-    ===================
-	
-    01. Theme default CSS
-	02. Header CSS
-        02.1 Header Top
-        02.2 Header Bottom
-    03. Hero CSS
-    04. Banner CSS
-    05. Product CSS
-    06. Single Product CSS
-    07. Cart CSS
-    08. Checkout CSS
-    09. Sidebar CSS
-    10. Feature CSS
-    11. Testimonial CSS
-    12. Blog CSS
-    13. Brand CSS
-    14. Login & Register CSS
-    15. My Account CSS
-    16. Contact CSS
-    17. Footer CSS
-
------------------------------------------------------------------------------------*/
-/*----------------------------------------*/
-/*  01. Theme default CSS
-/*----------------------------------------*/
 /*-- Google Font --*/
 @import url("https://fonts.googleapis.com/css?family=Dosis:400,500,600,700|Poppins:400,500,600,700");
-/*-- Common Style --*/
+
 *, *::after, *::before {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -332,7 +299,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 #scrollUp {
     width: 40px;
     height: 40px;
-    background-color: #ff708a;
+    background-color: #47cfca;
     border: 3px solid #eeeeee;
     color: #1a161e;
     right: 20px;
@@ -383,6 +350,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 
 .bg-theme-two {
     background-color: #1b334d;
+}
+
+.bg-theme-three {
+    background-color: #76d2d0;
 }
 
 .bg-theme-two-light {
@@ -1760,8 +1731,8 @@ img.mfp-img {
     width: 60px;
     height: 60px;
     margin-top: -30px;
-    background-color: #94c7eb;
-    color: #1a161e;
+    background-color: #1b334d;
+    color: #fff;
     border-radius: 50%;
 }
 
@@ -1779,7 +1750,7 @@ img.mfp-img {
     }
 
     .hero-slider-one .slick-arrow:hover, .hero-slider-three .slick-arrow:hover {
-        background-color: #ff708a;
+        background-color: #47cfcb;
         color: #ffffff;
     }
 
@@ -1790,7 +1761,7 @@ img.mfp-img {
     -webkit-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
     transform: translateX(-50%);
-    background-color: #94c7eb;
+    background-color:#fff;
     padding: 10px;
     border-radius: 50px;
 }
@@ -1812,8 +1783,8 @@ img.mfp-img {
         }
 
         .hero-slider-one .slick-dots li.slick-active button, .hero-slider-three .slick-dots li.slick-active button {
-            background-color: #ff708a;
-            border-color: #ff708a;
+            background-color: #1b334d;
+            border-color: #1b334d;
         }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -1850,6 +1821,7 @@ img.mfp-img {
 @media only screen and (min-width: 1200px) and (max-width: 1599px) {
     .hero-item {
         padding: 90px 30px;
+        height: 560px;
     }
 }
 
@@ -3793,7 +3765,7 @@ img.mfp-img {
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(148, 199, 235, 0.7);
+            background-color: rgba(27, 51, 77, 0.6);
             display: -webkit-box;
             display: -ms-flexbox;
             display: flex;
@@ -3843,8 +3815,8 @@ img.mfp-img {
                     }
 
                     .product-item .product-inner .image .image-overlay .action-buttons button:hover {
-                        background-color: #ff708a;
-                        border-color: #ff708a;
+                        background-color: #46ceca;
+                        border-color: #46ceca;
                         color: #ffffff;
                     }
 
@@ -3899,8 +3871,44 @@ img.mfp-img {
 
                 .product-item .product-inner .content .content-left .ratting i {
                     font-size: 14px;
-                    color: #94c7eb;
+                    color: #78d9e3;
                     margin-right: 5px;
+                }
+
+
+            .product-item .product-inner .content .content-left .nmra {
+                font-size: 14px;
+                color: #323132;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                line-height: 18px;
+                margin-bottom: 13px;
+                font-weight: 600;
+            }
+
+                .product-item .product-inner .content .content-left .nmra span {
+                    margin-left: 7px;
+                }
+
+            .product-item .product-inner .content .content-left .id {
+                font-size: 14px;
+                color: #323132;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                line-height: 18px;
+                margin-bottom: 0;
+                font-weight: 600;
+            }
+
+                .product-item .product-inner .content .content-left .id span {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50px;
+                    display: block;
+                    margin-left: 7px;
+                    margin-top: 3px;
                 }
 
             .product-item .product-inner .content .content-left .size {
@@ -6036,6 +6044,7 @@ img.mfp-img {
 /*----------------------------------------*/
 .feature-section {
     background-repeat: repeat;
+    padding: 30px 0;
 }
 
 /*-- Feature Wrap --*/
@@ -6072,7 +6081,7 @@ img.mfp-img {
         transform: translateX(-50%) translateY(-50%) rotate(55deg);
         height: 1000%;
         width: 80px;
-        background-color: rgba(255, 255, 255, 0.25);
+        /*background-color: rgba(133, 218, 215, 0.25);*/
         margin-left: -40px;
         z-index: -1;
     }
@@ -6091,7 +6100,7 @@ img.mfp-img {
     .feature-item .content h3 {
         font-size: 24px;
         line-height: 30px;
-        color: #1a161e;
+        color: #0c1928;
         margin-bottom: 5px;
         font-weight: 600;
     }
@@ -6102,7 +6111,7 @@ img.mfp-img {
         line-height: 24px;
         font-weight: 500;
         font-family: "Dosis", sans-serif;
-        color: #323132;
+        color: #1b334d;
     }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -7057,16 +7066,16 @@ img.mfp-img {
         font-size: 14px;
     }
 
-        .login-register-form-wrap input[type="submit"] {
-            width: auto;
-            background-color: #1a161e;
-            color: #ffffff;
-            text-transform: uppercase;
-            padding: 10px 30px;
-            font-weight: 600;
-        }
+    .login-register-form-wrap button {
+        width: auto;
+        background-color: #112234;
+        color: #ffffff;
+        text-transform: uppercase;
+        padding: 10px 30px;
+        font-weight: 600;
+    }
 
-            .login-register-form-wrap input[type="submit"]:hover {
+            .login-register-form-wrap button:hover {
                 background-color: #47cfcb;
                 border-color: #47cfcb;
             }
@@ -7161,7 +7170,7 @@ img.mfp-img {
         }
 
         .myaccount-tab-menu a:hover, .myaccount-tab-menu a.active {
-            background-color: #ff708a;
+            background-color: #1b334d;
             color: #ffffff;
         }
 
@@ -7218,7 +7227,7 @@ img.mfp-img {
     }
 
 .saved-message {
-    border-top: 3px solid #ff708a;
+    border-top: 3px solid #d9f4f4;
     border-radius: 5px 5px 0 0;
     font-weight: 600;
     font-size: 13px;
@@ -7230,7 +7239,8 @@ img.mfp-img {
     margin: 0;
 }
 
-.account-details-form input {
+.account-details-form input, .account-details-form select {
+    background:#fff;
     display: block;
     width: 100%;
     border: 1px solid #ebebeb;
@@ -7377,7 +7387,7 @@ img.mfp-img {
         font-size: 16px;
         line-height: 1;
         color: #1a161e;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         font-weight: 700;
     }
 
@@ -7442,7 +7452,7 @@ img.mfp-img {
 .footer-subscribe-form {
     border-bottom: 1px solid #94c7eb;
     position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
     .footer-subscribe-form input {
