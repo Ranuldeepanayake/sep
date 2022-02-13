@@ -201,6 +201,7 @@ app.post("/sign-in-process", function(req, res){
 //This function processes the logout form.
 app.get("/logout-process", function(req, res){
 	//Destroying the session.
+	///////////////////////////This is ASYNC! Needs a callback.
 	req.session.destroy();
 	console.log("**************Logged out!");
     res.redirect('/');
@@ -311,6 +312,194 @@ app.post('/add-item-process', upload.single('itemImage'), function(req, res) {
 	supplier.addItem(req.body, './html/uploads/' + req.file.filename + '.jpg', req.session.userId, function(result){
 		res.sendFile(htmlPath + result + '.html');
 	});
+});
+
+//Test function to fetch items in the cart.
+app.get('/get-cart', function(req, res) {
+	console.log('**************Fetching items in the cart>');
+
+	//Check if session array exists.
+	if(session.cartItemNumber){
+
+		//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
+
+		var x= 0;	//Incrementer.
+		var array= [];	//Array of objects.
+
+		//Loop through all elements in the cart session array.
+		session.cartItemNumber.forEach(element => {
+
+			//Code for debugging.
+			//console.log('Loop Item Number: ' + session.cartItemNumber[x]);
+			//console.log('Loop Item ID: ' + session.cartItemId[x]);
+			//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
+
+			//Create the object.
+			var data= {cartItemNumber : '', cartItemId : '', cartItemQuantity : ''}
+
+			//Assign session values to the object.
+			data.cartItemNumber= session.cartItemNumber[x];
+			data.cartItemId = session.cartItemId[x];
+			data.cartItemQuantity= session.cartItemQuantity[x];
+			x++; //Increment to the next set of session elements.
+
+			//Push the object into an object array
+			array.push(data); 
+		});	
+
+		//Send the object array to the caller as JSON.
+		res.json(array);
+
+	}else{
+		res.json({'status': 'Cart empty'});
+	}
+});
+
+//Test function to add items to the cart.
+app.get('/add-to-cart', function(req, res) {
+	console.log('**************Item details received>');
+
+	//Check if session array exists.
+	if(session.cartItemNumber){
+		//Add new item.
+		session.itemCount++;
+		session.cartItemNumber.push(session.itemCount);
+		session.cartItemId.push(1); //Values must come from the request body.
+		session.cartItemQuantity.push(5); //Values must come from the request body.
+		//session.itemCount++;
+
+		//Display items for debugging.
+		var i= 0;
+		console.log('**************Displaying cart session arrays>');
+		session.cartItemNumber.forEach(element => {
+			console.log('Item Number: ' + element);
+			console.log('Item ID: ' + session.cartItemId[i]);
+			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
+			i++;
+		});	
+
+	}else{
+		//Create session array if it doesn't exist.
+		session.itemCount= 0;	//To keep track of 
+		session.cartItemNumber= [];
+		session.cartItemId= [];
+		session.cartItemQuantity= [];
+
+		//Add the initial item.
+		session.cartItemNumber.push(session.itemCount);
+		session.cartItemId.push(1);	//Values must come from the request body.
+		session.cartItemQuantity.push(5);	//Values must come from the request body.
+		//session.itemCount++;
+
+		console.log('**************New cart session arrays created and initialized>');
+
+		//Display items for debugging.
+		var i= 0;
+		console.log('**************Displaying cart session arrays>');
+		session.cartItemNumber.forEach(element => {
+			console.log('Item Number: ' + element);
+			console.log('Item ID: ' + session.cartItemId[i]);
+			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
+			i++;
+		});	
+	}
+
+	//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
+
+	var x= 0;	//Incrementer.
+	var array= [];	//Array of objects.
+
+	//Loop through all elements in the cart session array.
+	session.cartItemNumber.forEach(element => {
+
+		//Code for debugging.
+		//console.log('Loop Item Number: ' + session.cartItemNumber[x]);
+		//console.log('Loop Item ID: ' + session.cartItemId[x]);
+		//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
+
+		//Create the object.
+		var data= {cartItemNumber : '', cartItemId : '', cartItemQuantity : ''}
+
+		//Assign session values to the object.
+		data.cartItemNumber= session.cartItemNumber[x];
+		data.cartItemId = session.cartItemId[x];
+		data.cartItemQuantity= session.cartItemQuantity[x];
+		x++; //Increment to the next set of session elements.
+
+		//Push the object into an object array
+		array.push(data); 
+	});	
+
+	//Send the object array to the caller as JSON.
+	res.json(array);
+});
+
+//Test function to remove items from the cart.
+app.get('/remove-from-cart', function(req, res) {
+	if(session.cartItemNumber){
+
+		//Handle if itemCount is 0.
+		if(session.itemCount== 0){
+			session.itemCount= null;
+			session.cartItemNumber= null;
+			session.cartItemId= null;
+			session.cartItemQuantity= null;
+			res.json({'status': 'Cart empty'});
+			return;
+		}
+
+		//Remove item.
+		console.log('**************Removing item from cart session arrays>');
+		var cartItemNumber= session.itemCount;
+		session.cartItemNumber.splice(cartItemNumber, cartItemNumber);
+		session.cartItemId.splice(cartItemNumber, cartItemNumber);
+		session.cartItemQuantity.splice(cartItemNumber, cartItemNumber);
+		session.itemCount= session.itemCount- 1;
+
+		//Display items.
+		var i= 0;
+		console.log('**************Displaying cart session arrays after removal>');
+		session.cartItemNumber.forEach(element => {
+			console.log('Item Number: ' + element);
+			console.log('Item ID: ' + session.cartItemId[i]);
+			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
+			i++;
+		});	
+
+
+		//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
+
+		var x= 0;	//Incrementer.
+		var array= [];	//Array of objects.
+
+		//Loop through all elements in the cart session array.
+		session.cartItemNumber.forEach(element => {
+
+			//Code for debugging.
+			//console.log('Loop Item Number: ' + session.cartItemNumber[x]);
+			//console.log('Loop Item ID: ' + session.cartItemId[x]);
+			//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
+
+			//Create the object.
+			var data= {cartItemNumber : '', cartItemId : '', cartItemQuantity : ''}
+
+			//Assign session values to the object.
+			data.cartItemNumber= session.cartItemNumber[x];
+			data.cartItemId = session.cartItemId[x];
+			data.cartItemQuantity= session.cartItemQuantity[x];
+			x++; //Increment to the next set of session elements.
+
+			//Push the object into an object array
+			array.push(data); 
+		});	
+
+		//Send the object array to the caller as JSON.
+		res.json(array);
+
+	}else{
+		console.log('**************No cart sessions!');
+		res.json({'status': 'Cart empty'});
+	}
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
