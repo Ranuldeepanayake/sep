@@ -17,6 +17,7 @@ var session = require('express-session');
 const cookieParser = require("cookie-parser");
 const { Session } = require('express-session');
 const { serialize } = require('v8');
+const { error } = require('console');
 
 //Global constants.
 const app = express();
@@ -104,8 +105,12 @@ app.post("/sign-up-process", function(req, res){
 		//Save data in the database.
 		supplier.signUp(req.body, function(result){
 			//res.sendFile(htmlPath + result + '.html');
-			res.end(result);
-			//res.json({'result' : result}); //This causes the program to crash??
+			//res.end(result);
+			try {
+				res.json({'result' : result}); //This causes the program to crash??
+			} catch (error) {
+				console.log(error);
+			}
 			return;
 		});
 	}
