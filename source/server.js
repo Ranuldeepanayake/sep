@@ -328,33 +328,29 @@ app.get('/view-suppliers', function(req, res) {
 	res.sendFile(htmlPath + "view-suppliers.html");
 });
 
-//An API which sends supplier data to the caller.
-app.get('/view-suppliers-visitor-process', function (req, res){
-	//Below is a callback function since node.js doesn't support returning values from functions.
-	//Add session authentication as well.
-	supplier.showSuppliersVisitor(function (result){
-		console.log("**************Showing all suppliers>");
-		console.log(result);
-		res.json(result);	
-	});
-});
 
 //An API which sends supplier data to the caller.
-app.get('/view-suppliers-customer-process', function (req, res){
+app.get('/view-suppliers-process', function (req, res){
 	//Below is a callback function since node.js doesn't support returning values from functions.
 	//Add session authentication as well.
 
-	//Check if session data exists.
+	//Check if session data exists. Show unlocalized data if user is not logged in.
 	if(typeof req.session.city== 'undefined'){
-		res.json({'result' : 'User not logged in!'});
-		return;
-	}
+		supplier.showSuppliersVisitor(function (result){
+			console.log("**************Showing all suppliers>");
+			console.log(result);
+			res.json(result);	
+			return;
+		});
 
-	supplier.showSuppliersCustomer(req.session.city, function (result){
-		console.log("**************Showing suppliers in the nearest city>");
-		console.log(result);
-		res.json(result);	
-	});
+	}else{
+		//Show localized data if user is logged in.
+		supplier.showSuppliersCustomer(req.session.city, function (result){
+			console.log("**************Showing suppliers in the nearest city>");
+			console.log(result);
+			res.json(result);	
+		});
+	}
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
