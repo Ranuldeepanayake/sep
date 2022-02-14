@@ -89,7 +89,7 @@ app.post("/sign-up-process", function(req, res){
 	//Check for empty fields if the user type is 'supplier'.
 	if((req.body.userType== 'supplier') && (req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
 	req.body.street== '' || req.body.city== 'null' || req.body.password== '' || req.body.confirmPassword== '' || 
-	req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '')){
+	req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '') || req.body.storeDescription== ''){
 		res.json({'result' : 'Fields are empty!'});
 		return;
 	}
@@ -131,9 +131,6 @@ app.post("/sign-up-process", function(req, res){
 app.post("/sign-in-process", function(req, res){
 	console.log('**************Received sign in form data>');
 	console.log(req.body);
-
-	//Delete any existing session.
-	//req.session.destroy(); Didn't work??
 
 	//Check the account type using the form dropdown.
 	if(req.body.email== '' || req.body.password== ''){
@@ -194,6 +191,7 @@ app.post("/sign-in-process", function(req, res){
 				req.session.password = result.password;
 				req.session.nmraRegistration = result.nmraRegistration;
 				req.session.pharmacistRegistration = result.pharmacistRegistration;
+				req.session.storeDescription = result.storeDescription;
 	
 				res.sendFile(htmlPath + 'success.html');
 				//res.redirect('/');
@@ -238,27 +236,6 @@ app.get('/Account.html', function (req, res){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Customer
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//This function delivers the sign up form.
-/*
-app.get('/sign-up-customer', function (req, res){
-	res.sendFile(htmlPath + "sign-up-customer.html");
-});
-
-//This function processes the sign up form.
-app.post("/sign-up-customer-process", function(req, res){
-	customer.signUp(req.body, function(result){
-		res.sendFile(htmlPath + result + '.html');
-		//res.end(result);
-		//Send result data to Ranga's front end using REST (JSON).
-	});
-});
-
-//This function delivers the sign in form.
-
-app.get('/sign-in', function (req, res){
-	res.sendFile(htmlPath + "sign-in.html");
-});
-*/
 
 //This function processes the form to update customer profile data.
 app.post('/edit-customer-process', function(req, res) {
@@ -301,17 +278,21 @@ app.get('/get-session', function(req, res) {
 
 	var object;
 
-	if(req.session.loggedIn== 'false'){
-		res.json({loggedIn: 'false'});
+	if((typeof req.session.userId== 'undefined') || req.session.loggedIn== 'false'){
+		res.json({'loggedIn': 'false'});
+		return;
+
 	}else if(req.session.loggedIn== 'true' && (req.session.userType== 'customer')){
 		object= {loggedIn: req.session.loggedIn, userId: req.session.userId, userType: req.session.userType,
 			email: req.session.email, firstName: req.session.firstName, lastName: req.session.lastName, 
 			street: req.session.street, city: req.session.city, password: req.session.password}
+
 	}else if(req.session.loggedIn== 'true' && req.session.userType== 'supplier'){
 		object= {loggedIn: req.session.loggedIn, userId: req.session.userId, userType: req.session.userType,
 			email: req.session.email, firstName: req.session.firstName, lastName: req.session.lastName, 
 			street: req.session.street, city: req.session.city, password: req.session.password,
-			nmraRegistration: req.session.nmraRegistration, pharmacistRegistration: req.session.pharmacistRegistration}
+			nmraRegistration: req.session.nmraRegistration, pharmacistRegistration: req.session.pharmacistRegistration, 
+			storeDescription: req.session.storeDescription}
 	}
 	
 	console.log(object);
@@ -533,17 +514,6 @@ app.get('/remove-from-cart', function(req, res) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Supplier
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*app.get('/sign-up-supplier', function(req, res) {
-	res.sendFile(htmlPath + "sign-up-supplier.html");
-});
-
-app.post('/sign-up-supplier-process', function(req, res) {
-	supplier.signUp(req.body, function(result){
-		res.sendFile(htmlPath + result + '.html');
-		//res.end(result);
-		//Send result data to Ranga's front end using REST (JSON).
-	});
-});*/
 
 //This function delivers a page with a data table.
 app.get('/view-suppliers', function(req, res) {

@@ -44,8 +44,9 @@ function signUp(request, callback) {
             console.log(result);
 
             //If data was successfully inserted into the user table, proceed with inserting data into the supplier table.
-            query= `insert into supplier(supplier_id, nmra_registration, pharmacist_registration) values (?, ?, ?)`;
-	        values= [result.insertId, request.nmraRegistration, request.pharmacistRegistration];
+            query= `insert into supplier(supplier_id, nmra_registration, pharmacist_registration, store_description) 
+			values (?, ?, ?, ?)`;
+	        values= [result.insertId, request.nmraRegistration, request.pharmacistRegistration, request.storeDescription];
 
             connection.query(query, values, (err, result)=>{
                 if(err){
@@ -74,7 +75,7 @@ function signIn(request, callback) {
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
 	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
-	supplier.nmra_registration, supplier.pharmacist_registration from user, supplier where
+	supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description from user, supplier where
 	user.user_id= supplier.supplier_id and user.email= ? and user.password= ? and user.type='supplier'`;
 	values= [email, password];
 
@@ -89,7 +90,8 @@ function signIn(request, callback) {
 				connection.end();
 
 				var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
-				lastName: "", street: "", city: "", password: "", nmraRegistration: "", pharmacistRegistration: ""}
+				lastName: "", street: "", city: "", password: "", nmraRegistration: "", pharmacistRegistration: "", 
+				storeDescription: ""}
 
 				authObject.loggedIn= "true";
 				authObject.userId= result[0].user_id;
@@ -102,6 +104,7 @@ function signIn(request, callback) {
 				authObject.password= result[0].password;
 				authObject.nmraRegistration= result[0].nmra_registration;
 				authObject.pharmacistRegistration= result[0].pharmacist_registration;
+				authObject.storeDescription= result[0].store_description;
 				
 				console.log(authObject);
 				return callback(authObject);
@@ -123,7 +126,7 @@ function showSuppliersVisitor(callback) {
 
 	createDbConnection();
 	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
-	supplier.nmra_registration, supplier.pharmacist_registration from user, supplier where
+	supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description from user, supplier where
 	user.user_id= supplier.supplier_id and user.type= 'supplier'`;
 	connection.query(query,function(err, result, fields) {
 		  //console.log(results); // Results contains rows returned by server.
@@ -147,7 +150,7 @@ function showSuppliersCustomer(city, callback) {
 
 	createDbConnection();
 	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
-	supplier.nmra_registration, supplier.pharmacist_registration from user, supplier where
+	supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description from user, supplier where
 	user.user_id= supplier.supplier_id and user.type= 'supplier' and user.city like ?`;
 	connection.query(query, values,function(err, result, fields) {
 		  //console.log(results); // Results contains rows returned by server.

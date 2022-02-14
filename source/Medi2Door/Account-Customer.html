@@ -126,23 +126,31 @@
                                 <div class="myaccount-content">
                                     <h3>Account Details</h3>
                                     <div class="account-details-form">
-                                        <form action="#">
+
+                                        <!--Form for updating account details
+                                            Get data from the get-session API and bind it to the form.
+                                            The form will be populated with existing user information and submitting the
+                                            form will lead to a batch update-->
+                                        <form action="edit-customer-process" method="post">
                                             <div class="row">
                                                 <div class="col-lg-6 col-12 mb-30">
-                                                    <input id="first-name" placeholder="First Name" type="text">
+                                                    <input id="first-name" placeholder="First Name" type="text" name="firstName">
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
-                                                    <input id="last-name" placeholder="Last Name" type="text">
+                                                    <input id="last-name" placeholder="Last Name" type="text" name="lastName">
                                                 </div>
 
                                                 <div class="col-12 mb-30">
-                                                    <input id="address" placeholder="Address" type="text">
+                                                    <input id="address" placeholder="Address" type="text" name="street">
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
                                                     <select id="city" name="city">
-                                                        <option value="">Nearest City</option>
+                                                        <option value="null">Nearest City</option>
+                                                        <option value="Kottawa">Kottawa</option>
+                                                        <option value="Rajagiriya">Rajagiriya</option>
+                                                        <option value="Nugegoda">Nugegoda</option>
                                                     </select>
                                                 </div>
 
