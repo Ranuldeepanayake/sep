@@ -239,13 +239,36 @@ app.get('/Account.html', function (req, res){
 
 //This function processes the form to update customer profile data.
 app.post('/edit-customer-process', function(req, res) {
-	console.log('**************Received edit profile form data>');
+	console.log('**************Received edit customer profile form data>');
 	console.log(req.body);
 
 	//Sanitize form data here.
 	//Check if the new passwords are the same.
 	//Check if the user is trying to use an occupied email. 
-	//Code.
+	//Check for empty fields if the user type is 'supplier'.
+	if(req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
+	req.body.street== '' || req.body.city== 'null'){
+		res.json({'result' : 'Fields are empty!'});
+		return;
+	}
+
+	//Check if user wants to change the password. If a user has typed something, consider it as a trigger.
+	if(req.body.currentPassword!= ''){
+		//Check if the current stored password matches the entered current password.
+		if(req.body.currentPassword != req.session.password){
+			res.json({'result' : 'Wrong current password!'});
+			return;
+		}
+	}
+	|| req.body.password== '' || req.body.confirmPassword== ''
+
+	//Check if passwords are matching.
+	if(req.body.password != req.body.confirmPassword){
+		res.json({'result' : 'Passwords do not match!'});
+		return;
+	}
+
+	 
 
 	//Check if session data exists.
 	if(typeof req.session.userId== 'undefined'){
