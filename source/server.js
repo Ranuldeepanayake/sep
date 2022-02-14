@@ -259,17 +259,12 @@ app.post('/edit-customer-process', function(req, res) {
 			res.json({'result' : 'Wrong current password!'});
 			return;
 		}
+		//|| req.body.password== '' || req.body.confirmPassword== ''
+
 	}
-	|| req.body.password== '' || req.body.confirmPassword== ''
+	
 
-	//Check if passwords are matching.
-	if(req.body.password != req.body.confirmPassword){
-		res.json({'result' : 'Passwords do not match!'});
-		return;
-	}
-
-	 
-
+	
 	//Check if session data exists.
 	if(typeof req.session.userId== 'undefined'){
 		res.json({'result' : 'User not logged in!'});
