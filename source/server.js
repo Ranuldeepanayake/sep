@@ -48,7 +48,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //This function delivers the home page.
 app.get('/', function (req, res){
-	res.sendFile(rangaFrontEnd + "Login.html");
+	res.sendFile(rangaFrontEnd + "Index.html");
 	//Below code is as a reference for session checking.
 	/*if(req.session.loggedIn== 'true'){
 		//Send session data to Ranga's front end using REST (JSON).
@@ -56,6 +56,16 @@ app.get('/', function (req, res){
 	}else{
 		res.sendFile(htmlPath + "index.html");
 	}*/
+});
+
+//This function also delivers the home page.
+app.get('/Index.html', function (req, res){
+	res.sendFile(rangaFrontEnd + "Index.html");
+});
+
+//This function also delivers the log in page.
+app.get('/Login.html', function (req, res){
+	res.sendFile(rangaFrontEnd + "Login.html");
 });
 
 //This function processes the sign up form.
@@ -205,6 +215,24 @@ app.get("/logout-process", function(req, res){
 	req.session.destroy();
 	console.log("**************Logged out!");
     res.redirect('/');
+});
+
+//This function displays the account settings page for customers.
+app.get('/Account.html', function (req, res){
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.json({'status' : 'User not logged in'});	
+		return;
+
+	}else if (req.session.userType== 'customer'){
+		res.sendFile(rangaFrontEnd + "Account-Customer.html");
+		return;
+
+	}else if (req.session.userType== 'supplier'){
+		res.sendFile(rangaFrontEnd + "Account-Supplier.html");
+		return;
+	} 
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
