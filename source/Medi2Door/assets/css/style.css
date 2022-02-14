@@ -7239,8 +7239,8 @@ img.mfp-img {
     margin: 0;
 }
 
-.account-details-form input, .account-details-form select {
-    background:#fff;
+.account-details-form input, .account-details-form select, .account-details-form textarea {
+    background: #fff;
     display: block;
     width: 100%;
     border: 1px solid #ebebeb;
