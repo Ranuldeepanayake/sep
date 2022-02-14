@@ -119,14 +119,14 @@ function showUsers(callback) {
 }
 
 //Updates customer data.
-function editProfile(request, userId, callback) {
+function editProfile(request, userId, password, callback) {
 	var query;
 	var values;
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
 	query= `update user set email= ?, first_name= ?, last_name= ?, street= ?, city= ?, password= ? where user_id= ?`;
-	values= [request.email, request.firstName, request.lastName, request.street, request.city, request.password, userId];
+	values= [request.email, request.firstName, request.lastName, request.street, request.city, password, userId];
 
 	connection.query(query, values, (err, result)=>{
 		if(err){

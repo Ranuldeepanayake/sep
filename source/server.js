@@ -242,6 +242,12 @@ app.post('/edit-customer-process', function(req, res) {
 	console.log('**************Received edit customer profile form data>');
 	console.log(req.body);
 
+	//Check if session data exists.
+	if(typeof req.session.userId== 'undefined'){
+		res.json({'result' : 'User not logged in!'});
+		return;
+	}
+
 	//Sanitize form data here.
 	//Check if the new passwords are the same.
 	//Check if the user is trying to use an occupied email. 
@@ -259,21 +265,22 @@ app.post('/edit-customer-process', function(req, res) {
 			res.json({'result' : 'Wrong current password!'});
 			return;
 		}
-		//|| req.body.password== '' || req.body.confirmPassword== ''
 
+		if(req.body.password!= req.body.confirmPassword== ''){
+			res.json({'result' : 'New passwords do not match!'});
+			return;
+		}
+
+		customer.editProfile(req.body, req.session.userId, req.body.password, function(result){
+			res.json({'result' : result});
+		});
+
+	}else{
+		//If the user does not want to change the password.
+		customer.editProfile(req.body, req.session.userId, req.session.password, function(result){
+			res.json({'result' : result});
+		});
 	}
-	
-
-	
-	//Check if session data exists.
-	if(typeof req.session.userId== 'undefined'){
-		res.json({'result' : 'User not logged in!'});
-		return;
-	}
-
-	customer.editProfile(req.body, req.session.userId, function(result){
-		res.json({'result' : result});
-	});
 });
 
 //This function delivers a sample data presentation page.
