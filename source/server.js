@@ -5,11 +5,13 @@ const path= require('path');
 const file = require('fs');
 
 //////////////////////////////////////////////////////////////////////////
+//For image uploads
+////////////////////////////////////////////////////////////////////////// 
 const multer  = require('multer');
-const upload = multer({ dest: './html/uploads' });
+const uploadItemImage = multer({ dest: './Medi2Door/assets/images/items' });
+const uploadStoreImage = multer({ dest: './Medi2Door/assets/images/pharmacies' });
 //////////////////////////////////////////////////////////////////////////
 
-//const db = require('./js/db.js');
 const customer = require('./js/customer.js');
 const supplier = require('./js/supplier.js');
 
@@ -360,7 +362,7 @@ app.get('/add-item', function(req, res) {
 });
 
 //An API which processes adding item information.
-app.post('/add-item-process', upload.single('itemImage'), function(req, res) {
+app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req, res) {
 	console.log("Form received!");
 	// req.file is the name of your file in the form above, here 'uploaded_file'
 	// req.body will hold the text fields, if there were any 
@@ -568,20 +570,26 @@ app.get('/remove-from-cart', function(req, res) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This function processes the form to update supplier profile data.
-app.post('/edit-supplier-process', upload.single('storeImage'), function(req, res) {
-
-	//Handle other file types and limit the maximum file size.
-	//file.renameSync('./html/uploads/' + req.file.filename, './html/uploads/' + req.file.filename + '.jpg');
-
-	supplier.addItem(req.body, './html/uploads/' + req.file.filename + '.jpg', req.session.userId, function(result){
-		res.sendFile(htmlPath + result + '.html');
-	});
+app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), function(req, res) {
 
 	console.log('**************Received edit supplier profile form data>');
 	// req.file is the name of your file in the form above, here 'uploaded_file'
 	// req.body will hold the text fields, if there were any 
 	console.log(req.file, req.body);
 	console.log(req.body.itemName);
+
+	var storeImageFileName;
+
+	//Check if an image file is actually uploaded or not.
+	if(typeof req.file.filename== 'undefined' || req.file.filename== null || req.file.filename== ''){
+		storeImageFileName= 'null';
+	}else{
+		//Handle other file types and limit the maximum file size.
+		file.renameSync(storeImagePath + req.file.filename, storeImagePath + req.file.filename + '.jpg');
+
+		//Format the image file path name to be saved in the database.
+		storeImageFileName= storeImagePath + req.file.filename + '.jpg';
+	}
 
 	//Check if session data exists.
 	if(typeof req.session.userId== 'undefined'){
@@ -594,7 +602,8 @@ app.post('/edit-supplier-process', upload.single('storeImage'), function(req, re
 	//Check if the user is trying to use an occupied email. 
 	//Check for empty fields if the user type is 'supplier'.
 	if(req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
-	req.body.street== '' || req.body.city== 'null'){
+	req.body.street== '' || req.body.city== 'null' || req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '' || 
+	req.body.storeDescription== ''){
 		res.json({'result' : 'Fields are empty!'});
 		return;
 	}
@@ -612,13 +621,13 @@ app.post('/edit-supplier-process', upload.single('storeImage'), function(req, re
 			return;
 		}
 
-		supplier.editProfile(req.body, req.session.userId, req.body.password, function(result){
+		supplier.editProfile(req.body, req.session.userId, req.body.password, storeImageFileName, function(result){
 			res.json({'result' : result});
 		});
 
 	}else{
 		//If the user does not want to change the password. Use the current password saved in the session.
-		supplier.editProfile(req.body, req.session.userId, req.session.password, function(result){
+		supplier.editProfile(req.body, req.session.userId, req.session.password, storeImageFileName, function(result){
 			res.json({'result' : result});
 		});
 	}
