@@ -30,6 +30,7 @@ const sessionSecret= 'sepprojectsessionsecret'
 //Path preparation.
 const htmlPath= path.join(__dirname, '/html/');
 const storeImagePath= path.join(__dirname, '/Medi2Door/assets/images/pharmacies/'); 
+const itemImagePath= path.join(__dirname, '/Medi2Door/assets/images/items/'); 
 const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
 
 //Use declarations.
@@ -410,9 +411,9 @@ app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req,
 	console.log(req.body.itemName);
 
 	//Handle other file types and limit the maximum file size.
-	file.renameSync('./html/uploads/' + req.file.filename, './html/uploads/' + req.file.filename + '.jpg');
+	file.renameSync(itemImagePath + req.file.filename, itemImagePath + req.file.filename + '.jpg');
 
-	supplier.addItem(req.body, './html/uploads/' + req.file.filename + '.jpg', req.session.userId, function(result){
+	supplier.addItem(req.body, itemImagePath + req.file.filename + '.jpg', req.session.userId, function(result){
 		res.sendFile(htmlPath + result + '.html');
 	});
 });
