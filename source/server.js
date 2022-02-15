@@ -51,9 +51,9 @@ app.set('view engine', 'ejs')
 //Common functions for the customer and the supllier.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //This function delivers the home page.
-app.get('/', function (req, res){
+/*app.get('/', function (req, res){
 	//ejs 
-	res.render('Login.ejs', { message :'', valmessage: ''})
+	res.render('Index.ejs', { message :'', valmessage: ''})
 	//res.sendFile(rangaFrontEnd + "Index.html");
 	//Below code is as a reference for session checking.
 	/*if(req.session.loggedIn== 'true'){
@@ -62,6 +62,14 @@ app.get('/', function (req, res){
 	}else{
 		res.sendFile(htmlPath + "index.html");
 	}*/
+
+app.get('/', function(req, res){
+  res.render('Index.ejs');
+});
+
+app.get('/index', function (req, res){
+	//ejs 
+	res.render('Index.ejs');
 });
 
 app.get('/login', function (req, res){
