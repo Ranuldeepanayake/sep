@@ -5,11 +5,13 @@ const path= require('path');
 const file = require('fs');
 
 //////////////////////////////////////////////////////////////////////////
+//For image uploads
+////////////////////////////////////////////////////////////////////////// 
 const multer  = require('multer');
-const upload = multer({ dest: './html/uploads' });
+const uploadItemImage = multer({ dest: './Medi2Door/assets/images/items' });
+const uploadStoreImage = multer({ dest: './Medi2Door/assets/images/pharmacies' });
 //////////////////////////////////////////////////////////////////////////
 
-//const db = require('./js/db.js');
 const customer = require('./js/customer.js');
 const supplier = require('./js/supplier.js');
 
@@ -27,7 +29,7 @@ const sessionSecret= 'sepprojectsessionsecret'
 
 //Path preparation.
 const htmlPath= path.join(__dirname, '/html/');
-const filePath= path.join(__dirname, '/html/'); 
+const storeImagePath= path.join(__dirname, '/Medi2Door/assets/images/pharmacies/'); 
 const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
 
 //Use declarations.
@@ -232,6 +234,7 @@ app.post("/sign-in-process", function(req, res){
 				req.session.nmraRegistration = result.nmraRegistration;
 				req.session.pharmacistRegistration = result.pharmacistRegistration;
 				req.session.storeDescription = result.storeDescription;
+				req.session.storeImage= result.storeImage;
 	
 				res.sendFile(htmlPath + 'success.html');
 				//res.redirect('/');
@@ -357,12 +360,38 @@ app.get('/get-session', function(req, res) {
 			email: req.session.email, firstName: req.session.firstName, lastName: req.session.lastName, 
 			street: req.session.street, city: req.session.city, password: req.session.password,
 			nmraRegistration: req.session.nmraRegistration, pharmacistRegistration: req.session.pharmacistRegistration, 
-			storeDescription: req.session.storeDescription}
+			storeDescription: req.session.storeDescription, storeImage: req.session.storeImage}
 	}
 	
 	console.log(object);
 	res.json(object);
 })
+
+//Function which might help Krishni for intergration. Same as the above but returns a JS obect rather than returning
+//a JSON response. This object can be returned to the front end using EJS res.render() if using EJS. 
+function getSession(){
+
+	var object;
+
+	if((typeof session.userId== 'undefined') || session.loggedIn== 'false'){
+		object= {'status': 'User not logged in!'}
+
+	}else if(session.loggedIn== 'true' && (session.userType== 'customer')){
+		object= {loggedIn: session.loggedIn, userId: session.userId, userType: session.userType,
+			email: session.email, firstName: session.firstName, lastName: session.lastName, 
+			street: session.street, city: session.city, password: session.password}
+
+	}else if(session.loggedIn== 'true' && session.userType== 'supplier'){
+		object= {loggedIn: session.loggedIn, userId: session.userId, userType: session.userType,
+			email: session.email, firstName: session.firstName, lastName: session.lastName, 
+			street: session.street, city: session.city, password: session.password,
+			nmraRegistration: session.nmraRegistration, pharmacistRegistration: session.pharmacistRegistration, 
+			storeDescription: session.storeDescription, storeImage: session.storeImage}
+	}
+	
+	console.log(object);
+	return object;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Item
@@ -373,7 +402,7 @@ app.get('/add-item', function(req, res) {
 });
 
 //An API which processes adding item information.
-app.post('/add-item-process', upload.single('itemImage'), function(req, res) {
+app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req, res) {
 	console.log("Form received!");
 	// req.file is the name of your file in the form above, here 'uploaded_file'
 	// req.body will hold the text fields, if there were any 
@@ -580,6 +609,71 @@ app.get('/remove-from-cart', function(req, res) {
 //Supplier
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//This function processes the form to update supplier profile data.
+app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), function(req, res) {
+
+	console.log('**************Received edit supplier profile form data>');
+	// req.file is the name of your file in the form above, here 'uploaded_file'
+	// req.body will hold the text fields, if there were any 
+	console.log(req.file, req.body);
+	console.log(req.body.itemName);
+
+	var storeImageFileName;
+
+	//Check if an image file is actually uploaded or not.
+	if(typeof req.file.filename== 'undefined' || req.file.filename== null || req.file.filename== ''){
+		storeImageFileName= 'null';
+	}else{
+		//Handle other file types and limit the maximum file size.
+		file.renameSync(storeImagePath + req.file.filename, storeImagePath + req.file.filename + '.jpg');
+
+		//Format the image file path name to be saved in the database.
+		storeImageFileName= storeImagePath + req.file.filename + '.jpg';
+	}
+
+	//Check if session data exists.
+	if(typeof req.session.userId== 'undefined'){
+		res.json({'result' : 'User not logged in!'});
+		return;
+	}
+
+	//Sanitize form data here.
+	//Check if the new passwords are the same.
+	//Check if the user is trying to use an occupied email. 
+	//Check for empty fields if the user type is 'supplier'.
+	if(req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
+	req.body.street== '' || req.body.city== 'null' || req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '' || 
+	req.body.storeDescription== ''){
+		res.json({'result' : 'Fields are empty!'});
+		return;
+	}
+
+	//Check if user wants to change the password. If a user has typed something, consider it as a trigger.
+	if(req.body.currentPassword!= ''){
+		//Check if the current stored password matches the entered current password.
+		if(req.body.currentPassword != req.session.password){
+			res.json({'result' : 'Wrong current password!'});
+			return;
+		}
+
+		if(req.body.password!= req.body.confirmPassword== ''){
+			res.json({'result' : 'New passwords do not match!'});
+			return;
+		}
+
+		supplier.editProfile(req.body, req.session.userId, req.body.password, storeImageFileName, function(result){
+			res.json({'result' : result});
+		});
+
+	}else{
+		//If the user does not want to change the password. Use the current password saved in the session.
+		supplier.editProfile(req.body, req.session.userId, req.session.password, storeImageFileName, function(result){
+			res.json({'result' : result});
+		});
+	}
+});
+
+
 //This function delivers a page with a data table.
 app.get('/view-suppliers', function(req, res) {
 	res.sendFile(htmlPath + "view-suppliers.html");
@@ -619,7 +713,7 @@ app.all('*', function(req, res) {
 
 //Starts a nodejs server instance.
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Example app listening at http://localhost:${port}`);
 });
 
 /*	//Create a JS object.

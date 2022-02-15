@@ -44,9 +44,9 @@ function signUp(request, callback) {
             console.log(result);
 
             //If data was successfully inserted into the user table, proceed with inserting data into the supplier table.
-            query= `insert into supplier(supplier_id, nmra_registration, pharmacist_registration, store_description) 
-			values (?, ?, ?, ?)`;
-	        values= [result.insertId, request.nmraRegistration, request.pharmacistRegistration, request.storeDescription];
+            query= `insert into supplier(supplier_id, nmra_registration, pharmacist_registration, store_description, 
+				store_image) values (?, ?, ?, ?, ?)`;
+	        values= [result.insertId, request.nmraRegistration, request.pharmacistRegistration, request.storeDescription, 'null'];
 
             connection.query(query, values, (err, result)=>{
                 if(err){
@@ -75,8 +75,9 @@ function signIn(request, callback) {
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
 	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
-	supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description from user, supplier where
-	user.user_id= supplier.supplier_id and user.email= ? and user.password= ? and user.type='supplier'`;
+	user.password, supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description, 
+	supplier.store_image from user, supplier where user.user_id= supplier.supplier_id and user.email= ? and 
+	user.password= ? and user.type='supplier'`;
 	values= [email, password];
 
 	connection.query(query, values,function(err, result, fields) {
@@ -91,7 +92,7 @@ function signIn(request, callback) {
 
 				var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
 				lastName: "", street: "", city: "", password: "", nmraRegistration: "", pharmacistRegistration: "", 
-				storeDescription: ""}
+				storeDescription: "", storeImage: ""}
 
 				authObject.loggedIn= "true";
 				authObject.userId= result[0].user_id;
@@ -105,6 +106,7 @@ function signIn(request, callback) {
 				authObject.nmraRegistration= result[0].nmra_registration;
 				authObject.pharmacistRegistration= result[0].pharmacist_registration;
 				authObject.storeDescription= result[0].store_description;
+				authObject.storeImage= result[0].store_image;
 				
 				console.log(authObject);
 				return callback(authObject);
@@ -126,8 +128,8 @@ function showSuppliersVisitor(callback) {
 
 	createDbConnection();
 	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
-	supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description from user, supplier where
-	user.user_id= supplier.supplier_id and user.type= 'supplier'`;
+	supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description, supplier.store_image
+	from user, supplier where user.user_id= supplier.supplier_id and user.type= 'supplier'`;
 	connection.query(query,function(err, result, fields) {
 		  //console.log(results); // Results contains rows returned by server.
 		  //console.log(fields); // Fields contains extra meta data about results, if available.
@@ -150,8 +152,8 @@ function showSuppliersCustomer(city, callback) {
 
 	createDbConnection();
 	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
-	supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description from user, supplier where
-	user.user_id= supplier.supplier_id and user.type= 'supplier' and user.city like ?`;
+	supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description, supplier.store_image 
+	from user, supplier where user.user_id= supplier.supplier_id and user.type= 'supplier' and user.city like ?`;
 	connection.query(query, values,function(err, result, fields) {
 		  //console.log(results); // Results contains rows returned by server.
 		  //console.log(fields); // Fields contains extra meta data about results, if available.
@@ -163,6 +165,46 @@ function showSuppliersCustomer(city, callback) {
 		}else{
 			connection.end();
 			return callback(result);
+		}
+	});
+}
+
+//Updates supplier data.
+function editProfile(request, userId, password, storeImage, callback) {
+	var query;
+	var values;
+
+	//console.log(request.email + request.firstName + request.age + request.password);
+	createDbConnection();
+	query= `update user set email= ?, first_name= ?, last_name= ?, street= ?, city= ?, password= ? where user_id= ?`;
+	values= [request.email, request.firstName, request.lastName, request.street, request.city, password, userId];
+
+	connection.query(query, values, (err, result)=>{
+		if(err){
+			console.log(err.message);
+			connection.end();
+			return callback("failure");
+
+		}else{
+			//Update data in the supplier table after successfully updating data in the user table.
+			query= `update supplier set nmra_registration= ?, pharmacist_registration= ?, store_description= ?, 
+			store_image= ? where supplier_id= ?`;
+			values= [request.nmraRegistration, request.pharmacistRegistration, request.storeDescription, storeImage, 
+			userId];
+			
+			connection.query(query, values, (err, result)=>{
+				if(err){
+					console.log(err.message);
+					connection.end();
+					return callback("failure");
+		
+				}else{
+					console.log("Record updated with ID: " + JSON.stringify(result));
+					connection.end();
+					return callback("success");
+				}
+			});
+			
 		}
 	});
 }
@@ -208,4 +250,5 @@ module.exports.signUp= signUp;
 module.exports.signIn= signIn;
 module.exports.showSuppliersVisitor= showSuppliersVisitor;
 module.exports.showSuppliersCustomer= showSuppliersCustomer;
+module.exports.editProfile= editProfile;
 module.exports.addItem= addItem;
