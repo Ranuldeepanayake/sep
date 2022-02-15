@@ -324,6 +324,32 @@ app.get('/get-session', function(req, res) {
 	res.json(object);
 })
 
+//Function which might help Krishni for intergration. Same as the above but returns a JS obect rather than returning
+//a JSON response. This object can be returned to the front end using EJS res.render() if using EJS. 
+function getSession(){
+
+	var object;
+
+	if((typeof session.userId== 'undefined') || session.loggedIn== 'false'){
+		object= {'status': 'User not logged in!'}
+
+	}else if(session.loggedIn== 'true' && (session.userType== 'customer')){
+		object= {loggedIn: session.loggedIn, userId: session.userId, userType: session.userType,
+			email: session.email, firstName: session.firstName, lastName: session.lastName, 
+			street: session.street, city: session.city, password: session.password}
+
+	}else if(session.loggedIn== 'true' && session.userType== 'supplier'){
+		object= {loggedIn: session.loggedIn, userId: session.userId, userType: session.userType,
+			email: session.email, firstName: session.firstName, lastName: session.lastName, 
+			street: session.street, city: session.city, password: session.password,
+			nmraRegistration: session.nmraRegistration, pharmacistRegistration: session.pharmacistRegistration, 
+			storeDescription: session.storeDescription}
+	}
+	
+	console.log(object);
+	return object;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Item
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -579,7 +605,8 @@ app.all('*', function(req, res) {
 
 //Starts a nodejs server instance.
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Example app listening at http://localhost:${port}`);
+  getSession();
 });
 
 /*	//Create a JS object.
