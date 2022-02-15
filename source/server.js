@@ -27,7 +27,7 @@ const sessionSecret= 'sepprojectsessionsecret'
 
 //Path preparation.
 const htmlPath= path.join(__dirname, '/html/');
-const filePath= path.join(__dirname, '/html/'); 
+const storeImagePath= path.join(__dirname, '/Medi2Door/assets/images/pharmacies/'); 
 const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
 
 //Use declarations.
@@ -192,6 +192,7 @@ app.post("/sign-in-process", function(req, res){
 				req.session.nmraRegistration = result.nmraRegistration;
 				req.session.pharmacistRegistration = result.pharmacistRegistration;
 				req.session.storeDescription = result.storeDescription;
+				req.session.storeImage= result.storeImage;
 	
 				res.sendFile(htmlPath + 'success.html');
 				//res.redirect('/');
@@ -317,7 +318,7 @@ app.get('/get-session', function(req, res) {
 			email: req.session.email, firstName: req.session.firstName, lastName: req.session.lastName, 
 			street: req.session.street, city: req.session.city, password: req.session.password,
 			nmraRegistration: req.session.nmraRegistration, pharmacistRegistration: req.session.pharmacistRegistration, 
-			storeDescription: req.session.storeDescription}
+			storeDescription: req.session.storeDescription, storeImage: req.session.storeImage}
 	}
 	
 	console.log(object);
@@ -343,7 +344,7 @@ function getSession(){
 			email: session.email, firstName: session.firstName, lastName: session.lastName, 
 			street: session.street, city: session.city, password: session.password,
 			nmraRegistration: session.nmraRegistration, pharmacistRegistration: session.pharmacistRegistration, 
-			storeDescription: session.storeDescription}
+			storeDescription: session.storeDescription, storeImage: session.storeImage}
 	}
 	
 	console.log(object);
@@ -566,6 +567,64 @@ app.get('/remove-from-cart', function(req, res) {
 //Supplier
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//This function processes the form to update supplier profile data.
+app.post('/edit-supplier-process', upload.single('storeImage'), function(req, res) {
+
+	//Handle other file types and limit the maximum file size.
+	//file.renameSync('./html/uploads/' + req.file.filename, './html/uploads/' + req.file.filename + '.jpg');
+
+	supplier.addItem(req.body, './html/uploads/' + req.file.filename + '.jpg', req.session.userId, function(result){
+		res.sendFile(htmlPath + result + '.html');
+	});
+
+	console.log('**************Received edit supplier profile form data>');
+	// req.file is the name of your file in the form above, here 'uploaded_file'
+	// req.body will hold the text fields, if there were any 
+	console.log(req.file, req.body);
+	console.log(req.body.itemName);
+
+	//Check if session data exists.
+	if(typeof req.session.userId== 'undefined'){
+		res.json({'result' : 'User not logged in!'});
+		return;
+	}
+
+	//Sanitize form data here.
+	//Check if the new passwords are the same.
+	//Check if the user is trying to use an occupied email. 
+	//Check for empty fields if the user type is 'supplier'.
+	if(req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
+	req.body.street== '' || req.body.city== 'null'){
+		res.json({'result' : 'Fields are empty!'});
+		return;
+	}
+
+	//Check if user wants to change the password. If a user has typed something, consider it as a trigger.
+	if(req.body.currentPassword!= ''){
+		//Check if the current stored password matches the entered current password.
+		if(req.body.currentPassword != req.session.password){
+			res.json({'result' : 'Wrong current password!'});
+			return;
+		}
+
+		if(req.body.password!= req.body.confirmPassword== ''){
+			res.json({'result' : 'New passwords do not match!'});
+			return;
+		}
+
+		supplier.editProfile(req.body, req.session.userId, req.body.password, function(result){
+			res.json({'result' : result});
+		});
+
+	}else{
+		//If the user does not want to change the password. Use the current password saved in the session.
+		supplier.editProfile(req.body, req.session.userId, req.session.password, function(result){
+			res.json({'result' : result});
+		});
+	}
+});
+
+
 //This function delivers a page with a data table.
 app.get('/view-suppliers', function(req, res) {
 	res.sendFile(htmlPath + "view-suppliers.html");
@@ -606,7 +665,6 @@ app.all('*', function(req, res) {
 //Starts a nodejs server instance.
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
-  getSession();
 });
 
 /*	//Create a JS object.

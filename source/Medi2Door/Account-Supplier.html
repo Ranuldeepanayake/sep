@@ -131,7 +131,7 @@
                     Get data from the get-session API and bind it to the form.
                     The form will be populated with existing user information and submitting the
                     form will lead to a batch update-->
-                                        <form action="edit-customer-process" method="post">
+                                        <form action="edit-supplier-process" method="post">
                                             <div class="row">
                                                 <div class="col-lg-6 col-12 mb-30">
                                                     <input id="first-name" placeholder="First Name" type="text" name="firstName">
@@ -154,19 +154,19 @@
                                                     </select>
                                                 </div>
 
-                                                <div class="col-lg-6 col-12 mb-15"><input type="email" placeholder="Email"></div>
+                                                <div class="col-lg-6 col-12 mb-15"><input type="email" placeholder="Email" name="email"></div>
 
-                                                <div class="col-lg-6 col-12 mb-15"><input type="text" placeholder="NMRA ID"></div>
+                                                <div class="col-lg-6 col-12 mb-15"><input type="text" placeholder="NMRA ID" name="nmraRegistration"></div>
 
-                                                <div class="col-lg-6 col-12 mb-15"><input type="email" placeholder="Pharmacy ID"></div>
+                                                <div class="col-lg-6 col-12 mb-15"><input type="email" placeholder="Pharmacy ID" name="pharmacistRegistration"></div>
 
                                                 
                                                 <div class="col-12 mb-30">
                                                     <hr />
-                                                    <textarea id="description" placeholder="Description" type="text" name="description"></textarea>
+                                                    <textarea id="storeDescription" placeholder="Description" type="text" name="storeDescription"></textarea>
                                                 </div>
                                                 <div class="col-lg-6 col-12 mb-30">
-                                                    <input type="file" id="myFile" name="storeImage">
+                                                    <input type="file" id="storeImage" name="storeImage">
                                                 </div>
 
                                                 <div class="col-12 mb-30"> <hr /> <h4>Password change</h4></div>
