@@ -42,13 +42,16 @@ app.use(express.static(__dirname + '/Medi2Door/'));	//Use Ranga's static resourc
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.set('view engine', 'ejs')
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Common functions for the customer and the supllier.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //This function delivers the home page.
 app.get('/', function (req, res){
-	res.sendFile(rangaFrontEnd + "Index.html");
+	//ejs 
+	res.render('Login.ejs', { message :'', valmessage: ''})
+	//res.sendFile(rangaFrontEnd + "Index.html");
 	//Below code is as a reference for session checking.
 	/*if(req.session.loggedIn== 'true'){
 		//Send session data to Ranga's front end using REST (JSON).
@@ -58,15 +61,35 @@ app.get('/', function (req, res){
 	}*/
 });
 
+app.get('/login', function (req, res){
+	//ejs 
+	res.render('Login.ejs', { message :'', valmessage: ''})
+});
+
+app.get('/login-validate', function (req, res, next){
+	res.render('Login.ejs', { message : 'Invalid Credentials!', valmessage : ''});
+
+})
+
+app.get('/register-supplier-validate', function (req, res, next){
+	res.render('Login.ejs', { message :'', valmessage : 'Please enter NMRA ID, Pharmasist ID and Description!'});
+})
+
+app.get('/registration-error', function (req, res, next){
+	res.render('Login.ejs', { message :'', valmessage : 'Error in creating account!'});
+})
+
+/*
 //This function also delivers the home page.
 app.get('/Index.html', function (req, res){
 	res.sendFile(rangaFrontEnd + "Index.html");
-});
+});*/
 
+/*
 //This function also delivers the log in page.
 app.get('/Login.html', function (req, res){
 	res.sendFile(rangaFrontEnd + "Login.html");
-});
+});*/
 
 //This function processes the sign up form.
 app.post("/sign-up-process", function(req, res){
@@ -74,6 +97,7 @@ app.post("/sign-up-process", function(req, res){
 	console.log(req.body);
 
 	//Bad input sanitization.
+    /* Handling form validation in the Login.ejs file
 	if(req.body.userType== 'null'){
 		res.json({'result' : 'Please select a user type!'});
 		return;
@@ -99,30 +123,44 @@ app.post("/sign-up-process", function(req, res){
 		res.json({'result' : 'Passwords do not match!'});
 		return;
 	}
+	*/
 
+	//CUSTOMER
 	if(req.body.userType== 'customer'){
 		//Save data in the database.
 		customer.signUp(req.body, function(result){
 			//res.sendFile(htmlPath + result + '.html');
 			//res.end(result);
-			res.json({'result' : result});
-			return;
-		});
-		
+			//res.json({'result' : result});
+			//return;
+			console.log(result)
+			if(result == "success"){
+				res.sendFile(htmlPath + 'success.html');
+			}
+			else {
+				res.redirect('/registration-error')
+			}
+			});	
 	}
-
-	if(req.body.userType== 'supplier'){
+	//SUPPLIER
+	else if(req.body.userType== 'supplier')
+		{
+		//Checking additional supplier fields
+		if((req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '' || req.body.storeDescription)){
+			res.redirect('/register-supplier-validate')
+		}
+		else {
 		//Save data in the database.
 		supplier.signUp(req.body, function(result){
-			//res.sendFile(htmlPath + result + '.html');
-			//res.end(result);
-			try {
-				res.json({'result' : result}); //This causes the program to crash??
-			} catch (error) {
-				console.log(error);
+			console.log(result)
+			if(result = "success"){
+				res.sendFile(htmlPath + 'success.html');
 			}
-			return;
-		});
+			else{
+				res.redirect('/registration-error')
+			}
+			});	
+	}
 	}
 });
 
@@ -131,7 +169,7 @@ app.post("/sign-up-process", function(req, res){
 app.post("/sign-in-process", function(req, res){
 	console.log('**************Received sign in form data>');
 	console.log(req.body);
-
+    /* Handling form validation in the Login.ejs file
 	//Check the account type using the form dropdown.
 	if(req.body.email== '' || req.body.password== ''){
 		res.json({'result' : 'Fields are empty!'});
@@ -142,6 +180,7 @@ app.post("/sign-in-process", function(req, res){
 		res.json({'result' : 'Select user type!'});
 		return;
 	}
+	*/
 
 	if(req.body.userType== 'customer'){
 	customer.signIn(req.body, function (result){
@@ -167,7 +206,8 @@ app.post("/sign-in-process", function(req, res){
 		}else {
 			req.session.loggedIn = "false";
 			console.log("**************Invalid credentials!");
-			res.json({'result' : 'Invalid credentials!'});
+			res.redirect('/login-validate');
+			//res.json({'result' : 'Invalid credentials!'});
 			//res.sendFile(htmlPath + 'invalid-credentials.html');
 		}
 	});
