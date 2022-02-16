@@ -8,8 +8,8 @@ const file = require('fs');
 //For image uploads
 ////////////////////////////////////////////////////////////////////////// 
 const multer  = require('multer');
-const uploadItemImage = multer({ dest: './Medi2Door/assets/images/items' });
-const uploadStoreImage = multer({ dest: './Medi2Door/assets/images/pharmacies' });
+const uploadItemImage = multer({ dest: './views/images/items' });
+const uploadStoreImage = multer({ dest: './views/images/pharmacies' });
 //////////////////////////////////////////////////////////////////////////
 
 const customer = require('./js/customer.js');
@@ -29,10 +29,12 @@ const sessionSecret= 'sepprojectsessionsecret'
 
 //Path preparation.
 const htmlPath= path.join(__dirname, '/html/');
-//const storeImagePath= path.join(__dirname, '/Medi2Door/assets/images/pharmacies/'); 
-const storeImagePath= './Medi2Door/assets/images/pharmacies/';
+const storeImagePath= path.join(__dirname, '/views/images/pharmacies/'); 
+//const storeImagePath= './views/images/pharmacies/';
+const newStoreImagePath= 'images/pharmacies/';
 //const itemImagePath= path.join(__dirname, '/Medi2Door/assets/images/items/'); 
-const itemImagePath= './Medi2Door/assets/images/items/';
+const itemImagePath= './views/images/items/';
+const newItemImagePath= '/images/items/';
 const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
 const krishniViews= path.join(__dirname, '/views/');
 
@@ -45,6 +47,7 @@ app.use(session({
 	saveUninitialized: true
 }));
 app.use(express.static(__dirname + '/Medi2Door/'));	//Use Ranga's static resources.
+app.use(express.static(__dirname + '/views/'));	//Use Krishni's static resources.
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -909,10 +912,14 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 
 	}else{
 		//Handle other file types and limit the maximum file size.
-		file.renameSync(storeImagePath + req.file.filename, storeImagePath + req.file.filename + '.jpg');
-
+		try {
+			file.renameSync(storeImagePath + req.file.filename, storeImagePath + req.file.filename + '.jpg');
+		} catch (error) {
+			console.log(error.message);
+		}
+		
 		//Format the image file path name to be saved in the database.
-		storeImageFileName= storeImagePath + req.file.filename + '.jpg';
+		storeImageFileName= newStoreImagePath + req.file.filename + '.jpg';
 	}
 
 	if(req.body.password == '' && req.body.confirmPassword.length == '' ){
