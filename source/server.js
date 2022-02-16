@@ -29,7 +29,8 @@ const sessionSecret= 'sepprojectsessionsecret'
 
 //Path preparation.
 const htmlPath= path.join(__dirname, '/html/');
-const storeImagePath= path.join(__dirname, '/Medi2Door/assets/images/pharmacies/'); 
+//const storeImagePath= path.join(__dirname, '/Medi2Door/assets/images/pharmacies/'); 
+const storeImagePath= './Medi2Door/assets/images/pharmacies/';
 const itemImagePath= path.join(__dirname, '/Medi2Door/assets/images/items/'); 
 const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
 
@@ -114,8 +115,8 @@ app.get('/my-account-customer', function (req, res, next){
 app.get('/customer-update-validate-success', function (req, res, next){
 	res.render('Account-customer.ejs', {userFName: req.session.firstName,
 		userLName: req.session.lastName,
-		userAddress: req.session.userAddress,
-		userCity: req.session.userCity,
+		userAddress: req.session.street,
+		userCity: req.session.city,
 		userEmail: req.session.email,
 		userPassword :req.session.password,
 		valmessage : "success"});
@@ -125,8 +126,8 @@ app.get('/customer-update-validate-success', function (req, res, next){
 app.get('/customer-update-validate-fail', function (req, res, next){
 	res.render('Account-customer.ejs', {userFName: req.session.firstName,
 		userLName: req.session.lastName,
-		userAddress: req.session.userAddress,
-		userCity: req.session.userCity,
+		userAddress: req.session.street,
+		userCity: req.session.city,
 		userEmail: req.session.email,
 		userPassword :req.session.password,
 		valmessage : "fail"});
@@ -153,8 +154,8 @@ app.get('/my-account-supplier', function (req, res, next){
 app.get('/supplier-update-validate-success', function (req, res, next){
 	res.render('Account-Supplier.ejs', {userFName: req.session.firstName,
 		userLName: req.session.lastName,
-		userAddress: req.session.userAddress,
-		userCity: req.session.userCity,
+		userAddress: req.session.street,
+		userCity: req.session.city,
 		userEmail: req.session.email,
 		userPassword :req.session.password,
 		userStoreDesc: req.session.storeDescription,
@@ -167,8 +168,8 @@ app.get('/supplier-update-validate-success', function (req, res, next){
 app.get('/supplier-update-validate-fail', function (req, res, next){
 	res.render('Account-Supplier.ejs', {userFName: req.session.firstName,
 		userLName: req.session.lastName,
-		userAddress: req.session.userAddress,
-		userCity: req.session.userCity,
+		userAddress: req.session.street,
+		userCity: req.session.city,
 		userEmail: req.session.email,
 		userPassword :req.session.password,
 		userStoreDesc: req.session.storeDescription,
@@ -851,12 +852,27 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 */
 
 
-app.post('/edit-supplier-process', function(req, res) {
+app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), function(req, res) {
 	console.log('**************Received edit supplier profile form data>');
+	console.log(req.file);
 	console.log(req.body);
 
+	var storeImageFileName;
+
+	//Check if an image file is actually uploaded or not.
+	if(typeof req.file== 'undefined' || req.file== null || req.file.filename== ''){
+		storeImageFileName= 'null';
+
+	}else{
+		//Handle other file types and limit the maximum file size.
+		file.renameSync(storeImagePath + req.file.filename, storeImagePath + req.file.filename + '.jpg');
+
+		//Format the image file path name to be saved in the database.
+		storeImageFileName= storeImagePath + req.file.filename + '.jpg';
+	}
+
 	if(req.body.password == '' && req.body.confirmPassword.length == '' ){
-			customer.editProfile(req.body, req.session.userId, req.session.password, function(result){
+			supplier.editProfile(req.body, req.session.userId, req.session.password, storeImageFileName, function(result){
 				console.log(result)
 				if(result == "success"){
 					res.redirect('/supplier-update-validate-success')
@@ -881,7 +897,7 @@ app.post('/edit-supplier-process', function(req, res) {
 		}
 
 		else {
-			customer.editProfile(req.body, req.session.userId, req.body.password, function(result){
+			supplier.editProfile(req.body, req.session.userId, req.body.password, storeImageFileName, function(result){
 				console.log(result)
 				if(result == "success"){
 					res.redirect('/supplier-update-validate-success')
