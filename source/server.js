@@ -31,7 +31,8 @@ const sessionSecret= 'sepprojectsessionsecret'
 const htmlPath= path.join(__dirname, '/html/');
 //const storeImagePath= path.join(__dirname, '/Medi2Door/assets/images/pharmacies/'); 
 const storeImagePath= './Medi2Door/assets/images/pharmacies/';
-const itemImagePath= path.join(__dirname, '/Medi2Door/assets/images/items/'); 
+//const itemImagePath= path.join(__dirname, '/Medi2Door/assets/images/items/'); 
+const itemImagePath= './Medi2Door/assets/images/items/';
 const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
 
 //Use declarations.
@@ -65,7 +66,13 @@ app.set('view engine', 'ejs')
 	}*/
 
 app.get('/', function(req, res){
-  res.render('Index.ejs', { userFName: req.session.firstName});
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.render('Index.ejs', { userFName: ''});
+
+	}else{
+		res.render('Index.ejs', { userFName: req.session.firstName});
+	}
 });
 
 app.get('/test', function(req, res){
@@ -74,7 +81,7 @@ app.get('/test', function(req, res){
 
 app.get('/index', function (req, res){
 	//ejs 
-	res.render('Index.ejs', { userFName: req.session.firstName});
+	res.redirect('/');
 });
 
 app.get('/login', function (req, res){
@@ -391,11 +398,11 @@ app.get('/my-account', function (req, res){
 
 	}else if (req.session.userType== 'customer'){
 		console.log("**************Customer MyAccount");
-		res.redirect('/my-account-customer')
+		res.redirect('/my-account-customer');
 
 	}else if (req.session.userType== 'supplier'){
-		res.sendFile(rangaFrontEnd + "Account-Supplier.html");
-		return;
+		console.log("**************Supplier MyAccount");
+		res.redirect('/my-account-supplier');
 	} 
 });
 
@@ -861,7 +868,7 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 
 	//Check if an image file is actually uploaded or not.
 	if(typeof req.file== 'undefined' || req.file== null || req.file.filename== ''){
-		storeImageFileName= 'null';
+		storeImageFileName= req.session.storeImage;	//Do not change the existing file if a file is not uploaded.
 
 	}else{
 		//Handle other file types and limit the maximum file size.
