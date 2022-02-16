@@ -34,6 +34,7 @@ const storeImagePath= './Medi2Door/assets/images/pharmacies/';
 //const itemImagePath= path.join(__dirname, '/Medi2Door/assets/images/items/'); 
 const itemImagePath= './Medi2Door/assets/images/items/';
 const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
+const krishniViews= path.join(__dirname, '/views/');
 
 //Use declarations.
 //For session management. Please change the session string.
