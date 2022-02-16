@@ -64,30 +64,68 @@ app.set('view engine', 'ejs')
 	}*/
 
 app.get('/', function(req, res){
-  res.render('Index.ejs');
+  res.render('Index.ejs', { userFName: req.session.firstName});
 });
 
 app.get('/index', function (req, res){
 	//ejs 
-	res.render('Index.ejs');
+	res.render('Index.ejs', { userFName: req.session.firstName});
 });
 
 app.get('/login', function (req, res){
 	//ejs 
-	res.render('Login.ejs', { message :'', valmessage: ''})
+	res.render('Login.ejs', { message :'', valmessage: '', loginerror: ''})
 });
 
 app.get('/login-validate', function (req, res, next){
-	res.render('Login.ejs', { message : 'Invalid Credentials!', valmessage : ''});
+	res.render('Login.ejs', { message : 'Invalid Credentials!', valmessage : '', loginerror: ''});
 
 })
 
 app.get('/register-supplier-validate', function (req, res, next){
-	res.render('Login.ejs', { message :'', valmessage : 'Please enter NMRA ID, Pharmasist ID and Description!'});
+	res.render('Login.ejs', { message :'', valmessage : 'Please enter NMRA ID, Pharmasist ID and Description!', loginerror: ''});
 })
 
 app.get('/registration-error', function (req, res, next){
-	res.render('Login.ejs', { message :'', valmessage : 'Error in creating account!'});
+	res.render('Login.ejs', { message :'', valmessage : 'Error in creating account!', loginerror: ''});
+})
+
+app.get('/my-account-error', function (req, res, next){
+	res.render('Login.ejs', { message :'', valmessage : '', loginerror: 'You have not logged in!'});
+})
+
+app.get('/my-account-customer', function (req, res, next){
+	console.log("In my-account-customer")
+	console.log(req.session.firstName)
+	res.render('Account-Customer.ejs', { userFName: req.session.firstName,
+		userLName: req.session.lastName,
+		userAddress: req.session.street,
+		userCity: req.session.city,
+		userEmail: req.session.email,
+		userPassword: req.session.password,
+		valmessage: ''});
+})
+
+app.get('/customer-update-validate-success', function (req, res, next){
+	res.render('Account-customer.ejs', {userFName: req.session.firstName,
+		userLName: req.session.lastName,
+		userAddress: req.session.userAddress,
+		userCity: req.session.userCity,
+		userEmail: req.session.email,
+		userPassword :req.session.password,
+		valmessage : "success"});
+
+})
+
+app.get('/customer-update-validate-fail', function (req, res, next){
+	res.render('Account-customer.ejs', {userFName: req.session.firstName,
+		userLName: req.session.lastName,
+		userAddress: req.session.userAddress,
+		userCity: req.session.userCity,
+		userEmail: req.session.email,
+		userPassword :req.session.password,
+		valmessage : "fail"});
+
 })
 
 /*
@@ -211,8 +249,11 @@ app.post("/sign-in-process", function(req, res){
 			req.session.city = result.city;
 			req.session.password = result.password;
 
-			res.sendFile(htmlPath + 'success.html');
+			res.locals.userFname = result.firstName;
+			//res.sendFile(htmlPath + 'success.html');
 			//res.redirect('/');
+			res.redirect('/index');
+
 
 		}else {
 			req.session.loggedIn = "false";
@@ -267,6 +308,7 @@ app.get("/logout-process", function(req, res){
     res.redirect('/');
 });
 
+/*
 //This function displays the account settings page for customers.
 app.get('/Account.html', function (req, res){
 	//Check session status.
@@ -284,38 +326,80 @@ app.get('/Account.html', function (req, res){
 		return;
 	} 
 });
+*/
+
+app.get('/my-account', function (req, res){
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else if (req.session.userType== 'customer'){
+		console.log("**************Customer MyAccount");
+		res.redirect('/my-account-customer')
+
+	}else if (req.session.userType== 'supplier'){
+		res.sendFile(rangaFrontEnd + "Account-Supplier.html");
+		return;
+	} 
+});
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Customer
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This function processes the form to update customer profile data.
+
+app.post('/edit-customer-process', function(req, res) {
+	console.log('**************Received edit customer profile form data>');
+	console.log(req.body);
+
+	if(req.body.password == '' && req.body.confirmPassword.length == '' ){
+			customer.editProfile(req.body, req.session.userId, req.session.password, function(result){
+				console.log(result)
+				if(result == "success"){
+					res.redirect('/customer-update-validate-success')
+				}
+				else {
+					updtStatus = "fail";
+					res.redirect('/customer-update-validate-fail')
+				}
+		});
+	}
+});
+
+/*
 app.post('/edit-customer-process', function(req, res) {
 	console.log('**************Received edit customer profile form data>');
 	console.log(req.body);
 
 	//Check if session data exists.
+	/* Is not need as this check is perfromed in the index/login pages
 	if(typeof req.session.userId== 'undefined'){
 		res.json({'result' : 'User not logged in!'});
 		return;
-	}
+	}*/
 
 	//Sanitize form data here.
 	//Check if the new passwords are the same.
 	//Check if the user is trying to use an occupied email. 
 	//Check for empty fields if the user type is 'supplier'.
+	/*Handled in form level
 	if(req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
 	req.body.street== '' || req.body.city== 'null'){
 		res.json({'result' : 'Fields are empty!'});
 		return;
 	}
-
+	
+	
 	//Check if user wants to change the password. If a user has typed something, consider it as a trigger.
 	if(req.body.currentPassword!= ''){
 		//Check if the current stored password matches the entered current password.
 		if(req.body.currentPassword != req.session.password){
-			res.json({'result' : 'Wrong current password!'});
-			return;
+			//res.json({'result' : 'Wrong current password!'});
+			//return;
+			console.log('Wrong current password!')
+			res.redirect('/customer-details-validate-pwerror')
 		}
 
 		if(req.body.password!= req.body.confirmPassword== ''){
@@ -332,8 +416,10 @@ app.post('/edit-customer-process', function(req, res) {
 		customer.editProfile(req.body, req.session.userId, req.session.password, function(result){
 			res.json({'result' : result});
 		});
-	}
-});
+	}*
+});*/
+
+
 
 //This function delivers a sample data presentation page.
 app.get('/view-users', function(req, res) {
