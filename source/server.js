@@ -86,18 +86,14 @@ app.get('/', function(req, res){
 		});
 	}
   //res.render('Index.ejs', { userFName: req.session.firstName});
-	if(typeof req.session.userId== 'undefined'){
+	/*if(typeof req.session.userId== 'undefined'){
 		console.log("**************User not logged in!");
 		res.render('Index.ejs', { userFName: ''});
 
 	}else{
 		res.render('Index.ejs', { userFName: req.session.firstName});
-	}
+	}*/
 });
-
-app.get('/test', function(req, res){
-	res.sendFile(rangaFrontEnd + "Account-Supplier.html");
-  });
 
 app.get('/index', function (req, res){
 	//ejs 
@@ -120,7 +116,7 @@ app.get('/index', function (req, res){
 		});
 	}
 	//res.render('Index.ejs', { userFName: req.session.firstName});
-	res.redirect('/');
+	//res.redirect('/');
 });
 
 app.get('/login', function (req, res){
