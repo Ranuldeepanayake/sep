@@ -67,6 +67,10 @@ app.get('/', function(req, res){
   res.render('Index.ejs', { userFName: req.session.firstName});
 });
 
+app.get('/test', function(req, res){
+	res.sendFile(rangaFrontEnd + "Account-Supplier.html");
+  });
+
 app.get('/index', function (req, res){
 	//ejs 
 	res.render('Index.ejs', { userFName: req.session.firstName});
@@ -146,7 +150,7 @@ app.get('/my-account-supplier', function (req, res, next){
 		valmessage: ''});
 })
 
-app.get('/supplier-update-supplier-success', function (req, res, next){
+app.get('/supplier-update-validate-success', function (req, res, next){
 	res.render('Account-Supplier.ejs', {userFName: req.session.firstName,
 		userLName: req.session.lastName,
 		userAddress: req.session.userAddress,
@@ -334,14 +338,16 @@ app.post("/sign-in-process", function(req, res){
 				req.session.storeDescription = result.storeDescription;
 				req.session.storeImage= result.storeImage;
 	
-				res.sendFile(htmlPath + 'success.html');
-				//res.redirect('/');
+				//res.sendFile(htmlPath + 'success.html');
+				res.redirect('/my-account-supplier');
+				
 	
 			}else{
 				req.session.loggedIn = "false";
 				console.log("**************Invalid credentials!");
-				res.json({'result' : 'Invalid credentials!'});
+				//res.json({'result' : 'Invalid credentials!'});
 				//res.sendFile(htmlPath + 'invalid-credentials.html');
+				res.redirect('/login-validate');
 			}
 		});
 	}	
