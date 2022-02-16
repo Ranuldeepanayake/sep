@@ -195,7 +195,7 @@ app.post("/sign-up-process", function(req, res){
 	else if(req.body.userType== 'supplier')
 		{
 		//Checking additional supplier fields
-		if((req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '' || req.body.storeDescription)){
+		if(req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '' || req.body.storeDescription== ''){
 			res.redirect('/register-supplier-validate')
 		}
 		else {
