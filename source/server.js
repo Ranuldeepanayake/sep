@@ -94,6 +94,7 @@ app.get('/my-account-error', function (req, res, next){
 	res.render('Login.ejs', { message :'', valmessage : '', loginerror: 'You have not logged in!'});
 })
 
+//CUSTOMER EDIT PROFILE
 app.get('/my-account-customer', function (req, res, next){
 	console.log("In my-account-customer")
 	console.log(req.session.firstName)
@@ -127,6 +128,52 @@ app.get('/customer-update-validate-fail', function (req, res, next){
 		valmessage : "fail"});
 
 })
+
+
+//SUPPLIER EDIT PROFILE
+app.get('/my-account-supplier', function (req, res, next){
+	console.log("In my-account-supplier")
+	console.log(req.session.firstName)
+	res.render('Account-Supplier.ejs', { userFName: req.session.firstName,
+		userLName: req.session.lastName,
+		userAddress: req.session.street,
+		userCity: req.session.city,
+		userEmail: req.session.email,
+		userPassword: req.session.password,
+		userStoreDesc: req.session.storeDescription,
+		userNMRA: req.session.nmraRegistration,
+		userPharmID: req.session.pharmacistRegistration,
+		valmessage: ''});
+})
+
+app.get('/supplier-update-supplier-success', function (req, res, next){
+	res.render('Account-Supplier.ejs', {userFName: req.session.firstName,
+		userLName: req.session.lastName,
+		userAddress: req.session.userAddress,
+		userCity: req.session.userCity,
+		userEmail: req.session.email,
+		userPassword :req.session.password,
+		userStoreDesc: req.session.storeDescription,
+		userNMRA: req.session.nmraRegistration,
+		userPharmID: req.session.pharmacistRegistration,
+		valmessage : "success"});
+
+})
+
+app.get('/supplier-update-validate-fail', function (req, res, next){
+	res.render('Account-Supplier.ejs', {userFName: req.session.firstName,
+		userLName: req.session.lastName,
+		userAddress: req.session.userAddress,
+		userCity: req.session.userCity,
+		userEmail: req.session.email,
+		userPassword :req.session.password,
+		userStoreDesc: req.session.storeDescription,
+		userNMRA: req.session.nmraRegistration,
+		userPharmID: req.session.pharmacistRegistration,
+		valmessage : "fail"});
+
+})
+
 
 /*
 //This function also delivers the home page.
@@ -184,7 +231,8 @@ app.post("/sign-up-process", function(req, res){
 			//return;
 			console.log(result)
 			if(result == "success"){
-				res.sendFile(htmlPath + 'success.html');
+				//res.sendFile(htmlPath + 'success.html');
+				res.redirect("/index")
 			}
 			else {
 				res.redirect('/registration-error')
@@ -365,7 +413,33 @@ app.post('/edit-customer-process', function(req, res) {
 					res.redirect('/customer-update-validate-fail')
 				}
 		});
-	}
+	} else if (req.body.currentPassword!= ''){
+		//Check if the current stored password matches the entered current password.
+		if(req.body.currentPassword != req.session.password){
+			//res.json({'result' : 'Wrong current password!'});
+			//return;
+			console.log('Wrong current password!')
+			res.redirect('/customer-update-validate-fail')
+		}
+
+		else if(req.body.password != req.body.confirmPassword){
+			console.log('Passwords do not match!')
+			res.redirect('/customer-update-validate-fail')
+		}
+
+		else {
+			customer.editProfile(req.body, req.session.userId, req.body.password, function(result){
+				console.log(result)
+				if(result == "success"){
+					res.redirect('/customer-update-validate-success')
+				}
+				else {
+					updtStatus = "fail";
+					res.redirect('/customer-update-validate-fail')
+				}
+		});
+	}}
+
 });
 
 /*
@@ -704,6 +778,7 @@ app.get('/remove-from-cart', function(req, res) {
 //Supplier
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/*
 //This function processes the form to update supplier profile data.
 app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), function(req, res) {
 
@@ -767,7 +842,52 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 		});
 	}
 });
+*/
 
+
+app.post('/edit-supplier-process', function(req, res) {
+	console.log('**************Received edit supplier profile form data>');
+	console.log(req.body);
+
+	if(req.body.password == '' && req.body.confirmPassword.length == '' ){
+			customer.editProfile(req.body, req.session.userId, req.session.password, function(result){
+				console.log(result)
+				if(result == "success"){
+					res.redirect('/supplier-update-validate-success')
+				}
+				else {
+					updtStatus = "fail";
+					res.redirect('/supplier-update-validate-fail')
+				}
+		});
+	} else if (req.body.currentPassword!= ''){
+		//Check if the current stored password matches the entered current password.
+		if(req.body.currentPassword != req.session.password){
+			//res.json({'result' : 'Wrong current password!'});
+			//return;
+			console.log('Wrong current password!')
+			res.redirect('/supplier-update-validate-fail')
+		}
+
+		else if(req.body.password != req.body.confirmPassword){
+			console.log('Passwords do not match!')
+			res.redirect('/supplier-update-validate-fail')
+		}
+
+		else {
+			customer.editProfile(req.body, req.session.userId, req.body.password, function(result){
+				console.log(result)
+				if(result == "success"){
+					res.redirect('/supplier-update-validate-success')
+				}
+				else {
+					updtStatus = "fail";
+					res.redirect('/supplier-update-validate-fail')
+				}
+		});
+	}}
+
+});
 
 //This function delivers a page with a data table.
 app.get('/view-suppliers', function(req, res) {

@@ -36,7 +36,7 @@
                                 <% if(userFName.length > 0) { %>
                                     <p>Hi <%= userFName %></p>                                        
                                     <% } %>
-                                <p></a><a href="#">Logout</a></p>
+                                <p></a><a href="/logout-process">Logout</a></p>
                             </div>
                         </div>
                     </div>
@@ -139,8 +139,7 @@
                                         </button>
                                       </div>
                                     <% }  %>
-                                </div>
-                                <br>
+                                 <br>
                                 <div class="myaccount-content">
                                     <h3>Account Details
                                         <button class="btn btn-dark btn-round" style=" margin-top: 1px;
@@ -191,9 +190,9 @@
                                                 <div class="col-lg-6 col-12 mb-30">
                                                     <input id="confirm-pwd" placeholder="Confirm Password" type="password" name="confirmPassword" disabled="True" >
                                                 </div>
-
+                                                <span id='message' style="tab-size: 4;"></span>
                                                 <div class="col-md-12 col-12">
-                                                    <button class="btn btn-dark btn-round"><i class="fa fa-save" type ="submit"></i> Save Changes</button>
+                                                    <button class="btn btn-dark btn-round" type ="submit" id="save-changes"><i class="fa fa-save" ></i> Save Changes</button>
                                                 </div>
 
                                             </div>
@@ -329,11 +328,13 @@
               document.getElementById("address").disabled = false;
               document.getElementById("city").disabled = false;
               document.getElementById("last-name").disabled = false;
-              document.getElementById("last-name").disabled = false;
+              document.getElementById("current-pwd").disabled = false;
               document.getElementById("email").disabled = false;
               document.getElementById("new-pwd").disabled = false;
               document.getElementById("confirm-pwd").disabled = false;
             }
+
             </script>
+           
 </body>
 </html>
