@@ -47,7 +47,7 @@
                     <div class="row menu-center align-items-center justify-content-between">
                         <div class="col mt-15 mb-15">
                             <div class="header-logo">
-                                <a href="/index">
+                                <a href="/">
                                     <img src="assets/images/logo.png">
                                 </a>
                             </div>
@@ -65,7 +65,7 @@
                                 <nav>
                                     <ul>
                                         <li>
-                                            <a class="active" href="/index">HOME</a>
+                                            <a class="active" href="/">HOME</a>
                                         </li>
                                         <li>
                                             <a href="#">ABOUT</a>
@@ -145,257 +145,34 @@
                 </div>
 
                 <div class="row mbn-40">
-
+                    <% for(var i=0; i < suppliers.length; i++) { %>
                     <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-40">
-
-                        <div class="product-item">
-                            <div class="product-inner">
-                                <div class="image">
-                                    <img src="assets/images/pharmacies/pharmacy-1.jpg" alt="">
-                                    <div class="image-overlay">
-                                        <div class="action-buttons">
-                                            <button>Visit Pharmacy</button>
+                                <div class="product-item">
+                                    <div class="product-inner">
+                                        <div class="image">
+                                            <img src="assets/images/pharmacies/pharmacy-3.jpg" alt="">
+                                            <div class="image-overlay">
+                                                <div class="action-buttons">
+                                                    <button>Visit Pharmacy</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <div class="content-left">
+                                                <h4 class="title"><a href="single-product.html"><%= suppliers[i].store_description %></a></h4>
+                                                <h5 class="nmra">Location: <%= suppliers[i].street %></h5>
+                                                <hr>
+                                                <h5 class="nmra">NRMA ID: <%= suppliers[i].nmra_registration %></h5>
+                                                <h5 class="id">Pharmacist ID: <%= suppliers[i].pharmacist_registration %></h5>
+                                            </div>
+        
                                         </div>
                                     </div>
                                 </div>
-                                <div class="content">
-                                    <div class="content-left">
-                                        <h4 class="title"><a href="single-product.html">Healthguard Pharmacy</a></h4>
-                                        <div class="ratting">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <h5 class="nmra">NMRA : 384-1</h5>
-                                        <h5 class="id">Pharmacy ID : 123456789</h5>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-40">
-
-                        <div class="product-item">
-                            <div class="product-inner">
-                                <div class="image">
-                                    <img src="assets/images/pharmacies/pharmacy-2.jpg" alt="">
-                                    <div class="image-overlay">
-                                        <div class="action-buttons">
-                                            <button>Visit Pharmacy</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <div class="content-left">
-                                        <h4 class="title"><a href="single-product.html">Union Chemists</a></h4>
-                                        <div class="ratting">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-half-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <h5 class="nmra">NMRA : 356-2</h5>
-                                        <h5 class="id">Pharmacy ID : 123456789</h5>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-40">
-
-                        <div class="product-item">
-                            <div class="product-inner">
-                                <div class="image">
-                                    <img src="assets/images/pharmacies/pharmacy-3.jpg" alt="">
-                                    <div class="image-overlay">
-                                        <div class="action-buttons">
-                                            <button>Visit Pharmacy</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <div class="content-left">
-                                        <h4 class="title"><a href="single-product.html">City Pharmacy</a></h4>
-                                        <div class="ratting">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-half-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <h5 class="nmra">NMRA : 356-2</h5>
-                                        <h5 class="id">Pharmacy ID : 123456789</h5>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-40">
-
-                        <div class="product-item">
-                            <div class="product-inner">
-                                <div class="image">
-                                    <img src="assets/images/pharmacies/pharmacy-4.jpg" alt="">
-                                    <div class="image-overlay">
-                                        <div class="action-buttons">
-                                            <button>Visit Pharmacy</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <div class="content-left">
-                                        <h4 class="title"><a href="single-product.html">Rajya Osusala</a></h4>
-                                        <div class="ratting">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-half-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <h5 class="nmra">NMRA : 356-2</h5>
-                                        <h5 class="id">Pharmacy ID : 123456789</h5>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-40">
-
-                        <div class="product-item">
-                            <div class="product-inner">
-                                <div class="image">
-                                    <img src="assets/images/pharmacies/pharmacy-5.jpg" alt="">
-                                    <div class="image-overlay">
-                                        <div class="action-buttons">
-                                            <button>Visit Pharmacy</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <div class="content-left">
-                                        <h4 class="title"><a href="single-product.html">Healthaid Pharmacy</a></h4>
-                                        <div class="ratting">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-half-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <h5 class="nmra">NMRA : 384-1</h5>
-                                        <h5 class="id">Pharmacy ID : 123456789</h5>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-40">
-
-                        <div class="product-item">
-                            <div class="product-inner">
-                                <div class="image">
-                                    <img src="assets/images/pharmacies/pharmacy-6.jpg" alt="">
-                                    <div class="image-overlay">
-                                        <div class="action-buttons">
-                                            <button>Visit Pharmacy</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <div class="content-left">
-                                        <h4 class="title"><a href="single-product.html">New Waruna Pharmacy</a></h4>
-                                        <div class="ratting">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-half-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <h5 class="nmra">NMRA : 356-2</h5>
-                                        <h5 class="id">Pharmacy ID : 123456789</h5>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-40">
-
-                        <div class="product-item">
-                            <div class="product-inner">
-                                <div class="image">
-                                    <img src="assets/images/pharmacies/pharmacy-7.jpg" alt="">
-                                    <div class="image-overlay">
-                                        <div class="action-buttons">
-                                            <button>Visit Pharmacy</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <div class="content-left">
-                                        <h4 class="title"><a href="single-product.html">CFC Pharmacy</a></h4>
-                                        <div class="ratting">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-half-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <h5 class="nmra">NMRA : 356-2</h5>
-                                        <h5 class="id">Pharmacy ID : 123456789</h5>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-40">
-
-                        <div class="product-item">
-                            <div class="product-inner">
-                                <div class="image">
-                                    <img src="assets/images/pharmacies/pharmacy-8.jpg" alt="">
-                                    <div class="image-overlay">
-                                        <div class="action-buttons">
-                                            <button>Visit Pharmacy</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <div class="content-left">
-                                        <h4 class="title"><a href="single-product.html">The Mount Pharmacy</a></h4>
-                                        <div class="ratting">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-half-o"></i>
-                                        </div>
-                                        <h5 class="nmra">NMRA : 356-2</h5>
-                                        <h5 class="id">Pharmacy ID : 123456789</h5>
-                                    </div>
-
-                                </div>
-                            </div>
+                         </div>     
+                            <% } %>
+                        
+                   
                         </div>
                     </div>
 

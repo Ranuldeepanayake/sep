@@ -64,7 +64,26 @@ app.set('view engine', 'ejs')
 	}*/
 
 app.get('/', function(req, res){
-  res.render('Index.ejs', { userFName: req.session.firstName});
+	//ejs 
+	if(typeof req.session.city== 'undefined'){
+		supplier.showSuppliersVisitor(function (result){
+			console.log("**************Showing all suppliers>");
+			console.log(result);
+			//res.json(result);	
+			//return;
+			res.render('Index.ejs', { userFName: '', suppliers: result});
+		});
+
+	}else{
+		//Show localized data if user is logged in.
+		supplier.showSuppliersCustomer(req.session.city, function (result){
+			console.log("**************Showing suppliers in the nearest city>");
+			console.log(result);
+			//res.json(result);	
+			res.render('Index.ejs', { userFName: '', suppliers: result});
+		});
+	}
+  //res.render('Index.ejs', { userFName: req.session.firstName});
 });
 
 app.get('/test', function(req, res){
@@ -73,7 +92,25 @@ app.get('/test', function(req, res){
 
 app.get('/index', function (req, res){
 	//ejs 
-	res.render('Index.ejs', { userFName: req.session.firstName});
+	if(typeof req.session.city== 'undefined'){
+		supplier.showSuppliersVisitor(function (result){
+			console.log("**************Showing all suppliers>");
+			console.log(result);
+			//res.json(result);	
+			//return;
+			res.render('Index.ejs', { userFName: '', suppliers: result});
+		});
+
+	}else{
+		//Show localized data if user is logged in.
+		supplier.showSuppliersCustomer(req.session.city, function (result){
+			console.log("**************Showing suppliers in the nearest city>");
+			console.log(result);
+			//res.json(result);	
+			res.render('Index.ejs', { userFName: '', suppliers: result});
+		});
+	}
+	//res.render('Index.ejs', { userFName: req.session.firstName});
 });
 
 app.get('/login', function (req, res){
