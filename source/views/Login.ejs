@@ -179,7 +179,7 @@
                                     <div class="col-md-6 col-12 mb-15"><input name="nmraRegistration" type="text" placeholder="NMRA ID"></div>
                                     <div class="col-md-6 col-12 mb-15"><input name="pharmacistRegistration" type="text" placeholder="Pharmacist ID"></div>
                                     <div class="col-md-6 col-12 mb-15"><input name="storeDescription" type="text" placeholder="Store Description"></div>
-                                    <div class="col-md-12 col-12"><button class="btn btn-dark btn-round" type="submit" value="Register">Register</div>
+                                    <div class="col-md-12 col-12"><button id="register" class="btn btn-dark btn-round" type="submit" value="Register">Register</div>
                                 </div>
                             </form>
                             <br>
@@ -261,15 +261,18 @@
         var check = function() {
             if (document.getElementById('confirmPassword').value.length<1 && document.getElementById('password').value.length<1) {
             document.getElementById('message').style.color = 'red';
-            document.getElementById('message').innerHTML = 'Passwords do not Match';
+            document.getElementById("register").disabled = true;
+            document.getElementById('message').innerHTML = 'Passwords do not Match!';
 
         } else if (document.getElementById('confirmPassword').value == document.getElementById('password').value) {
             document.getElementById('message').style.color = 'green';
-            document.getElementById('message').innerHTML = 'Passwords Match';
+            document.getElementById("register").disabled = false;
+            document.getElementById('message').innerHTML = 'Passwords Match!';
         } 
          else {
             document.getElementById('message').style.color = 'red';
-            document.getElementById('message').innerHTML = 'Passwords do not match';
+            document.getElementById("register").disabled = true;
+            document.getElementById('message').innerHTML = 'Passwords do not match!';
         }
         }
     </script>
