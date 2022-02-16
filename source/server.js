@@ -74,7 +74,7 @@ app.get('/', function(req, res){
 			console.log(result);
 			//res.json(result);	
 			//return;
-			res.render('Index.ejs', { userFName: '', suppliers: result});
+			res.render(krishniViews+"Index.ejs", { userFName: '', suppliers: result});
 		});
 
 	}else{
@@ -83,7 +83,7 @@ app.get('/', function(req, res){
 			console.log("**************Showing suppliers in the nearest city>");
 			console.log(result);
 			//res.json(result);	
-			res.render('Index.ejs', { userFName: '', suppliers: result});
+			res.render(krishniViews+"Index.ejs", { userFName: '', suppliers: result});
 		});
 	}
   //res.render('Index.ejs', { userFName: req.session.firstName});
