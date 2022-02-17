@@ -150,6 +150,25 @@
 
                     <!--Form for signing up-->
                     <div class="col-lg-7 col-12 mb-40 ml-auto">
+                        <div class="col-12 mb-15"> 
+                            <% if(valmessage.length > 25) { %>
+                              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                  <%= valmessage %>
+                                  <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                              <% } else if (valmessage.length == 0) { %>
+                                    <span aria-hidden="true"></span>
+                              <% } else { %>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                  <%= valmessage %>
+                                  <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                              <% } %>
+                          </div>
                         <div class="login-register-form-wrap">
                             <h3>Register</h3>
                             <form action="sign-up-process" method="post">
@@ -183,25 +202,7 @@
                                 </div>
                             </form>
                             <br>
-                            <div class="col-12 mb-15"> 
-                                <% if(valmessage.length > 25) { %>
-                                  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                      <%= valmessage %>
-                                      <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                    </div>
-                                  <% } else if (valmessage.length == 0) { %>
-                                        <span aria-hidden="true"></span>
-                                  <% } else { %>
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                      <%= valmessage %>
-                                      <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                    </div>
-                                  <% } %>
-                              </div>
+                            
                         </div>
                     </div>
 
@@ -266,23 +267,20 @@
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-
         var check = function() {
             if (document.getElementById('confirmPassword').value.length<1 && document.getElementById('password').value.length<1) {
             document.getElementById('message').style.color = 'red';
             document.getElementById("register").disabled = true;
             document.getElementById('message').innerHTML = 'Passwords do not Match!';
-
-        } else if (document.getElementById('confirmPassword').value == document.getElementById('password').value) {
-            document.getElementById('message').style.color = 'green';
-            document.getElementById("register").disabled = false;
-            document.getElementById('message').innerHTML = 'Passwords Match!';
-        } 
-         else {
-            document.getElementById('message').style.color = 'red';
-            document.getElementById("register").disabled = true;
-            document.getElementById('message').innerHTML = 'Passwords do not match!';
-        }
+            } else if (document.getElementById('confirmPassword').value == document.getElementById('password').value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById("register").disabled = false;
+                document.getElementById('message').innerHTML = 'Passwords Match!';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById("register").disabled = true;
+                document.getElementById('message').innerHTML = 'Passwords do not match!';
+            }
         }
     </script>
 </body>
