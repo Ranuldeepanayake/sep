@@ -306,8 +306,8 @@ app.post("/sign-up-process", function(req, res){
 		//Save data in the database.
 		supplier.signUp(req.body, function(result){
 			console.log(result)
-			if(result = "success"){
-				res.redirect("/registration-success")
+			if(result == "success"){
+				res.redirect('/registration-success')
 			}
 			else{
 				res.redirect('/registration-error')
