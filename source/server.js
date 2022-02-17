@@ -142,6 +142,10 @@ app.get('/registration-error', function (req, res, next){
 	res.render('Login.ejs', { message :'', valmessage : 'Error in creating account!', loginerror: ''});
 })
 
+app.get('/registration-success', function (req, res, next){
+	res.render('Login.ejs', { message :'', valmessage : 'Registration successful!', loginerror: ''});
+})
+
 app.get('/my-account-error', function (req, res, next){
 	res.render('Login.ejs', { message :'', valmessage : '', loginerror: 'You have not logged in!'});
 })
@@ -284,7 +288,7 @@ app.post("/sign-up-process", function(req, res){
 			console.log(result)
 			if(result == "success"){
 				//res.sendFile(htmlPath + 'success.html');
-				res.redirect("/index")
+				res.redirect("/registration-success")
 			}
 			else {
 				res.redirect('/registration-error')

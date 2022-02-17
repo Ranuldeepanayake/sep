@@ -184,8 +184,17 @@
                             </form>
                             <br>
                             <div class="col-12 mb-15"> 
-                                <% if(valmessage.length > 0) { %>
+                                <% if(valmessage.length > 25) { %>
                                   <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                      <%= valmessage %>
+                                      <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                  <% } else if (valmessage.length == 0) { %>
+                                        <span aria-hidden="true"></span>
+                                  <% } else { %>
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
                                       <%= valmessage %>
                                       <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
                                         <span aria-hidden="true">&times;</span>
