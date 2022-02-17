@@ -200,15 +200,18 @@
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
-                                                    <input id="new-pwd" placeholder="New Password" type="password" name="password" disabled="True" >
+                                                    <input id="new-pwd" placeholder="New Password" type="password" name="password" disabled="True" onkeyup="check()">
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
-                                                    <input id="confirm-pwd" placeholder="Confirm Password" type="password" name="confirmPassword" disabled="True" >
+                                                    <input id="confirm-pwd" placeholder="Confirm Password" type="password" name="confirmPassword" disabled="True" onkeyup="check()">
                                                 </div>
-                                                <span id='message' style="tab-size: 4;"></span>
+                                                
+                                                <div><span id="message"></span></div>
+                                                
                                                 <div class="col-md-12 col-12">
-                                                    <button class="btn btn-dark btn-round" type="submit" id="-save-chages"><i class="fa fa-save"></i> Save Changes</button>
+                                                    <br>
+                                                    <button class="btn btn-dark btn-round" type="submit" id="save-changes" disabled="True"><i class="fa fa-save"></i> Save Changes</button>
                                                 </div>
 
                                             </div>
@@ -352,7 +355,23 @@
               document.getElementById("pharmacistRegistration").disabled = false;
               document.getElementById("storeDescription").disabled = false;
               document.getElementById("storeImage").disabled = false;
+              document.getElementById("save-changes").disabled = false;
             }
+
+            var check = function() {
+            if (document.getElementById('new-pwd').value.length<1 && document.getElementById('confirm-pwd').value.length<1) {
+                document.getElementById("save-changes").disabled = false;
+
+            } else if (document.getElementById('new-pwd').value == document.getElementById('confirm-pwd').value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = 'Passwords Match!';
+                document.getElementById("save-changes").disabled = false;
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'Passwords do not match!';
+                document.getElementById("save-changes").disabled = true;
+            }
+        }
         </script>
            
 </body>
