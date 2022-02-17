@@ -307,7 +307,7 @@ app.post("/sign-up-process", function(req, res){
 		supplier.signUp(req.body, function(result){
 			console.log(result)
 			if(result = "success"){
-				res.sendFile(htmlPath + 'success.html');
+				res.redirect("/registration-success")
 			}
 			else{
 				res.redirect('/registration-error')
