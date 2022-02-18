@@ -56,19 +56,6 @@ app.set('view engine', 'ejs')
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Common functions for the customer and the supllier.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//This function delivers the home page.
-/*app.get('/', function (req, res){
-	//ejs 
-	res.render('Index.ejs', { message :'', valmessage: ''})
-	//res.sendFile(rangaFrontEnd + "Index.html");
-	//Below code is as a reference for session checking.
-	/*if(req.session.loggedIn== 'true'){
-		//Send session data to Ranga's front end using REST (JSON).
-		res.send("Welcome " + req.session.firstName + " " + req.session.email);
-	}else{
-		res.sendFile(htmlPath + "index.html");
-	}*/
-
 app.get('/', function(req, res){
 	//res.redirect('/index');
 	//ejs
@@ -276,19 +263,6 @@ app.get('/supplier-update-validate-fail', function (req, res, next){
 
 })
 
-
-/*
-//This function also delivers the home page.
-app.get('/Index.html', function (req, res){
-	res.sendFile(rangaFrontEnd + "Index.html");
-});*/
-
-/*
-//This function also delivers the log in page.
-app.get('/Login.html', function (req, res){
-	res.sendFile(rangaFrontEnd + "Login.html");
-});*/
-
 //This function processes the sign up form.
 app.post("/sign-up-process", function(req, res){
 	console.log('**************Received sign up form data>');
@@ -460,26 +434,6 @@ app.get("/logout-process", function(req, res){
     res.redirect('/');
 });
 
-/*
-//This function displays the account settings page for customers.
-app.get('/Account.html', function (req, res){
-	//Check session status.
-	if(typeof req.session.userId== 'undefined'){
-		console.log("**************User not logged in!");
-		res.json({'status' : 'User not logged in'});	
-		return;
-
-	}else if (req.session.userType== 'customer'){
-		res.sendFile(rangaFrontEnd + "Account-Customer.html");
-		return;
-
-	}else if (req.session.userType== 'supplier'){
-		res.sendFile(rangaFrontEnd + "Account-Supplier.html");
-		return;
-	} 
-});
-*/
-
 app.get('/my-account', function (req, res){
 	//Check session status.
 	if(typeof req.session.userId== 'undefined'){
@@ -501,11 +455,11 @@ app.get('/my-account', function (req, res){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This function processes the form to update customer profile data.
-
 app.post('/edit-customer-process', function(req, res) {
 	console.log('**************Received edit customer profile form data>');
 	console.log(req.body);
 
+	//If the conditions are not met to trigger a password change.
 	if(req.body.password == '' && req.body.confirmPassword.length == '' ){
 			customer.editProfile(req.body, req.session.userId, req.session.password, function(result){
 				console.log(result)
@@ -517,6 +471,8 @@ app.post('/edit-customer-process', function(req, res) {
 					res.redirect('/customer-update-validate-fail')
 				}
 		});
+
+	//If the conditions are met to trigger a password change.	
 	} else if (req.body.currentPassword!= ''){
 		//Check if the current stored password matches the entered current password.
 		if(req.body.currentPassword != req.session.password){
@@ -546,60 +502,7 @@ app.post('/edit-customer-process', function(req, res) {
 
 });
 
-/*
-app.post('/edit-customer-process', function(req, res) {
-	console.log('**************Received edit customer profile form data>');
-	console.log(req.body);
-
-	//Check if session data exists.
-	/* Is not need as this check is perfromed in the index/login pages
-	if(typeof req.session.userId== 'undefined'){
-		res.json({'result' : 'User not logged in!'});
-		return;
-	}*/
-
-	//Sanitize form data here.
-	//Check if the new passwords are the same.
-	//Check if the user is trying to use an occupied email. 
-	//Check for empty fields if the user type is 'supplier'.
-	/*Handled in form level
-	if(req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
-	req.body.street== '' || req.body.city== 'null'){
-		res.json({'result' : 'Fields are empty!'});
-		return;
-	}
-	
-	
-	//Check if user wants to change the password. If a user has typed something, consider it as a trigger.
-	if(req.body.currentPassword!= ''){
-		//Check if the current stored password matches the entered current password.
-		if(req.body.currentPassword != req.session.password){
-			//res.json({'result' : 'Wrong current password!'});
-			//return;
-			console.log('Wrong current password!')
-			res.redirect('/customer-details-validate-pwerror')
-		}
-
-		if(req.body.password!= req.body.confirmPassword== ''){
-			res.json({'result' : 'New passwords do not match!'});
-			return;
-		}
-
-		customer.editProfile(req.body, req.session.userId, req.body.password, function(result){
-			res.json({'result' : result});
-		});
-
-	}else{
-		//If the user does not want to change the password.
-		customer.editProfile(req.body, req.session.userId, req.session.password, function(result){
-			res.json({'result' : result});
-		});
-	}*
-});*/
-
-
-
-//This function delivers a sample data presentation page.
+//This function delivers a sample data presentation page. **OLD UI
 app.get('/view-users', function(req, res) {
 	res.sendFile(htmlPath + "view-users.html");
 });
@@ -616,7 +519,6 @@ app.get('/view-users-process', function (req, res){
 
 //An API which sends session data to the caller (can be used to render user data and populate forms).
 app.get('/get-session', function(req, res) {
-
 	var object;
 
 	if((typeof req.session.userId== 'undefined') || req.session.loggedIn== 'false'){
@@ -669,6 +571,7 @@ function getSession(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Item
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //This function delivers the add item form.
 app.get('/add-item', function(req, res) {
 	res.sendFile(htmlPath + "add-item.html");
@@ -882,73 +785,7 @@ app.get('/remove-from-cart', function(req, res) {
 //Supplier
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
 //This function processes the form to update supplier profile data.
-app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), function(req, res) {
-
-	console.log('**************Received edit supplier profile form data>');
-	// req.file is the name of your file in the form above, here 'uploaded_file'
-	// req.body will hold the text fields, if there were any 
-	console.log(req.file, req.body);
-	console.log(req.body.itemName);
-
-	var storeImageFileName;
-
-	//Check if an image file is actually uploaded or not.
-	if(typeof req.file.filename== 'undefined' || req.file.filename== null || req.file.filename== ''){
-		storeImageFileName= 'null';
-	}else{
-		//Handle other file types and limit the maximum file size.
-		file.renameSync(storeImagePath + req.file.filename, storeImagePath + req.file.filename + '.jpg');
-
-		//Format the image file path name to be saved in the database.
-		storeImageFileName= storeImagePath + req.file.filename + '.jpg';
-	}
-
-	//Check if session data exists.
-	if(typeof req.session.userId== 'undefined'){
-		res.json({'result' : 'User not logged in!'});
-		return;
-	}
-
-	//Sanitize form data here.
-	//Check if the new passwords are the same.
-	//Check if the user is trying to use an occupied email. 
-	//Check for empty fields if the user type is 'supplier'.
-	if(req.body.email== '' || req.body.firstName== '' || req.body.lastName== '' || 
-	req.body.street== '' || req.body.city== 'null' || req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '' || 
-	req.body.storeDescription== ''){
-		res.json({'result' : 'Fields are empty!'});
-		return;
-	}
-
-	//Check if user wants to change the password. If a user has typed something, consider it as a trigger.
-	if(req.body.currentPassword!= ''){
-		//Check if the current stored password matches the entered current password.
-		if(req.body.currentPassword != req.session.password){
-			res.json({'result' : 'Wrong current password!'});
-			return;
-		}
-
-		if(req.body.password!= req.body.confirmPassword== ''){
-			res.json({'result' : 'New passwords do not match!'});
-			return;
-		}
-
-		supplier.editProfile(req.body, req.session.userId, req.body.password, storeImageFileName, function(result){
-			res.json({'result' : result});
-		});
-
-	}else{
-		//If the user does not want to change the password. Use the current password saved in the session.
-		supplier.editProfile(req.body, req.session.userId, req.session.password, storeImageFileName, function(result){
-			res.json({'result' : result});
-		});
-	}
-});
-*/
-
-
 app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), function(req, res) {
 	console.log('**************Received edit supplier profile form data>');
 	console.log(req.file);
@@ -972,6 +809,7 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 		storeImageFileName= newStoreImagePath + req.file.filename + '.jpg';
 	}
 
+	//If the conditions are not met to trigger a password change.
 	if(req.body.password == '' && req.body.confirmPassword.length == '' ){
 			supplier.editProfile(req.body, req.session.userId, req.session.password, storeImageFileName, function(result){
 				console.log(result)
@@ -983,6 +821,8 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 					res.redirect('/supplier-update-validate-fail')
 				}
 		});
+
+	//If the conditions are met to trigger a password change.		
 	} else if (req.body.currentPassword!= ''){
 		//Check if the current stored password matches the entered current password.
 		if(req.body.currentPassword != req.session.password){
@@ -1041,6 +881,31 @@ app.get('/view-suppliers-process', function (req, res){
 		});
 	}
 });
+
+//An API which sends a suppliers product data to the caller.
+app.get('/view-supplier-products', function (req, res){
+	console.log("**************Showing the selected supplier's data and items>");
+	
+	//////////Supplier ID is hardcoded for testing.
+	supplier.getSupplierData('3', function (resultSupplier){
+		console.log("**************Showing the selected supplier's profile data>");
+		console.log(resultSupplier);
+
+		supplier.getItemsList('3', function (resultItems){
+			console.log("**************Showing the selected supplier's items>");
+			console.log(resultItems);
+
+			//For testing only.
+			var object= [];
+			object.push(resultSupplier);
+			object.push(resultItems);
+			res.json(object);
+		});
+	});
+	
+});
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
