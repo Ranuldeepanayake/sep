@@ -164,15 +164,37 @@ app.get('/my-account-customer', function (req, res, next){
 })
 
 app.get('/customer-update-validate-success', function (req, res, next){
-	res.render('Account-customer.ejs', {userFName: req.session.firstName,
-		userLName: req.session.lastName,
-		userAddress: req.session.street,
-		userCity: req.session.city,
-		userEmail: req.session.email,
-		userPassword :req.session.password,
-		valmessage : "success"});
+	console.log("**************Updating session variables after a profile update>");
 
-})
+	//Check if the session exists.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+	}
+
+	//Pull the updated data from the database and update the session variables.
+	customer.getProfileData(req.session.userId, function (result){
+		console.log(result);
+
+		if(result!= 'failure'){
+			//Update session variables.
+			req.session.email = result.email;
+			req.session.firstName = result.firstName;
+			req.session.lastName = result.lastName;
+			req.session.street = result.street;
+			req.session.city = result.city;
+			req.session.password = result.password;
+		}
+		
+		res.render('Account-customer.ejs', {userFName: req.session.firstName,
+			userLName: req.session.lastName,
+			userAddress: req.session.street,
+			userCity: req.session.city,
+			userEmail: req.session.email,
+			userPassword :req.session.password,
+			valmessage : "success"});
+	});
+});
 
 app.get('/customer-update-validate-fail', function (req, res, next){
 	res.render('Account-customer.ejs', {userFName: req.session.firstName,
@@ -182,9 +204,7 @@ app.get('/customer-update-validate-fail', function (req, res, next){
 		userEmail: req.session.email,
 		userPassword :req.session.password,
 		valmessage : "fail"});
-
-})
-
+});
 
 //SUPPLIER EDIT PROFILE
 app.get('/my-account-supplier', function (req, res, next){
@@ -200,21 +220,47 @@ app.get('/my-account-supplier', function (req, res, next){
 		userNMRA: req.session.nmraRegistration,
 		userPharmID: req.session.pharmacistRegistration,
 		valmessage: ''});
-})
+});
 
 app.get('/supplier-update-validate-success', function (req, res, next){
-	res.render('Account-Supplier.ejs', {userFName: req.session.firstName,
-		userLName: req.session.lastName,
-		userAddress: req.session.street,
-		userCity: req.session.city,
-		userEmail: req.session.email,
-		userPassword :req.session.password,
-		userStoreDesc: req.session.storeDescription,
-		userNMRA: req.session.nmraRegistration,
-		userPharmID: req.session.pharmacistRegistration,
-		valmessage : "success"});
+	console.log("**************Updating session variables after a profile update>");
 
-})
+	//Check if the session exists.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+	}
+
+	//Pull the updated data from the database and update the session variables.
+	supplier.getProfileData(req.session.userId, function (result){
+		console.log(result);
+
+		if(result!= 'failure'){
+			//Update session variables.
+			req.session.email = result.email;
+			req.session.firstName = result.firstName;
+			req.session.lastName = result.lastName;
+			req.session.street = result.street;
+			req.session.city = result.city;
+			req.session.password = result.password;
+			req.session.nmraRegistration = result.nmraRegistration;
+			req.session.pharmacistRegistration = result.pharmacistRegistration;
+			req.session.storeDescription = result.storeDescription;
+			req.session.storeImage= result.storeImage;
+		}
+
+		res.render('Account-Supplier.ejs', {userFName: req.session.firstName,
+			userLName: req.session.lastName,
+			userAddress: req.session.street,
+			userCity: req.session.city,
+			userEmail: req.session.email,
+			userPassword :req.session.password,
+			userStoreDesc: req.session.storeDescription,
+			userNMRA: req.session.nmraRegistration,
+			userPharmID: req.session.pharmacistRegistration,
+			valmessage : "success"});
+		});
+});
 
 app.get('/supplier-update-validate-fail', function (req, res, next){
 	res.render('Account-Supplier.ejs', {userFName: req.session.firstName,

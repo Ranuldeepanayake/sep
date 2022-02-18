@@ -209,6 +209,56 @@ function editProfile(request, userId, password, storeImage, callback) {
 	});
 }
 
+//Handles showing data of a particular user.
+function getProfileData(userId, callback) {
+	var query;
+	var values;
+
+	createDbConnection();
+	query= `select * from user, supplier where user.user_id= supplier.supplier_id and user.user_id= ?`;
+	values= [userId];
+
+	connection.query(query, values, function(err, result, fields) {
+		  //console.log(results); // Results contains rows returned by server.
+		  //console.log(fields); // Fields contains extra meta data about results, if available.
+		if(err){
+			console.log(err.message);
+			connection.end();
+			return callback("failure");
+
+		}else{
+			if (result.length > 0) {
+				connection.end();
+
+				var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
+				lastName: "", street: "", city: "", password: "", nmraRegistration: "", pharmacistRegistration: "", 
+				storeDescription: "", storeImage: ""}
+
+				authObject.loggedIn= "true";
+				authObject.userId= result[0].user_id;
+				authObject.userType= result[0].type;
+				authObject.email= result[0].email;
+				authObject.firstName= result[0].first_name;
+				authObject.lastName= result[0].last_name;
+				authObject.street= result[0].street;
+				authObject.city= result[0].city;
+				authObject.password= result[0].password;
+				authObject.nmraRegistration= result[0].nmra_registration;
+				authObject.pharmacistRegistration= result[0].pharmacist_registration;
+				authObject.storeDescription= result[0].store_description;
+				authObject.storeImage= result[0].store_image;
+				
+				console.log(authObject);
+				return callback(authObject);
+
+			}else{
+				connection.end();
+				return callback("failure");
+			}
+		}
+	});
+}
+
 //Handles adding items.
 function addItem(request, imagePath, supplierId, callback) {
 	var query;
@@ -251,4 +301,5 @@ module.exports.signIn= signIn;
 module.exports.showSuppliersVisitor= showSuppliersVisitor;
 module.exports.showSuppliersCustomer= showSuppliersCustomer;
 module.exports.editProfile= editProfile;
+module.exports.getProfileData= getProfileData;
 module.exports.addItem= addItem;
