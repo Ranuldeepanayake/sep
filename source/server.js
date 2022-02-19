@@ -905,7 +905,11 @@ app.get('/view-supplier-products', function (req, res){
 	
 });
 
+/*app.get('/view-item', function (req, res){
+	supplier.getItem(1, result()){
 
+	}
+});*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

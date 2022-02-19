@@ -371,7 +371,31 @@ function getItemsList(userId, callback) {
 	});
 }
 
-//Handle showing items of a supplier to a customer or visitor.
+//Handle showing individual items of a supplier to a customer or visitor.
+function getItem(itemCode, callback) {
+	var query;
+	values= [itemCode];
+
+	createDbConnection();
+	query= `select item_code, type, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
+	where item_code= ?`;
+
+	connection.query(query, values,function(err, result, fields) {
+		//console.log(results); // Results contains rows returned by server.
+		//console.log(fields); // Fields contains extra meta data about results, if available.
+	  if(err){
+		  console.log(err.message);
+		  connection.end();
+		  return callback("failure");
+
+	  }else{
+		  connection.end();
+		  return callback(result);
+	  }
+  });
+}
+
+//Handle creating an order.
 
 //Exporting class members to the public.
 module.exports.signUp= signUp;
@@ -386,3 +410,4 @@ module.exports.getProfileData= getProfileData;
 module.exports.addItem= addItem;
 module.exports.getSupplierData= getSupplierData;
 module.exports.getItemsList= getItemsList;
+module.exports.getItem= getItem;
