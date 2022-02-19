@@ -811,6 +811,10 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 
 	//If the conditions are not met to trigger a password change.
 	if(req.body.password == '' && req.body.confirmPassword.length == '' ){
+
+			//Delete the existing image from the filesystem first.
+			file.unlinkSync('./views/' + req.session.storeImage);
+
 			supplier.editProfile(req.body, req.session.userId, req.session.password, storeImageFileName, function(result){
 				console.log(result)
 				if(result == "success"){
@@ -838,6 +842,10 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 		}
 
 		else {
+
+			//Delete the existing image from the filesystem first.
+			file.unlinkSync('./views/' + req.session.storeImage);
+			
 			supplier.editProfile(req.body, req.session.userId, req.body.password, storeImageFileName, function(result){
 				console.log(result)
 				if(result == "success"){
