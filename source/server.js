@@ -206,6 +206,7 @@ app.get('/my-account-supplier', function (req, res, next){
 		userStoreDesc: req.session.storeDescription,
 		userNMRA: req.session.nmraRegistration,
 		userPharmID: req.session.pharmacistRegistration,
+		userStoreImage: req.session.storeImage,
 		valmessage: ''});
 });
 
@@ -245,6 +246,7 @@ app.get('/supplier-update-validate-success', function (req, res, next){
 			userStoreDesc: req.session.storeDescription,
 			userNMRA: req.session.nmraRegistration,
 			userPharmID: req.session.pharmacistRegistration,
+			userStoreImage: req.session.storeImage,
 			valmessage : "success"});
 		});
 });
@@ -259,6 +261,7 @@ app.get('/supplier-update-validate-fail', function (req, res, next){
 		userStoreDesc: req.session.storeDescription,
 		userNMRA: req.session.nmraRegistration,
 		userPharmID: req.session.pharmacistRegistration,
+		userStoreImage: req.session.storeImage,
 		valmessage : "fail"});
 
 })
@@ -813,7 +816,11 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 	if(req.body.password == '' && req.body.confirmPassword.length == '' ){
 
 			//Delete the existing image from the filesystem first.
-			file.unlinkSync('./views/' + req.session.storeImage);
+			try {
+				file.unlinkSync('./views/' + req.session.storeImage);
+			} catch (error) {
+				console.log(error.message);
+			}
 
 			supplier.editProfile(req.body, req.session.userId, req.session.password, storeImageFileName, function(result){
 				console.log(result)
@@ -844,7 +851,11 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 		else {
 
 			//Delete the existing image from the filesystem first.
-			file.unlinkSync('./views/' + req.session.storeImage);
+			try {
+				file.unlinkSync('./views/' + req.session.storeImage);
+			} catch (error) {
+				console.log(error.message);
+			}
 			
 			supplier.editProfile(req.body, req.session.userId, req.body.password, storeImageFileName, function(result){
 				console.log(result)
