@@ -174,7 +174,7 @@
                             <form action="sign-up-process" method="post">
                                 <div class="row">
                                     <div class="col-md-12 col-12 mb-15">
-                                        <select name="userType" id="userType" required>
+                                        <select name="userType" id="userTypeRegister" required onchange="toggleRegisterView()">
                                             <option value="">Select User Type</option>
                                             <option value="customer">Customer</option>
                                             <option value="supplier">Supplier</option>
@@ -195,9 +195,9 @@
                                     <div class="col-md-6 col-12 mb-15"><input id = "password" name="password" type="password" placeholder="Password" onkeyup="check()" required></div>
                                     <div class="col-md-6 col-12 mb-15"><input id ="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password" onkeyup="check()" required></div>
                                     <span id='message' style="tab-size: 4;"></span>
-                                    <div class="col-md-6 col-12 mb-15"><input name="nmraRegistration" type="text" placeholder="NMRA ID"></div>
-                                    <div class="col-md-6 col-12 mb-15"><input name="pharmacistRegistration" type="text" placeholder="Pharmacist ID"></div>
-                                    <div class="col-md-6 col-12 mb-15"><input name="storeDescription" type="text" placeholder="Store Description"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input id="nmraRegistration" name="nmraRegistration" type="text" placeholder="NMRA ID"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input id= "pharmacistRegistration" name="pharmacistRegistration" type="text" placeholder="Pharmacist ID"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input id= "storeDescription" name="storeDescription" type="text" placeholder="Store Description"></div>
                                     <div class="col-md-12 col-12"><button id="register" class="btn btn-dark btn-round" type="submit" value="Register">Register</div>
                                 </div>
                             </form>
@@ -281,6 +281,27 @@
                 document.getElementById("register").disabled = true;
                 document.getElementById('message').innerHTML = 'Passwords do not match!';
             }
+        }
+
+        var toggleRegisterView = function() {
+
+            console.log('Function triggered!');
+
+            console.log(document.getElementById('userTypeRegister').value);
+
+            if (document.getElementById('userTypeRegister').value== 'customer') {
+                document.getElementById('nmraRegistration').style.visibility= "hidden";
+                document.getElementById('pharmacistRegistration').style.visibility= "hidden";
+                document.getElementById('storeDescription').style.visibility= "hidden";
+            
+            } else if (document.getElementById('userTypeRegister').value== 'supplier') {
+                document.getElementById('nmraRegistration').style.visibility= "visible";
+                document.getElementById('pharmacistRegistration').style.visibility= "visible";
+                document.getElementById('storeDescription').style.visibility= "visible";
+                //document.getElementById('message').style.color = 'green';
+                //document.getElementById("register").disabled = false;
+                //document.getElementById('message').innerHTML = 'Passwords Match!';
+            } 
         }
     </script>
 </body>
