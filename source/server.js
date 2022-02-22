@@ -32,9 +32,11 @@ const htmlPath= path.join(__dirname, '/html/');
 const storeImagePath= path.join(__dirname, '/views/images/pharmacies/'); 
 //const storeImagePath= './views/images/pharmacies/';
 const newStoreImagePath= 'images/pharmacies/';
-//const itemImagePath= path.join(__dirname, '/Medi2Door/assets/images/items/'); 
-const itemImagePath= './views/images/items/';
-const newItemImagePath= '/images/items/';
+
+const itemImagePath= path.join(__dirname, '/views/images/items/'); 
+//const itemImagePath= './views/images/items/';
+const newItemImagePath= 'images/items/';
+
 const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
 const krishniViews= path.join(__dirname, '/views/');
 
@@ -505,20 +507,20 @@ app.post('/edit-customer-process', function(req, res) {
 
 });
 
-//This function delivers a sample data presentation page. **OLD UI
-app.get('/view-users', function(req, res) {
+//This function delivers a sample data presentation page (Old UI).
+/*app.get('/view-users', function(req, res) {
 	res.sendFile(htmlPath + "view-users.html");
-});
+});*/
 
 //An API which sends user data to the caller.
-app.get('/view-users-process', function (req, res){
+/*app.get('/view-users-process', function (req, res){
 	//Below is a callback function since node.js doesn't support returning values from functions.
 	//Add session authentication as well.
 	customer.showUsers(function (result){
 		console.log(result);
 		res.json(result);	
 	});
-});
+});*/
 
 //An API which sends session data to the caller (can be used to render user data and populate forms).
 app.get('/get-session', function(req, res) {
@@ -572,29 +574,8 @@ function getSession(){
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Item
+//Cart functions
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//This function delivers the add item form.
-app.get('/add-item', function(req, res) {
-	res.sendFile(htmlPath + "add-item.html");
-});
-
-//An API which processes adding item information.
-app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req, res) {
-	console.log("Form received!");
-	// req.file is the name of your file in the form above, here 'uploaded_file'
-	// req.body will hold the text fields, if there were any 
-	console.log(req.file, req.body);
-	console.log(req.body.itemName);
-
-	//Handle other file types and limit the maximum file size.
-	file.renameSync(itemImagePath + req.file.filename, itemImagePath + req.file.filename + '.jpg');
-
-	supplier.addItem(req.body, itemImagePath + req.file.filename + '.jpg', req.session.userId, function(result){
-		res.sendFile(htmlPath + result + '.html');
-	});
-});
 
 //Test function to fetch items in the cart.
 app.get('/get-cart', function(req, res) {
@@ -872,13 +853,13 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 });
 
 //This function delivers a page with a data table (Old UI).
-app.get('/view-suppliers', function(req, res) {
+/*app.get('/view-suppliers', function(req, res) {
 	res.sendFile(htmlPath + "view-suppliers.html");
-});
+});*/
 
 
 //An API which sends supplier data to the caller.
-app.get('/view-suppliers-process', function (req, res){
+/*app.get('/view-suppliers-process', function (req, res){
 	//Below is a callback function since node.js doesn't support returning values from functions.
 	//Add session authentication as well.
 
@@ -899,10 +880,10 @@ app.get('/view-suppliers-process', function (req, res){
 			res.json(result);	
 		});
 	}
-});
+});*/
 
 //An API which sends a supplier's product data to the caller.
-//The request must include the 
+//The request must include the supplier ID which will be passed into the back end function.
 app.get('/view-supplier-products', function (req, res){
 	console.log("**************Showing the selected supplier's data and items>");
 	
@@ -919,17 +900,37 @@ app.get('/view-supplier-products', function (req, res){
 			var object= [];
 			object.push(resultSupplier);
 			object.push(resultItems);
-			res.json(object);
+			res.json(object);	//Change this as res.render().
 		});
 	});
 	
 });
 
-/*app.get('/view-item', function (req, res){
-	supplier.getItem(1, result()){
+//This function delivers the add item form (Old UI).
+app.get('/add-item', function(req, res) {
+	res.sendFile(htmlPath + "add-item.html");
+});
 
-	}
-});*/
+//An API which processes adding item information.
+app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req, res) {
+	console.log("Form received!");
+	// req.file is the name of your file in the form above, here 'uploaded_file'
+	// req.body will hold the text fields, if there were any 
+	console.log(req.file, req.body);
+	console.log(req.body.itemName);
+
+	//Handle other file types and limit the maximum file size.
+	file.renameSync(itemImagePath + req.file.filename, itemImagePath + req.file.filename + '.jpg');
+
+	supplier.addItem(req.body, newItemImagePath + req.file.filename + '.jpg', req.session.userId, function(result){
+		res.sendFile(htmlPath + result + '.html');
+	});
+});
+
+//An API to view an item.
+app.get('/view-item-process', function (req, res){
+	//supplier.getItem(1, result()){}
+});
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
