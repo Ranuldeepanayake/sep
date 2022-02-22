@@ -887,11 +887,13 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 app.get('/view-supplier-products', function (req, res){
 	console.log("**************Showing the selected supplier's data and items>");
 	
+	//Get supplier data first.
 	//////////Supplier ID is hardcoded for testing.
 	supplier.getSupplierData('3', function (resultSupplier){
 		console.log("**************Showing the selected supplier's profile data>");
 		console.log(resultSupplier);
 
+		//Then get the respective supplier's items list.
 		supplier.getItemsList('3', function (resultItems){
 			console.log("**************Showing the selected supplier's items>");
 			console.log(resultItems);
@@ -929,7 +931,12 @@ app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req,
 
 //An API to view an item.
 app.get('/view-item-process', function (req, res){
-	//supplier.getItem(1, result()){}
+	console.log("**************Showing the selected item details>");
+
+	supplier.getItem(req.body.itemCode, function(result){
+		console.log(result);
+		res.json(result);	//Change this as res.render().
+	});
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
