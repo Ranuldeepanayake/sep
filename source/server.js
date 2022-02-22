@@ -871,7 +871,7 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 
 });
 
-//This function delivers a page with a data table.
+//This function delivers a page with a data table (Old UI).
 app.get('/view-suppliers', function(req, res) {
 	res.sendFile(htmlPath + "view-suppliers.html");
 });
@@ -901,7 +901,8 @@ app.get('/view-suppliers-process', function (req, res){
 	}
 });
 
-//An API which sends a suppliers product data to the caller.
+//An API which sends a supplier's product data to the caller.
+//The request must include the 
 app.get('/view-supplier-products', function (req, res){
 	console.log("**************Showing the selected supplier's data and items>");
 	
