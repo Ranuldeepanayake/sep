@@ -32,8 +32,15 @@
                         </div>
                         <div class="col mt-10 mb-10">
                             <div class="header-top-right">
-                                <p><a href="#">My Account</a></p>
-                                <p><a href="#">Register</a><a href="Login.html">Login</a></p>
+                                <% if(userFName.length > 0) { %>
+                                    <p>Hi <%= userFName %></p>                                        
+                                    <% } %>
+                                <p><a href="/my-account">My Account</a></p>
+                                <% if(userFName.length > 0) { %>
+                                    <p><a href="/logout-process">Logout</a></p>                                        
+                                    <% } else { %>
+                                <p><a href="/login">Register</a><a href="/login">Login</a></p>
+                                <% } %>
                             </div>
                         </div>
                     </div>
@@ -44,7 +51,7 @@
                     <div class="row menu-center align-items-center justify-content-between">
                         <div class="col mt-15 mb-15">
                             <div class="header-logo">
-                                <a href="index.html">
+                                <a href="/">
                                     <img src="assets/images/logo.png">
                                 </a>
                             </div>
@@ -62,7 +69,7 @@
                                 <nav>
                                     <ul>
                                         <li>
-                                            <a class="active" href="Index.html">HOME</a>
+                                            <a class="active" href="/index">HOME</a>
                                         </li>
                                         <li>
                                             <a href="#">ABOUT</a>
@@ -89,8 +96,8 @@
 
                         <h1>Pharmacy</h1>
                         <ul class="page-breadcrumb">
-                            <li><a href="index.html">Medi2Door</a></li>
-                            <li><a href="Pharmacy.html">Pharmacy</a></li>
+                            <li><a href="/index">Medi2Door</a></li>
+                            <li><a href="/view-supplier-details">Pharmacy</a></li>
                         </ul>
 
                     </div>
@@ -103,32 +110,29 @@
                 <div class="row row-20 mb-10">
 
                     <div class="col-lg-4 col-12 mb-40">
-                        <img src="assets/images/pharmacies/pharmacy-1.jpg" alt="" />
+                        <img src="<%= SupplierDetails.storeImage %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                        width: 300px;
+                        height: 300px; object-fit: contain; align-self: center;"> 
                     </div>
 
                     <div class="col-lg-8 col-12 mb-40">
                         <div class="single-product-content">
                             <div class="head">
                                 <div class="head-left">
-                                    <h3 class="title">Healthguard Pharmacy</h3>
-                                    <div class="ratting">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                    </div>
+                                    <h2 class="title"> <%= SupplierDetails.storeDescription %></h3>
                                 </div>
 
                                 <div class="head-right">
-                                    <h5 class="nmra bold">NMRA : 384-1</h5>
-                                    <h5 class="id bold">Pharmacy ID : 123456789</h5>
+                                    <h5 class="nmra bold">NMRA : <%= SupplierDetails.nmraRegistration %></h5>
+                                    <h5 class="id bold">Pharmacy ID: <%= SupplierDetails.pharmacistRegistration %></h5>
                                 </div>
                             </div>
-                            <div class="description">
-                                <p class="text-justify">enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia res eos qui ratione voluptatem sequi Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora inform.</p>
-                            </div>
-                            <span class="availability">Location: <span>Near Dehiwala - Mount Lavinia</span></span>
+                           
+                            <h4 class="name">Supplier Name: <span><%= SupplierDetails.firstName %> <%= SupplierDetails.lastName %> </span></span></h4>
+                            <h4 class="email">Email: <span> <%= SupplierDetails.email %> </span></span></h4>
+                            <br>
+                            <br>
+                            <span class="availability">Location: <span><%= SupplierDetails.street %> - <%= SupplierDetails.city %> </span></span>
                             <!--<div class="row">
                                 <div class="col-lg-4 col-12 mb-30">
                                     <button class="btn btn-warning btn-round">Upload Prescription</button>
@@ -185,11 +189,17 @@
                                                     </div>
                                                 </div>
 
+                                               
+
+                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
                                                 <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                    <% if(ItemDetails[i].prescribed == 'false') { %>
                                                     <div class="product-item border">
                                                         <div class="product-inner">
                                                             <div class="image">
-                                                                <img src="assets/images/product/homecare/p1.jpg" alt="">
+                                                                <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                                                width: 300px;
+                                                                height: 300px; object-fit: contain; align-self: center;">
                                                                 <div class="image-overlay">
                                                                     <div class="action-buttons">
                                                                         <button>add to cart</button>
@@ -199,298 +209,26 @@
                                                             <div class="content">
                                                                 <div class="content-left">
                                                                     <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Panadol Tab
+                                                                        <a href="#">
+                                                                            <%= ItemDetails[i].name %>
                                                                         </a>
                                                                     </h4>
                                                                 </div>
                                                                 <div class="content-right">
-                                                                    <span class="price">Rs. 100</span>
+                                                                    <span class="price"> <%= ItemDetails[i].unit_price %></span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <% } %>
                                                 </div>
+                                                <% } %>
 
 
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p2.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Eno Tray '5s
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 175</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                
 
 
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p3.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Beautine
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 2190</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p4.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            DETTOL FABRIC PLASTER
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 10</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p5.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Dettol Antiseptic Liquid 210ml
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 262</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p6.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Eno Panidodam 30'S
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 1050</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p7.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Iodex Balm 1x18g
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 200</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p8.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Iodex Headfast 4g
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 70</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p9.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Panadeine 120'S
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 960</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p10.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Voltran 20g
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 360</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p11.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Healing Herbs Cough Syrup
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 430</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
+                                              
                                             </div>
                                         </div>
 
@@ -553,311 +291,42 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p1.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
+                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                    <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                        <% if(ItemDetails[i].prescribed == 'true') { %>
+                                                        <div class="product-item border">
+                                                            <div class="product-inner">
+                                                                <div class="image">
+                                                                    <img src="<%= ItemDetails[i].image %>" alt="" style="background-size: 150px;
+                                                                    width: 300px;
+                                                                    height: 300px; object-fit: contain; align-self: center;">
+                                                                    <div class="image-overlay">
+                                                                        <div class="action-buttons">
+                                                                            <button>add to cart</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="content">
+                                                                    <div class="content-left">
+                                                                        <h4 class="title">
+                                                                            <a href="#">
+                                                                                <%= ItemDetails[i].name %>
+                                                                            </a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="content-right">
+                                                                        <span class="price"> <%= ItemDetails[i].unit_price %></span>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Panadol Tab
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 100</span>
-                                                                </div>
-                                                            </div>
                                                         </div>
+                                                        <% } %>
                                                     </div>
-                                                </div>
+                                                    <% } %>
+    
 
 
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p2.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Eno Tray '5s
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 175</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p3.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Beautine
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 2190</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p4.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            DETTOL FABRIC PLASTER
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 10</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p5.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Dettol Antiseptic Liquid 210ml
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 262</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p6.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Eno Panidodam 30'S
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 1050</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p7.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Iodex Balm 1x18g
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 200</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p8.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Iodex Headfast 4g
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 70</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p9.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Panadeine 120'S
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 960</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p10.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Voltran 20g
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 360</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xl-3 col-md-6 col-12 mb-40">
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="assets/images/product/homecare/p11.jpg" alt="">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="single-product.html">
-                                                                            Healing Herbs Cough Syrup
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price">Rs. 430</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                              
 
                                             </div>
                                         </div>
