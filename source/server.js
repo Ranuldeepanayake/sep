@@ -905,28 +905,38 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 //The request must include the supplier ID which will be passed into the back end function.
 //Request must also include the type of product (prescribed or not).
 //Request can optionally have a filter string for the item category.
-app.get('/view-supplier-products', function (req, res){
+app.post('/view-supplier-products', function (req, res){
 	console.log("**************Showing the selected supplier's data and items>");
 	console.log(req.body);
 	
 	//Get supplier data first.
 	//////////Supplier ID is hardcoded for testing.
 	//supplier.getSupplierData(req.body.supplierId, function (resultSupplier)
-	supplier.getSupplierData('3', function (resultSupplier){
+	supplier.getSupplierData(req.body.user_id, function (resultSupplier){
 		console.log("**************Showing the selected supplier's profile data>");
 		console.log(resultSupplier);
 
 		//Then get the respective supplier's items list.
 		//supplier.getItemsList(req.body.supplierId, req.body.prescribed, request.body.itemCategory, function (resultItems)
-		supplier.getItemsList('3', 'false', 'null', function (resultItems){
+		supplier.getItemsList(req.body.user_id, 'false', 'null', function (resultItems){
 			console.log("**************Showing the selected supplier's items>");
 			console.log(resultItems);
 
 			//For testing only.
-			var object= [];
+			/*var object= [];
 			object.push(resultSupplier);
-			object.push(resultItems);
-			res.json(object);	//Change this as res.render().
+			object.push(resultItems);*/
+			//res.json(object);	//Change this as res.render().
+			
+			if(typeof req.session.loggedIn == "true")
+			{
+				res.render('Pharmacy.ejs', { userFName: req.session.firstName,  ItemDetails: resultItems, SupplierDetails: resultSupplier});	
+			}
+			else
+			{
+				res.render('Pharmacy.ejs', { userFName: '',  ItemDetails: resultItems, SupplierDetails: resultSupplier});
+			}
+			
 		});
 	});
 	
