@@ -49,14 +49,14 @@ app.use(session({
 	saveUninitialized: true
 }));
 app.use(express.static(__dirname + '/Medi2Door/'));	//Use Ranga's static resources.
-app.use(express.static(__dirname + '/views/'));	//Use Krishni's static resources.
+app.use(express.static(__dirname + '/views/'));	//Use Krishni's dynamic resources.
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs')
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Common functions for the customer and the supllier.
+//Routes for serving the front end.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get('/', function(req, res){
 	//res.redirect('/index');
@@ -114,32 +114,31 @@ app.get('/index', function (req, res){
 });
 
 app.get('/login', function (req, res){
-	//ejs 
 	res.render('Login.ejs', { message :'', valmessage: '', loginerror: ''})
 });
 
 app.get('/login-validate', function (req, res, next){
 	res.render('Login.ejs', { message : 'Invalid Credentials!', valmessage : '', loginerror: ''});
 
-})
+});
 
 app.get('/register-supplier-validate', function (req, res, next){
 	res.render('Login.ejs', { message :'', valmessage : 'Please enter NMRA ID, Pharmasist ID and Description!', loginerror: ''});
-})
+});
 
 app.get('/registration-error', function (req, res, next){
 	res.render('Login.ejs', { message :'', valmessage : 'Error in creating account!', loginerror: ''});
-})
+});
 
 app.get('/registration-success', function (req, res, next){
 	res.render('Login.ejs', { message :'', valmessage : 'Registration successful!', loginerror: ''});
-})
+});
 
 app.get('/my-account-error', function (req, res, next){
 	res.render('Login.ejs', { message :'', valmessage : '', loginerror: 'You have not logged in!'});
-})
+});
 
-//CUSTOMER EDIT PROFILE
+//CUSTOMER EDIT PROFILE routes.
 app.get('/my-account-customer', function (req, res, next){
 	console.log("In my-account-customer")
 	console.log(req.session.firstName)
@@ -150,7 +149,7 @@ app.get('/my-account-customer', function (req, res, next){
 		userEmail: req.session.email,
 		userPassword: req.session.password,
 		valmessage: ''});
-})
+});
 
 app.get('/customer-update-validate-success', function (req, res, next){
 	console.log("**************Updating session variables after a profile update>");
@@ -195,7 +194,7 @@ app.get('/customer-update-validate-fail', function (req, res, next){
 		valmessage : "fail"});
 });
 
-//SUPPLIER EDIT PROFILE
+//SUPPLIER EDIT PROFILE routes.
 app.get('/my-account-supplier', function (req, res, next){
 	console.log("In my-account-supplier")
 	console.log(req.session.firstName)
@@ -266,7 +265,20 @@ app.get('/supplier-update-validate-fail', function (req, res, next){
 		userStoreImage: req.session.storeImage,
 		valmessage : "fail"});
 
-})
+});
+
+//Product catalog related routes.
+app.get('/customer-product-catalog', function (req, res){
+	//res.render('Login.ejs', { message :'', valmessage: '', loginerror: ''})
+});
+
+app.get('/customer-product-detail', function (req, res){
+	//res.render('Login.ejs', { message :'', valmessage: '', loginerror: ''})
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Common functions (back end)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This function processes the sign up form.
 app.post("/sign-up-process", function(req, res){
@@ -341,7 +353,6 @@ app.post("/sign-up-process", function(req, res){
 	}
 	}
 });
-
 
 //This function processes the login form.
 app.post("/sign-in-process", function(req, res){
@@ -439,6 +450,7 @@ app.get("/logout-process", function(req, res){
     res.redirect('/');
 });
 
+//This functions routes to the proper edit profile page.
 app.get('/my-account', function (req, res){
 	//Check session status.
 	if(typeof req.session.userId== 'undefined'){
@@ -456,7 +468,7 @@ app.get('/my-account', function (req, res){
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Customer
+//Customer functions (back end)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This function processes the form to update customer profile data.
@@ -574,7 +586,7 @@ function getSession(){
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Cart functions
+//Cart functions (back end)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Test function to fetch items in the cart.
@@ -765,8 +777,15 @@ app.get('/remove-from-cart', function(req, res) {
 	}
 });
 
+//Test function for checking out the cart.
+//Create an order.
+//Create order items from the cart session array.
+app.post('/checkout-process', function(req, res) {
+
+});
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Supplier
+//Supplier functions (back end)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This function processes the form to update supplier profile data.
