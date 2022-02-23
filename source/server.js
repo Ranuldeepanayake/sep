@@ -884,17 +884,22 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 
 //An API which sends a supplier's product data to the caller.
 //The request must include the supplier ID which will be passed into the back end function.
+//Request must also include the type of product (prescribed or not).
+//Request can optionally have a filter string for the item category.
 app.get('/view-supplier-products', function (req, res){
 	console.log("**************Showing the selected supplier's data and items>");
+	console.log(req.body);
 	
 	//Get supplier data first.
 	//////////Supplier ID is hardcoded for testing.
+	//supplier.getSupplierData(req.body.supplierId, function (resultSupplier)
 	supplier.getSupplierData('3', function (resultSupplier){
 		console.log("**************Showing the selected supplier's profile data>");
 		console.log(resultSupplier);
 
 		//Then get the respective supplier's items list.
-		supplier.getItemsList('3', function (resultItems){
+		//supplier.getItemsList(req.body.supplierId, req.body.prescribed, request.body.itemCategory, function (resultItems)
+		supplier.getItemsList('3', 'false', 'null', function (resultItems){
 			console.log("**************Showing the selected supplier's items>");
 			console.log(resultItems);
 
@@ -929,11 +934,11 @@ app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req,
 	});
 });
 
-//An API to view an item.
+//An API to view an item. The caller must send 
 app.get('/view-item-process', function (req, res){
 	console.log("**************Showing the selected item details>");
 
-	supplier.getItem(req.body.itemCode, function(result){
+	supplier.getItem(1, function(result){
 		console.log(result);
 		res.json(result);	//Change this as res.render().
 	});

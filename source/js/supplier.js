@@ -348,13 +348,28 @@ function addItem(request, imagePath, supplierId, callback) {
 }
 
 //Handle showing items of a supplier to a customer or visitor.
-function getItemsList(userId, callback) {
+function getItemsList(userId, prescribed, itemCategory, callback) {
 	var query;
-	values= [userId];
+	values;
+
+	//Check for undefined input.
+	if(typeof prescribed== 'undefined' || typeof itemCategory== 'undefined'){
+		return callback("failure");
+	}
+
+	//Dynamic query selection.
+	if(itemCategory== 'null'){
+		query= `select item_code, type, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
+		where supplier_id= ? and prescribed= ?`;
+		values= [userId, prescribed];
+
+	}else if(itemCategory!= 'null'){
+		query= `select item_code, type, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
+		where supplier_id= ? and prescribed= ?  and type like ?`;	
+		values= [userId, prescribed, itemCategory];
+	}
 
 	createDbConnection();
-	query= `select item_code, type, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
-	where supplier_id= ?`;
 
 	connection.query(query, values,function(err, result, fields) {
 		  //console.log(results); // Results contains rows returned by server.
