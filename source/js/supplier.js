@@ -350,7 +350,8 @@ function addItem(request, imagePath, supplierId, callback) {
 //Handle showing items of a supplier to a customer or visitor.
 function getItemsList(userId, prescribed, itemCategory, callback) {
 	var query;
-	values;
+	var values = [];
+	console.log(userId,prescribed, itemCategory, callback)
 
 	//Check for undefined input.
 	if(typeof prescribed== 'undefined' || typeof itemCategory== 'undefined'){
