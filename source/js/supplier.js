@@ -330,7 +330,7 @@ function addItem(request, imagePath, supplierId, callback) {
 	console.log(itemPrescribed);
 
 	createDbConnection();
-	query= `insert into item(type, name, description, prescribed, quantity, unit_price, image, supplier_id) 
+	query= `insert into item(category, name, description, prescribed, quantity, unit_price, image, supplier_id) 
 	values (?, ?, ?, ?, ?, ?, ?, ?)`;
 	values= [request.itemCategory, request.itemName, request.itemDescription, itemPrescribed, 
 		request.itemQuantity, request.itemUnitPrice, imagePath, supplierId];
@@ -351,7 +351,8 @@ function addItem(request, imagePath, supplierId, callback) {
 function getItemsList(userId, prescribed, itemCategory, callback) {
 	var query;
 	var values = [];
-	console.log(userId,prescribed, itemCategory, callback)
+
+	//console.log(userId,prescribed, itemCategory, callback)
 
 	//Check for undefined input.
 	if(typeof prescribed== 'undefined' || typeof itemCategory== 'undefined'){
@@ -360,12 +361,12 @@ function getItemsList(userId, prescribed, itemCategory, callback) {
 
 	//Dynamic query selection.
 	if(itemCategory== 'null'){
-		query= `select item_code, type, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
+		query= `select item_code, category, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
 		where supplier_id= ? and prescribed= ?`;
 		values= [userId, prescribed];
 
 	}else if(itemCategory!= 'null'){
-		query= `select item_code, type, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
+		query= `select item_code, category, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
 		where supplier_id= ? and prescribed= ?  and type like ?`;	
 		values= [userId, prescribed, itemCategory];
 	}
@@ -393,7 +394,7 @@ function getItem(itemCode, callback) {
 	values= [itemCode];
 
 	createDbConnection();
-	query= `select item_code, type, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
+	query= `select item_code, category, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
 	where item_code= ?`;
 
 	connection.query(query, values,function(err, result, fields) {

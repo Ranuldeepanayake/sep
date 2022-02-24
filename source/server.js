@@ -922,12 +922,6 @@ app.post('/view-supplier-products', function (req, res){
 			console.log("**************Showing the selected supplier's items>");
 			console.log(resultItems);
 
-			//For testing only.
-			/*var object= [];
-			object.push(resultSupplier);
-			object.push(resultItems);*/
-			//res.json(object);	//Change this as res.render().
-			
 			if(typeof req.session.loggedIn == "true")
 			{
 				res.render('Pharmacy.ejs', { userFName: req.session.firstName,  ItemDetails: resultItems, SupplierDetails: resultSupplier});	
