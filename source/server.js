@@ -579,12 +579,22 @@ app.get('/get-cart', function(req, res) {
 			//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
 
 			//Create the object.
-			var data= {cartItemNumber : '', cartItemId : '', cartItemQuantity : ''}
+			var data= {cartItemNumber : '', cartItemId : '', cartItemCategory: '', cartItemName: '', 
+			cartItemDescription: '', cartItemPrescribed: '', cartItemQuantity : '', cartItemUnitPrice: '', 
+			cartItemImage: '', cartItemSupplierId: ''}
 
 			//Assign session values to the object.
 			data.cartItemNumber= session.cartItemNumber[x];
 			data.cartItemId = session.cartItemId[x];
+			data.cartItemCategory= session.cartItemCategory[x];
+			data.cartItemName= session.cartItemName[x];
+			data.cartItemDescription = session.cartItemDescription[x];
+			data.cartItemPrescribed= session.cartItemPrescribed[x];
 			data.cartItemQuantity= session.cartItemQuantity[x];
+			data.cartItemUnitPrice= session.cartItemUnitPrice[x];
+			data.cartItemImage = session.cartItemImage[x];
+			data.cartItemSupplierId = session.cartItemSupplierId[x];
+
 			x++; //Increment to the next set of session elements.
 
 			//Push the object into an object array
@@ -602,14 +612,50 @@ app.get('/get-cart', function(req, res) {
 //Test function to add items to the cart.
 //The 'add item to cart' request must send the required parameters.
 app.post('/add-to-cart', function(req, res) {
-	console.log('**************Item details received>');
+	console.log('**************Item details received for addition to cart>');
 	console.log(req.body);
 
 	//Check if session array exists.
 	if(session.cartItemNumber){
+		
+
+		//If itemCount is equal to an existing itemNumber (happens after removing an item from the cart),
+		//increment the itemNumber than the highest number available.
+
+		//var maxItemNumber;
+		//var incrementItemNumber= 'false';
+		//Get array max
+		/*session.cartItemNumber.forEach(element =>{
+			if(element)
+		});*/
+
+
+		/*var i= 0;
+		session.cartItemNumber.forEach(element => {
+
+			if(element== maxItemNumber && session.itemCount== maxItemNumber){
+				incrementItemNumber= 'contigous';
+
+			}else if(){
+
+			}
+			
+			i++;
+		});	
+		
+		//If items have previously been removed from the middle.
+		if(incrementItemNumber== 'contigous'){
+			session.itemCount++;
+			session.cartItemNumber.push(session.itemCount);	
+		
+		//If items have not been removed from the middle and the array values are contigous.
+		}else if(incrementItemNumber== 'false'){
+			session.cartItemNumber.push(session.itemCount);	
+		}*/
+
 		//Add new item.
 		session.itemCount++;
-		session.cartItemNumber.push(session.itemCount);
+		session.cartItemNumber.push(session.itemCount);	
 
 		//Values must come from the request body.
 		session.cartItemId.push(req.body.itemCode);	
@@ -718,11 +764,17 @@ app.post('/add-to-cart', function(req, res) {
 	res.json(array);
 });
 
-//Test function to remove items from the cart.
-app.get('/remove-from-cart', function(req, res) {
+//Test function to remove items from the cart. Currently, only the item at the tail can be deleted.
+app.post('/remove-from-cart', function(req, res) {
+	console.log('**************Item details received for removal from cart>');
+	console.log(req.body);
+
+	//Item number has to be received from the form. This has been passed to the views using JSON.
+	//var removeIndex= req.body.itemNumber;	 
+
 	if(session.cartItemNumber){
 
-		//Handle if itemCount is 0.
+		//Handle if itemCount is 0. Destroy the cart session arrays.
 		if(session.itemCount== 0){
 			session.itemCount= null;
 			session.cartItemNumber= null;
@@ -740,12 +792,21 @@ app.get('/remove-from-cart', function(req, res) {
 			return;
 		}
 
-		//Remove item.
+		//Remove item. 
 		console.log('**************Removing item from cart session arrays>');
-		var cartItemNumber= session.itemCount;
+		var cartItemNumber= session.itemCount; //Will only delete the last item in the cart.
+
 		session.cartItemNumber.splice(cartItemNumber, cartItemNumber);
 		session.cartItemId.splice(cartItemNumber, cartItemNumber);
+		session.cartItemCategory.splice(cartItemNumber, cartItemNumber);
+		session.cartItemName.splice(cartItemNumber, cartItemNumber);
+		session.cartItemDescription.splice(cartItemNumber, cartItemNumber);
+		session.cartItemPrescribed.splice(cartItemNumber, cartItemNumber);
 		session.cartItemQuantity.splice(cartItemNumber, cartItemNumber);
+		session.cartItemUnitPrice.splice(removeIndex, cartItemNumber);
+		session.cartItemImage.splice(cartItemNumber, cartItemNumber);
+		session.cartItemSupplierId.splice(cartItemNumber, cartItemNumber);
+
 		session.itemCount= session.itemCount- 1;
 
 		//Display items.
@@ -754,6 +815,7 @@ app.get('/remove-from-cart', function(req, res) {
 		session.cartItemNumber.forEach(element => {
 			console.log('Item Number: ' + element);
 			console.log('Item ID: ' + session.cartItemId[i]);
+			console.log('Item Name: ' + session.cartItemName[i]);
 			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
 			i++;
 		});	
@@ -773,12 +835,22 @@ app.get('/remove-from-cart', function(req, res) {
 			//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
 
 			//Create the object.
-			var data= {cartItemNumber : '', cartItemId : '', cartItemQuantity : ''}
+			var data= {cartItemNumber : '', cartItemId : '', cartItemCategory: '', cartItemName: '', 
+			cartItemDescription: '', cartItemPrescribed: '', cartItemQuantity : '', cartItemUnitPrice: '', 
+			cartItemImage: '', cartItemSupplierId: ''}
 
 			//Assign session values to the object.
 			data.cartItemNumber= session.cartItemNumber[x];
 			data.cartItemId = session.cartItemId[x];
+			data.cartItemCategory= session.cartItemCategory[x];
+			data.cartItemName= session.cartItemName[x];
+			data.cartItemDescription = session.cartItemDescription[x];
+			data.cartItemPrescribed= session.cartItemPrescribed[x];
 			data.cartItemQuantity= session.cartItemQuantity[x];
+			data.cartItemUnitPrice= session.cartItemUnitPrice[x];
+			data.cartItemImage = session.cartItemImage[x];
+			data.cartItemSupplierId = session.cartItemSupplierId[x];
+
 			x++; //Increment to the next set of session elements.
 
 			//Push the object into an object array
