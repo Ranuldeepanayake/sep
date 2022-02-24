@@ -610,8 +610,17 @@ app.post('/add-to-cart', function(req, res) {
 		//Add new item.
 		session.itemCount++;
 		session.cartItemNumber.push(session.itemCount);
-		session.cartItemId.push(1); //Values must come from the request body.
-		session.cartItemQuantity.push(5); //Values must come from the request body.
+
+		//Values must come from the request body.
+		session.cartItemId.push(req.body.itemCode);	
+		session.cartItemCategory.push(req.body.itemCategory);
+		session.cartItemName.push(req.body.itemName);
+		session.cartItemDescription.push(req.body.itemDescription);
+		session.cartItemPrescribed.push(req.body.itemPrescribed);
+		session.cartItemQuantity.push(req.body.itemQuantity);
+		session.cartItemUnitPrice.push(req.body.itemUnitPrice);
+		session.cartItemImage.push(req.body.itemImage);
+		session.cartItemSupplierId.push(req.body.itemSupplierId);
 		//session.itemCount++;
 
 		//Display items for debugging.
@@ -620,6 +629,7 @@ app.post('/add-to-cart', function(req, res) {
 		session.cartItemNumber.forEach(element => {
 			console.log('Item Number: ' + element);
 			console.log('Item ID: ' + session.cartItemId[i]);
+			console.log('Item Name: ' + session.cartItemName[i]);
 			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
 			i++;
 		});	
@@ -657,19 +667,19 @@ app.post('/add-to-cart', function(req, res) {
 
 		console.log('**************New cart session arrays created and initialized>');
 
-		//Display items for debugging.
+		//Display items in the cart for debugging.
 		var i= 0;
 		console.log('**************Displaying cart session arrays>');
 		session.cartItemNumber.forEach(element => {
-			console.log('Item Number: ' + element);
+			console.log('Item Index: ' + element);
 			console.log('Item ID: ' + session.cartItemId[i]);
+			console.log('Item Name: ' + session.cartItemName[i]);
 			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
 			i++;
 		});	
 	}
 
 	//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
-
 	var x= 0;	//Incrementer.
 	var array= [];	//Array of objects.
 
@@ -682,12 +692,22 @@ app.post('/add-to-cart', function(req, res) {
 		//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
 
 		//Create the object.
-		var data= {cartItemNumber : '', cartItemId : '', cartItemQuantity : ''}
+		var data= {cartItemNumber : '', cartItemId : '', cartItemCategory: '', cartItemName: '', 
+		cartItemDescription: '', cartItemPrescribed: '', cartItemQuantity : '', cartItemUnitPrice: '', 
+		cartItemImage: '', cartItemSupplierId: ''}
 
 		//Assign session values to the object.
 		data.cartItemNumber= session.cartItemNumber[x];
 		data.cartItemId = session.cartItemId[x];
+		data.cartItemCategory= session.cartItemCategory[x];
+		data.cartItemName= session.cartItemName[x];
+		data.cartItemDescription = session.cartItemDescription[x];
+		data.cartItemPrescribed= session.cartItemPrescribed[x];
 		data.cartItemQuantity= session.cartItemQuantity[x];
+		data.cartItemUnitPrice= session.cartItemUnitPrice[x];
+		data.cartItemImage = session.cartItemImage[x];
+		data.cartItemSupplierId = session.cartItemSupplierId[x];
+		
 		x++; //Increment to the next set of session elements.
 
 		//Push the object into an object array
@@ -707,7 +727,15 @@ app.get('/remove-from-cart', function(req, res) {
 			session.itemCount= null;
 			session.cartItemNumber= null;
 			session.cartItemId= null;
+			session.cartItemCategory= null;
+			session.cartItemName= null;
+			session.cartItemDescription= null;
+			session.cartItemPrescribed= null;
 			session.cartItemQuantity= null;
+			session.cartItemUnitPrice= null;
+			session.cartItemImage= null;
+			session.cartItemSupplierId= null;
+
 			res.json({'status': 'Cart empty'});
 			return;
 		}
