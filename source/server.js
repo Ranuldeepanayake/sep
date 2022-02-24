@@ -318,13 +318,9 @@ app.post("/sign-up-process", function(req, res){
 	if(req.body.userType== 'customer'){
 		//Save data in the database.
 		customer.signUp(req.body, function(result){
-			//res.sendFile(htmlPath + result + '.html');
-			//res.end(result);
-			//res.json({'result' : result});
-			//return;
 			console.log(result)
+
 			if(result == "success"){
-				//res.sendFile(htmlPath + 'success.html');
 				res.redirect("/registration-success")
 			}
 			else {
@@ -358,18 +354,6 @@ app.post("/sign-up-process", function(req, res){
 app.post("/sign-in-process", function(req, res){
 	console.log('**************Received sign in form data>');
 	console.log(req.body);
-    /* Handling form validation in the Login.ejs file
-	//Check the account type using the form dropdown.
-	if(req.body.email== '' || req.body.password== ''){
-		res.json({'result' : 'Fields are empty!'});
-		return;
-	}
-
-	if(req.body.userType== 'null'){
-		res.json({'result' : 'Select user type!'});
-		return;
-	}
-	*/
 
 	if(req.body.userType== 'customer'){
 	customer.signIn(req.body, function (result){
@@ -519,21 +503,6 @@ app.post('/edit-customer-process', function(req, res) {
 
 });
 
-//This function delivers a sample data presentation page (Old UI).
-/*app.get('/view-users', function(req, res) {
-	res.sendFile(htmlPath + "view-users.html");
-});*/
-
-//An API which sends user data to the caller.
-/*app.get('/view-users-process', function (req, res){
-	//Below is a callback function since node.js doesn't support returning values from functions.
-	//Add session authentication as well.
-	customer.showUsers(function (result){
-		console.log(result);
-		res.json(result);	
-	});
-});*/
-
 //An API which sends session data to the caller (can be used to render user data and populate forms).
 app.get('/get-session', function(req, res) {
 	var object;
@@ -631,8 +600,10 @@ app.get('/get-cart', function(req, res) {
 });
 
 //Test function to add items to the cart.
-app.get('/add-to-cart', function(req, res) {
+//The 'add item to cart' request must send the required parameters.
+app.post('/add-to-cart', function(req, res) {
 	console.log('**************Item details received>');
+	console.log(req.body);
 
 	//Check if session array exists.
 	if(session.cartItemNumber){
@@ -654,16 +625,34 @@ app.get('/add-to-cart', function(req, res) {
 		});	
 
 	}else{
-		//Create session array if it doesn't exist.
-		session.itemCount= 0;	//To keep track of 
-		session.cartItemNumber= [];
-		session.cartItemId= [];
+		//Create session arrays if they don't exist (ininitializing the cart).
+		session.itemCount= 0;	//To keep track of the number of items in the session arrays (incrementer).
+		session.cartItemNumber= []; //To keep track of the number of items in the session arrays (index).
+
+		session.cartItemId= [];	//Item code.
+		session.cartItemCategory= [];
+		session.cartItemName= [];
+		session.cartItemDescription= [];
+		session.cartItemPrescribed= [];
 		session.cartItemQuantity= [];
+		session.cartItemUnitPrice= [];
+		session.cartItemImage= [];
+		session.cartItemSupplierId= [];
 
 		//Add the initial item.
 		session.cartItemNumber.push(session.itemCount);
-		session.cartItemId.push(1);	//Values must come from the request body.
-		session.cartItemQuantity.push(5);	//Values must come from the request body.
+
+		//Values must come from the request body.
+		session.cartItemId.push(req.body.itemCode);	
+		session.cartItemCategory.push(req.body.itemCategory);
+		session.cartItemName.push(req.body.itemName);
+		session.cartItemDescription.push(req.body.itemDescription);
+		session.cartItemPrescribed.push(req.body.itemPrescribed);
+		session.cartItemQuantity.push(req.body.itemQuantity);
+		session.cartItemUnitPrice.push(req.body.itemUnitPrice);
+		session.cartItemImage.push(req.body.itemImage);
+		session.cartItemSupplierId.push(req.body.itemSupplierId);
+		
 		//session.itemCount++;
 
 		console.log('**************New cart session arrays created and initialized>');
@@ -871,35 +860,6 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 
 });
 
-//This function delivers a page with a data table (Old UI).
-/*app.get('/view-suppliers', function(req, res) {
-	res.sendFile(htmlPath + "view-suppliers.html");
-});*/
-
-
-//An API which sends supplier data to the caller.
-/*app.get('/view-suppliers-process', function (req, res){
-	//Below is a callback function since node.js doesn't support returning values from functions.
-	//Add session authentication as well.
-
-	//Check if session data exists. Show unlocalized data if user is not logged in.
-	if(typeof req.session.city== 'undefined'){
-		supplier.showSuppliersVisitor(function (result){
-			console.log("**************Showing all suppliers>");
-			console.log(result);
-			res.json(result);	
-			return;
-		});
-
-	}else{
-		//Show localized data if user is logged in.
-		supplier.showSuppliersCustomer(req.session.city, function (result){
-			console.log("**************Showing suppliers in the nearest city>");
-			console.log(result);
-			res.json(result);	
-		});
-	}
-});*/
 
 //An API which sends a supplier's product data to the caller.
 //The request must include the supplier ID which will be passed into the back end function.
@@ -979,6 +939,51 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
+//This function delivers a page with a data table (Old UI).
+/*app.get('/view-suppliers', function(req, res) {
+	res.sendFile(htmlPath + "view-suppliers.html");
+});*/
+
+
+//An API which sends supplier data to the caller.
+/*app.get('/view-suppliers-process', function (req, res){
+	//Below is a callback function since node.js doesn't support returning values from functions.
+	//Add session authentication as well.
+
+	//Check if session data exists. Show unlocalized data if user is not logged in.
+	if(typeof req.session.city== 'undefined'){
+		supplier.showSuppliersVisitor(function (result){
+			console.log("**************Showing all suppliers>");
+			console.log(result);
+			res.json(result);	
+			return;
+		});
+
+	}else{
+		//Show localized data if user is logged in.
+		supplier.showSuppliersCustomer(req.session.city, function (result){
+			console.log("**************Showing suppliers in the nearest city>");
+			console.log(result);
+			res.json(result);	
+		});
+	}
+});*/
+
+//This function delivers a sample data presentation page (Old UI).
+/*app.get('/view-users', function(req, res) {
+	res.sendFile(htmlPath + "view-users.html");
+});*/
+
+//An API which sends user data to the caller.
+/*app.get('/view-users-process', function (req, res){
+	//Below is a callback function since node.js doesn't support returning values from functions.
+	//Add session authentication as well.
+	customer.showUsers(function (result){
+		console.log(result);
+		res.json(result);	
+	});
+});*/
+
 /*	//Create a JS object.
 	var object = {loggedIn : "", userName : "" }
 
@@ -992,4 +997,194 @@ app.listen(port, () => {
 	//Turn JSON string back to an object to be accessed.
 	console.log(JSON.parse(jason));
 	console.log(JSON.parse(jason).loggedIn);
+*/
+
+/*
+//Test function to fetch items in the cart.
+app.get('/get-cart', function(req, res) {
+	console.log('**************Fetching items in the cart>');
+
+	//Check if session array exists.
+	if(session.cartItemNumber){
+
+		//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
+
+		var x= 0;	//Incrementer.
+		var array= [];	//Array of objects.
+
+		//Loop through all elements in the cart session array.
+		session.cartItemNumber.forEach(element => {
+
+			//Code for debugging.
+			//console.log('Loop Item Number: ' + session.cartItemNumber[x]);
+			//console.log('Loop Item ID: ' + session.cartItemId[x]);
+			//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
+
+			//Create the object.
+			var data= {cartItemNumber : '', cartItemId : '', cartItemQuantity : ''}
+
+			//Assign session values to the object.
+			data.cartItemNumber= session.cartItemNumber[x];
+			data.cartItemId = session.cartItemId[x];
+			data.cartItemQuantity= session.cartItemQuantity[x];
+			x++; //Increment to the next set of session elements.
+
+			//Push the object into an object array
+			array.push(data); 
+		});	
+
+		//Send the object array to the caller as JSON.
+		res.json(array);
+
+	}else{
+		res.json({'status': 'Cart empty'});
+	}
+});
+
+//Test function to add items to the cart.
+app.get('/add-to-cart', function(req, res) {
+	console.log('**************Item details received>');
+
+	//Check if session array exists.
+	if(session.cartItemNumber){
+		//Add new item.
+		session.itemCount++;
+		session.cartItemNumber.push(session.itemCount);
+		session.cartItemId.push(1); //Values must come from the request body.
+		session.cartItemQuantity.push(5); //Values must come from the request body.
+		//session.itemCount++;
+
+		//Display items for debugging.
+		var i= 0;
+		console.log('**************Displaying cart session arrays>');
+		session.cartItemNumber.forEach(element => {
+			console.log('Item Number: ' + element);
+			console.log('Item ID: ' + session.cartItemId[i]);
+			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
+			i++;
+		});	
+
+	}else{
+		//Create session array if it doesn't exist.
+		session.itemCount= 0;	//To keep track of 
+		session.cartItemNumber= [];
+		session.cartItemId= [];
+		session.cartItemQuantity= [];
+
+		//Add the initial item.
+		session.cartItemNumber.push(session.itemCount);
+		session.cartItemId.push(1);	//Values must come from the request body.
+		session.cartItemQuantity.push(5);	//Values must come from the request body.
+		//session.itemCount++;
+
+		console.log('**************New cart session arrays created and initialized>');
+
+		//Display items for debugging.
+		var i= 0;
+		console.log('**************Displaying cart session arrays>');
+		session.cartItemNumber.forEach(element => {
+			console.log('Item Number: ' + element);
+			console.log('Item ID: ' + session.cartItemId[i]);
+			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
+			i++;
+		});	
+	}
+
+	//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
+
+	var x= 0;	//Incrementer.
+	var array= [];	//Array of objects.
+
+	//Loop through all elements in the cart session array.
+	session.cartItemNumber.forEach(element => {
+
+		//Code for debugging.
+		//console.log('Loop Item Number: ' + session.cartItemNumber[x]);
+		//console.log('Loop Item ID: ' + session.cartItemId[x]);
+		//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
+
+		//Create the object.
+		var data= {cartItemNumber : '', cartItemId : '', cartItemQuantity : ''}
+
+		//Assign session values to the object.
+		data.cartItemNumber= session.cartItemNumber[x];
+		data.cartItemId = session.cartItemId[x];
+		data.cartItemQuantity= session.cartItemQuantity[x];
+		x++; //Increment to the next set of session elements.
+
+		//Push the object into an object array
+		array.push(data); 
+	});	
+
+	//Send the object array to the caller as JSON.
+	res.json(array);
+});
+
+//Test function to remove items from the cart.
+app.get('/remove-from-cart', function(req, res) {
+	if(session.cartItemNumber){
+
+		//Handle if itemCount is 0.
+		if(session.itemCount== 0){
+			session.itemCount= null;
+			session.cartItemNumber= null;
+			session.cartItemId= null;
+			session.cartItemQuantity= null;
+			res.json({'status': 'Cart empty'});
+			return;
+		}
+
+		//Remove item.
+		console.log('**************Removing item from cart session arrays>');
+		var cartItemNumber= session.itemCount;
+		session.cartItemNumber.splice(cartItemNumber, cartItemNumber);
+		session.cartItemId.splice(cartItemNumber, cartItemNumber);
+		session.cartItemQuantity.splice(cartItemNumber, cartItemNumber);
+		session.itemCount= session.itemCount- 1;
+
+		//Display items.
+		var i= 0;
+		console.log('**************Displaying cart session arrays after removal>');
+		session.cartItemNumber.forEach(element => {
+			console.log('Item Number: ' + element);
+			console.log('Item ID: ' + session.cartItemId[i]);
+			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
+			i++;
+		});	
+
+
+		//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
+
+		var x= 0;	//Incrementer.
+		var array= [];	//Array of objects.
+
+		//Loop through all elements in the cart session array.
+		session.cartItemNumber.forEach(element => {
+
+			//Code for debugging.
+			//console.log('Loop Item Number: ' + session.cartItemNumber[x]);
+			//console.log('Loop Item ID: ' + session.cartItemId[x]);
+			//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
+
+			//Create the object.
+			var data= {cartItemNumber : '', cartItemId : '', cartItemQuantity : ''}
+
+			//Assign session values to the object.
+			data.cartItemNumber= session.cartItemNumber[x];
+			data.cartItemId = session.cartItemId[x];
+			data.cartItemQuantity= session.cartItemQuantity[x];
+			x++; //Increment to the next set of session elements.
+
+			//Push the object into an object array
+			array.push(data); 
+		});	
+
+		//Send the object array to the caller as JSON.
+		res.json(array);
+
+	}else{
+		console.log('**************No cart sessions!');
+		res.json({'status': 'Cart empty'});
+	}
+});
 */
