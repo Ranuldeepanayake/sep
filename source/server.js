@@ -568,7 +568,9 @@ app.get('/get-cart', function(req, res) {
 		//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
 
 		var x= 0;	//Incrementer.
-		var array= [];	//Array of objects.
+		var array= [];	//Array of cart item objects.
+		var objects= [];
+		var totalPrice= 0;
 
 		//Loop through all elements in the cart session array.
 		session.cartItemNumber.forEach(element => {
@@ -595,14 +597,20 @@ app.get('/get-cart', function(req, res) {
 			data.cartItemImage = session.cartItemImage[x];
 			data.cartItemSupplierId = session.cartItemSupplierId[x];
 
+			//Calculating total price.
+			totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
+
 			x++; //Increment to the next set of session elements.
 
 			//Push the object into an object array
 			array.push(data); 
 		});	
 
+		objects.push(array);
+		objects.push(totalPrice);
+
 		//Send the object array to the caller as JSON.
-		res.json(array);
+		res.json(objects);
 
 	}else{
 		res.json({'status': 'Cart empty'});
@@ -618,41 +626,6 @@ app.post('/add-to-cart', function(req, res) {
 	//Check if session array exists.
 	if(session.cartItemNumber){
 		
-
-		//If itemCount is equal to an existing itemNumber (happens after removing an item from the cart),
-		//increment the itemNumber than the highest number available.
-
-		//var maxItemNumber;
-		//var incrementItemNumber= 'false';
-		//Get array max
-		/*session.cartItemNumber.forEach(element =>{
-			if(element)
-		});*/
-
-
-		/*var i= 0;
-		session.cartItemNumber.forEach(element => {
-
-			if(element== maxItemNumber && session.itemCount== maxItemNumber){
-				incrementItemNumber= 'contigous';
-
-			}else if(){
-
-			}
-			
-			i++;
-		});	
-		
-		//If items have previously been removed from the middle.
-		if(incrementItemNumber== 'contigous'){
-			session.itemCount++;
-			session.cartItemNumber.push(session.itemCount);	
-		
-		//If items have not been removed from the middle and the array values are contigous.
-		}else if(incrementItemNumber== 'false'){
-			session.cartItemNumber.push(session.itemCount);	
-		}*/
-
 		//Add new item.
 		session.itemCount++;
 		session.cartItemNumber.push(session.itemCount);	
@@ -727,7 +700,9 @@ app.post('/add-to-cart', function(req, res) {
 
 	//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
 	var x= 0;	//Incrementer.
-	var array= [];	//Array of objects.
+	var array= [];	//Array of cart item objects.
+	var objects= [];
+	var totalPrice= 0;
 
 	//Loop through all elements in the cart session array.
 	session.cartItemNumber.forEach(element => {
@@ -753,6 +728,9 @@ app.post('/add-to-cart', function(req, res) {
 		data.cartItemUnitPrice= session.cartItemUnitPrice[x];
 		data.cartItemImage = session.cartItemImage[x];
 		data.cartItemSupplierId = session.cartItemSupplierId[x];
+
+		//Calculating total price.
+		totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
 		
 		x++; //Increment to the next set of session elements.
 
@@ -760,8 +738,11 @@ app.post('/add-to-cart', function(req, res) {
 		array.push(data); 
 	});	
 
+	objects.push(array);
+	objects.push(totalPrice);
+
 	//Send the object array to the caller as JSON.
-	res.json(array);
+	res.json(objects);
 });
 
 //Test function to remove items from the cart. Currently, only the item at the tail can be deleted.
@@ -770,7 +751,7 @@ app.post('/remove-from-cart', function(req, res) {
 	console.log(req.body);
 
 	//Item number has to be received from the form. This has been passed to the views using JSON.
-	//var removeIndex= req.body.itemNumber;	 
+	var removeIndex= req.body.itemNumber;	 
 
 	if(session.cartItemNumber){
 
@@ -794,19 +775,28 @@ app.post('/remove-from-cart', function(req, res) {
 
 		//Remove item. 
 		console.log('**************Removing item from cart session arrays>');
-		var cartItemNumber= session.itemCount; //Will only delete the last item in the cart.
+		//var cartItemNumber= session.itemCount; //Will only delete the last item in the cart.
 
-		session.cartItemNumber.splice(cartItemNumber, cartItemNumber);
-		session.cartItemId.splice(cartItemNumber, cartItemNumber);
-		session.cartItemCategory.splice(cartItemNumber, cartItemNumber);
-		session.cartItemName.splice(cartItemNumber, cartItemNumber);
-		session.cartItemDescription.splice(cartItemNumber, cartItemNumber);
-		session.cartItemPrescribed.splice(cartItemNumber, cartItemNumber);
-		session.cartItemQuantity.splice(cartItemNumber, cartItemNumber);
-		session.cartItemUnitPrice.splice(removeIndex, cartItemNumber);
-		session.cartItemImage.splice(cartItemNumber, cartItemNumber);
-		session.cartItemSupplierId.splice(cartItemNumber, cartItemNumber);
+		session.cartItemNumber.splice(removeIndex, removeIndex);
+		session.cartItemId.splice(removeIndex, removeIndex);
+		session.cartItemCategory.splice(removeIndex, removeIndex);
+		session.cartItemName.splice(removeIndex, removeIndex);
+		session.cartItemDescription.splice(removeIndex, removeIndex);
+		session.cartItemPrescribed.splice(removeIndex, removeIndex);
+		session.cartItemQuantity.splice(removeIndex, removeIndex);
+		session.cartItemUnitPrice.splice(removeIndex, removeIndex);
+		session.cartItemImage.splice(removeIndex, removeIndex);
+		session.cartItemSupplierId.splice(removeIndex, removeIndex);
 
+		//Rewrite the cartItemNumber array with consolidated index values after removing an item.
+		var k= 0;
+		console.log('**************Rewriting cartItemNumber index values after removal>');
+		session.cartItemNumber.forEach(element => {
+			session.cartItemNumber[k]= k;	//Try element= k as well;
+			k++;
+		});
+
+		//Decrement the item count.
 		session.itemCount= session.itemCount- 1;
 
 		//Display items.
@@ -824,7 +814,9 @@ app.post('/remove-from-cart', function(req, res) {
 		//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
 
 		var x= 0;	//Incrementer.
-		var array= [];	//Array of objects.
+		var array= [];	//Array of cart item objects.
+		var objects= [];
+		var totalPrice= 0;
 
 		//Loop through all elements in the cart session array.
 		session.cartItemNumber.forEach(element => {
@@ -851,14 +843,20 @@ app.post('/remove-from-cart', function(req, res) {
 			data.cartItemImage = session.cartItemImage[x];
 			data.cartItemSupplierId = session.cartItemSupplierId[x];
 
+			//Calculating total price.
+			totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
+
 			x++; //Increment to the next set of session elements.
 
 			//Push the object into an object array
 			array.push(data); 
 		});	
 
+		objects.push(array);
+		objects.push(totalPrice);
+
 		//Send the object array to the caller as JSON.
-		res.json(array);
+		res.json(objects);
 
 	}else{
 		console.log('**************No cart sessions!');
