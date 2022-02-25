@@ -228,10 +228,10 @@ function createOrderPrescribed(itemArray, totalPrice, supplierId, customerId, im
 }
 
 function testPromises(){
-	var query;
-	var data;	
+	//var query;
+	//var data;	
 
-	createDbConnection();
+	//createDbConnection();
 
 	//query= `select * from user`;
 	//const [rows, fields]= await connection.execute(query);
@@ -243,14 +243,37 @@ function testPromises(){
 	}*/
 	
 	display().then(function(result){
-		console.log(result);
+		//console.log(result);
 	});
 }
 
 async function display(){
-	var query= `select user_id, type, email, first_name, last_name, street, city from user`;
-	var result= await connection.promise().query(query);
-	return result[0];
+	console.log('Before printing');
+
+	createDbConnection();
+
+	var query= `select user_id, type, email, first_name, last_name, street, city from user where user_id= ?`;
+	var values;
+	var result;
+
+	//Enclose within a try-catch block for easier error handling.
+	try {
+		for(let i= 0; i< 3; i++){
+			values= [i];
+			result= await connection.promise().query(query, values);
+			console.log(result[0]);
+			//return result[0];
+		}
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return 'failure';
+	}
+	
+	console.log('After printing');
+	connection.end();
+	return 'success';
 }
 
 
