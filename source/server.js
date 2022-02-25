@@ -10,6 +10,7 @@ const file = require('fs');
 const multer  = require('multer');
 const uploadItemImage = multer({ dest: './views/images/items' });
 const uploadStoreImage = multer({ dest: './views/images/pharmacies' });
+const uploadPrescriptionImage = multer({ dest: './views/images/prescriptions' });
 //////////////////////////////////////////////////////////////////////////
 
 const customer = require('./js/customer.js');
@@ -29,13 +30,15 @@ const sessionSecret= 'sepprojectsessionsecret'
 
 //Path preparation.
 const htmlPath= path.join(__dirname, '/html/');
+
 const storeImagePath= path.join(__dirname, '/views/images/pharmacies/'); 
-//const storeImagePath= './views/images/pharmacies/';
 const newStoreImagePath= 'images/pharmacies/';
 
 const itemImagePath= path.join(__dirname, '/views/images/items/'); 
-//const itemImagePath= './views/images/items/';
 const newItemImagePath= 'images/items/';
+
+const prescriptionImagePath= path.join(__dirname, '/views/images/prescriptions/'); 
+const newPrescriptionImagePath= 'images/prescriptions/';
 
 const rangaFrontEnd= path.join(__dirname, '/Medi2Door/');
 const krishniViews= path.join(__dirname, '/views/');
@@ -571,6 +574,7 @@ app.get('/get-cart', function(req, res) {
 		var array= [];	//Array of cart item objects.
 		var objects= [];
 		var totalPrice= 0;
+		var prescribed= 'false';
 
 		//Loop through all elements in the cart session array.
 		session.cartItemNumber.forEach(element => {
@@ -600,6 +604,11 @@ app.get('/get-cart', function(req, res) {
 			//Calculating total price.
 			totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
 
+			//Check for prescribed items. Checking this once is enough. 
+			if(session.cartItemPrescribed== 'true'){
+				prescribed= 'true';
+			}
+
 			x++; //Increment to the next set of session elements.
 
 			//Push the object into an object array
@@ -607,7 +616,8 @@ app.get('/get-cart', function(req, res) {
 		});	
 
 		objects.push(array);
-		objects.push(totalPrice);
+		objects.push({'totalPrice': totalPrice});
+		objects.push({'prescribed': prescribed});
 
 		//Send the object array to the caller as JSON.
 		res.json(objects);
@@ -703,6 +713,7 @@ app.post('/add-to-cart', function(req, res) {
 	var array= [];	//Array of cart item objects.
 	var objects= [];
 	var totalPrice= 0;
+	var prescribed= 'false';
 
 	//Loop through all elements in the cart session array.
 	session.cartItemNumber.forEach(element => {
@@ -731,6 +742,11 @@ app.post('/add-to-cart', function(req, res) {
 
 		//Calculating total price.
 		totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
+
+		//Check for prescribed items. Checking this once is enough. 
+		if(session.cartItemPrescribed== 'true'){
+			prescribed= 'true';
+		}
 		
 		x++; //Increment to the next set of session elements.
 
@@ -739,7 +755,8 @@ app.post('/add-to-cart', function(req, res) {
 	});	
 
 	objects.push(array);
-	objects.push(totalPrice);
+	objects.push({'totalPrice': totalPrice});
+	objects.push({'prescribed': prescribed});
 
 	//Send the object array to the caller as JSON.
 	res.json(objects);
@@ -817,6 +834,77 @@ app.post('/remove-from-cart', function(req, res) {
 		var array= [];	//Array of cart item objects.
 		var objects= [];
 		var totalPrice= 0;
+		var prescribed= 'false';
+
+		//Loop through all elements in the cart session array.
+		session.cartItemNumber.forEach(element => {
+
+			//Code for debugging.
+			//console.log('Loop Item Number: ' + session.cartItemNumber[x]);
+			//console.log('Loop Item ID: ' + session.cartItemId[x]);
+			//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
+
+			//Create the object.
+			var data= {cartItemNumber : '', cartItemId : '', cartItemCategory: '', cartItemName: '', 
+			cartItemDescription: '', cartItemPrescribed: '', cartItemQuantity : '', cartItemUnitPrice: '', 
+			cartItemImage: '', cartItemSupplierId: ''}
+
+			//Assign session values to the object.
+			data.cartItemNumber= session.cartItemNumber[x];
+			data.cartItemId = session.cartItemId[x];
+			data.cartItemCategory= session.cartItemCategory[x];
+			data.cartItemName= session.cartItemName[x];
+			data.cartItemDescription = session.cartItemDescription[x];
+			data.cartItemPrescribed= session.cartItemPrescribed[x];
+			data.cartItemQuantity= session.cartItemQuantity[x];
+			data.cartItemUnitPrice= session.cartItemUnitPrice[x];
+			data.cartItemImage = session.cartItemImage[x];
+			data.cartItemSupplierId = session.cartItemSupplierId[x];
+
+			//Calculating total price.
+			totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
+			
+			//Check for prescribed items. Checking this once is enough. 
+			if(session.cartItemPrescribed== 'true'){
+				prescribed= 'true';
+			}
+
+			x++; //Increment to the next set of session elements.
+
+			//Push the object into an object array
+			array.push(data); 
+		});	
+
+		objects.push(array);
+		objects.push({'totalPrice': totalPrice});
+		objects.push({'prescribed': prescribed});
+
+		//Send the object array to the caller as JSON.
+		res.json(objects);
+
+	}else{
+		console.log('**************No cart sessions!');
+		res.json({'status': 'Cart empty'});
+	}
+});
+
+//Test function for checking out the cart.
+//Create an order.
+//Create order items from the cart session array.
+app.get('/checkout-process', uploadPrescriptionImage.single('prescriptionImage'), function(req, res) {
+	console.log('**************Creating order from the cart>');
+	console.log(req.body);
+	console.log(req.file);
+
+	//Check if session array exists.
+	if(session.cartItemNumber){
+
+		//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
+
+		var x= 0;	//Incrementer.
+		var array= [];	//Array of cart item objects.
+		var totalPrice= 0;
+		var prescribed= 'false';
 
 		//Loop through all elements in the cart session array.
 		session.cartItemNumber.forEach(element => {
@@ -846,28 +934,53 @@ app.post('/remove-from-cart', function(req, res) {
 			//Calculating total price.
 			totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
 
+			//Check for prescribed items. Checking this once is enough. 
+			if(session.cartItemPrescribed== 'true'){
+				prescribed= 'true';
+			}
+
 			x++; //Increment to the next set of session elements.
 
 			//Push the object into an object array
 			array.push(data); 
 		});	
 
-		objects.push(array);
-		objects.push(totalPrice);
+		//Choose the function depending on whether prescribed items are present or not.
+		//If prescribed items are in the cart.
+		if(prescribed== 'true'){
+			var prescriptionFileName= 'null';
 
-		//Send the object array to the caller as JSON.
-		res.json(objects);
+			//Check if an image file is actually uploaded or not.
+			if(typeof req.file== 'undefined' || req.file== null || req.file.filename== ''){
+				res.json({'status': 'failure'}); //Return if prescription is null.
+				return;
 
+			}else{
+				//Handle other file types and limit the maximum file size.
+				try {
+					file.renameSync(prescriptionImagePath + req.file.filename, prescriptionImagePath + req.file.filename + '.jpg');
+				} catch (error) {
+					console.log(error.message);
+				}
+				
+				//Format the image file path name to be saved in the database.
+				prescriptionFileName= newPrescriptionImagePath + req.file.filename + '.jpg';
+			}
+
+			customer.createOrderPrescribed(array, totalPrice, req.supplierId, req.session.userId, prescriptionFileName, function(result){
+				res.json(result);
+			});
+
+		//If prescribed items are not in the cart.
+		}else if(prescribed== 'false'){
+			customer.createOrder(array, totalPrice, req.supplierId, req.session.userId, function(result){
+				res.json(result);
+			});
+		}
+		
 	}else{
-		console.log('**************No cart sessions!');
 		res.json({'status': 'Cart empty'});
 	}
-});
-
-//Test function for checking out the cart.
-//Create an order.
-//Create order items from the cart session array.
-app.post('/checkout-process', function(req, res) {
 
 });
 

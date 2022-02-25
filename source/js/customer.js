@@ -142,7 +142,6 @@ function getProfileData(userId, callback) {
 	});
 }
 
-
 //Handles listing all the users.
 function showUsers(callback) {
 	var query;
@@ -187,9 +186,54 @@ function editProfile(request, userId, password, callback) {
 	});
 }
 
+//Handles creating an order.
+function createOrder(itemArray, totalPrice, supplierId, customerId, callback) {
+	/*var query;
+
+	createDbConnection();
+	query= `select user_id, type, email, first_name, last_name, street, city from user`;
+	connection.query(query,function(err, result, fields) {
+		  //console.log(results); // Results contains rows returned by server.
+		  //console.log(fields); // Fields contains extra meta data about results, if available.
+		if(err){
+			console.log(err.message);
+			connection.end();
+			return callback("failure");
+
+		}else{
+			connection.end();
+			return callback(result);
+		}
+	});*/
+}
+
+function createOrderPrescribed(itemArray, totalPrice, supplierId, customerId, imagePath, callback) {
+	/*var query;
+
+	createDbConnection();
+	query= `select user_id, type, email, first_name, last_name, street, city from user`;
+	connection.query(query,function(err, result, fields) {
+		  //console.log(results); // Results contains rows returned by server.
+		  //console.log(fields); // Fields contains extra meta data about results, if available.
+		if(err){
+			console.log(err.message);
+			connection.end();
+			return callback("failure");
+
+		}else{
+			connection.end();
+			return callback(result);
+		}
+	});*/
+}
+
 //Exporting class members to the public.
 module.exports.signUp= signUp;
 module.exports.signIn= signIn;
 module.exports.showUsers= showUsers;
+
 module.exports.editProfile= editProfile; 
 module.exports.getProfileData= getProfileData;
+
+module.exports.createOrder= createOrder;
+module.exports.createOrderPrescribed= createOrderPrescribed;
