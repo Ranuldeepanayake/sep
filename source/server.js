@@ -1107,6 +1107,11 @@ app.post('/view-supplier-products', function (req, res){
 	
 });
 
+app.get('/view-product-details', function (req, res){
+		console.log("**************Showing the selected item>");
+		console.log(req.body);
+});
+
 //This function delivers the add item form (Old UI).
 app.get('/add-item', function(req, res) {
 	res.sendFile(htmlPath + "add-item.html");
