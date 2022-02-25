@@ -891,7 +891,7 @@ app.post('/remove-from-cart', function(req, res) {
 //Test function for checking out the cart.
 //Create an order.
 //Create order items from the cart session array.
-app.get('/checkout-process', uploadPrescriptionImage.single('prescriptionImage'), function(req, res) {
+app.post('/checkout-process', uploadPrescriptionImage.single('prescriptionImage'), function(req, res) {
 	console.log('**************Creating order from the cart>');
 	console.log(req.body);
 	console.log(req.file);
@@ -1129,13 +1129,18 @@ app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req,
 });
 
 //An API to view an item. The caller must send 
-app.get('/view-item-process', function (req, res){
+app.post('/view-item-process', function (req, res){
 	console.log("**************Showing the selected item details>");
+	console.log(req.body.itemCode);
 
-	supplier.getItem(1, function(result){
+	supplier.getItem(req.body.itemCode, function(result){
 		console.log(result);
 		res.json(result);	//Change this as res.render().
 	});
+});
+
+app.get('/test', function(req, res){
+	customer.testPromises();
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

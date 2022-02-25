@@ -227,6 +227,33 @@ function createOrderPrescribed(itemArray, totalPrice, supplierId, customerId, im
 	});*/
 }
 
+function testPromises(){
+	var query;
+	var data;	
+
+	createDbConnection();
+
+	//query= `select * from user`;
+	//const [rows, fields]= await connection.execute(query);
+
+	/*for(let i= 0; i< 3; i++){
+		display().then(function(result){
+			console.log(result);
+		}).then(function(){ console.log('After')});
+	}*/
+	
+	display().then(function(result){
+		console.log(result);
+	});
+}
+
+async function display(){
+	var query= `select user_id, type, email, first_name, last_name, street, city from user`;
+	var result= await connection.promise().query(query);
+	return result[0];
+}
+
+
 //Exporting class members to the public.
 module.exports.signUp= signUp;
 module.exports.signIn= signIn;
@@ -237,3 +264,5 @@ module.exports.getProfileData= getProfileData;
 
 module.exports.createOrder= createOrder;
 module.exports.createOrderPrescribed= createOrderPrescribed;
+
+module.exports.testPromises= testPromises;
