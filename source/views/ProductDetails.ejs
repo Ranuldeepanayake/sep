@@ -33,8 +33,17 @@
                         </div>
                         <div class="col mt-10 mb-10">
                             <div class="header-top-right">
-                                <p><a href="Account.html">My Account</a></p>
-                                <p><a href="Login.html">Register</a><a href="Login.html">Login</a></p>
+                                <div class="header-top-right">
+                                    <% if(userFName.length > 0) { %>
+                                        <p>Hi <%= userFName %></p>                                        
+                                        <% } %>
+                                    <p><a href="/my-account">My Account</a></p>
+                                    <% if(userFName.length > 0) { %>
+                                        <p><a href="/logout-process">Logout</a></p>                                        
+                                        <% } else { %>
+                                    <p><a href="/login">Register</a><a href="/login">Login</a></p>
+                                    <% } %>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -45,7 +54,7 @@
                     <div class="row menu-center align-items-center justify-content-between">
                         <div class="col mt-15 mb-15">
                             <div class="header-logo">
-                                <a href="index.html">
+                                <a href="/index">
                                     <img src="assets/images/logo.png">
                                 </a>
                             </div>
@@ -63,7 +72,7 @@
                                 <nav>
                                     <ul>
                                         <li>
-                                            <a class="active" href="index.html">HOME</a>
+                                            <a class="active" href="/index">HOME</a>
                                         </li>
                                         <li>
                                             <a href="#">ABOUT</a>
@@ -89,8 +98,8 @@
 
                         <h1>Product Details</h1>
                         <ul class="page-breadcrumb">
-                            <li><a href="index.html">Medi2Door</a></li>
-                            <li><a href="Pharmacy.html">Pharmacy</a></li>
+                            <li><a href="/index">Medi2Door</a></li>
+                            <li><a href="/index">Pharmacy</a></li>
                             <li><a href="index.html">Product Details</a></li>
                         </ul>
 
@@ -107,7 +116,9 @@
                         <div class="row row-20 mb-10">
 
                             <div class="col-lg-6 col-12 mb-40">
-                                <img src="assets/images/product/homecare/p1.jpg" alt="" />
+                                <img src="<%= ItemDetails.image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                width: 300px;
+                                height: 300px; object-fit: contain; align-self: center;">
                             </div>
 
                             <div class="col-lg-6 col-12 mb-40">
@@ -115,31 +126,37 @@
 
                                     <div class="head">
                                         <div class="head-left">
-                                            <h3 class="title">Panadol Tab</h3>
+                                            <h3 class="title"><%= ItemDetails[0].name %></h3>
                                         </div>
-
+                                        
                                         <div class="head-right">
-                                            <span class="price">Rs. 100.00</span>
+                                            <span class="price">Rs.<%= ItemDetails[0].unit_price %>.00</span>
                                         </div>
                                     </div>
 
                                     <div class="description">
-                                        <p>enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia res eos qui ratione voluptatem sequi Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora inform</p>
+                                        <p><%= ItemDetails[0].description %></p>
                                     </div>
 
-                                    <span class="availability">Availability: <span>In Stock</span></span>
+                                    <span class="availability">Availability: 
+                                        <% if(ItemDetails[0].quantity == 0) { %>
+                                        <span style="color: crimson;">Not in Stock</span>
+                                        <% } else { %>
+                                        <span style="color: green;">In Stock</span>
+                                        <% } %>
+                                    </span>
 
                                     <div class="quantity-colors">
                                         <div class="quantity">
                                             <h5>Quantity:</h5>
-                                            <div class="pro-qty"><input type="text" value="1"></div>
+                                            <div class="pro-qty"><input type="text" value="<%= ItemDetails[0].quantity %>"></div>
                                         </div>
                                         <button class="btn btn-primary-cs btn-round"><i class="ti-shopping-cart"></i><span>ADD TO CART</span></button>
                                     </div>
 
                                     <div class="tags">
                                         <h5>Category:</h5>
-                                        <p>Home Medicine</p>
+                                        <p><%= ItemDetails[0].category %></p>
                                     </div>
                                 </div>
                             </div>
@@ -151,17 +168,12 @@
                             <div class="col-12">
                                 <ul class="pro-info-tab-list section nav">
                                     <li><a class="active" href="#more-info" data-toggle="tab">More info</a></li>
-                                    <li><a href="#reviews" data-toggle="tab">Reviews</a></li>
                                 </ul>
                             </div>
                             <!-- Tab panes -->
                             <div class="tab-content col-12">
                                 <div class="pro-info-tab tab-pane active" id="more-info">
-                                    <p>enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia res eos qui ratione voluptatem sequi Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora inform</p>
-                                </div>
-
-                                <div class="pro-info-tab tab-pane" id="reviews">
-                                    <a href="#">Be the first to write your review!</a>
+                                    <p><%= ItemDetails[0].description %></p>
                                 </div>
                             </div>
                         </div>
