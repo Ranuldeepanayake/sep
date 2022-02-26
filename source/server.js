@@ -1093,13 +1093,43 @@ app.post('/view-supplier-products', function (req, res){
 			console.log("**************Showing the selected supplier's items>");
 			console.log(resultItems);
 
+			var miscCount = 0
+			var mediCount = 0
+			var grocCount = 0
+			var otherCount = 0
+			let catCount = new Object();
+
+			for(var i=0; i < resultItems.length; i++)
+			{
+				if(resultItems[i].category == "Medicine")
+				{
+					mediCount += 1;
+				} else if (resultItems[i].category == "Grocery")
+				{
+					grocCount += 1;
+				} else if (resultItems[i].category == "Misc")
+				{
+					miscCount += 1;
+				} else
+				{
+					otherCount += 1; 
+				}
+			}
+
+			catCount.medicine = mediCount;
+			catCount.groceries = grocCount;
+			catCount.misc = miscCount;
+			catCount.other = otherCount;
+			console.log(catCount)
+
+
 			if(typeof req.session.loggedIn == "true")
 			{
-				res.render('Pharmacy.ejs', { userFName: req.session.firstName,  ItemDetails: resultItems, SupplierDetails: resultSupplier});	
+				res.render('Pharmacy.ejs', { userFName: req.session.firstName,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount});	
 			}
 			else
 			{
-				res.render('Pharmacy.ejs', { userFName: '',  ItemDetails: resultItems, SupplierDetails: resultSupplier});
+				res.render('Pharmacy.ejs', { userFName: '',  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount});
 			}
 			
 		});
