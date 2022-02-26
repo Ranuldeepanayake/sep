@@ -167,8 +167,9 @@
                                             <div class="row">
 
                                                 <div class="col-12">
+                                                    <!--
                                                     <div class="product-show">
-                                                        <h4>Show:</h4>
+                                                       <h4>Show:</h4>
                                                         <select class="nice-select">
                                                             <option>8</option>
                                                             <option>12</option>
@@ -187,6 +188,7 @@
                                                             <option>Price Descending</option>
                                                         </select>
                                                     </div>
+                                                -->
                                                 </div>
 
                                                
@@ -194,32 +196,33 @@
                                                 <% for(var i=0; i < ItemDetails.length; i++) { %>
                                                 <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                     <% if(ItemDetails[i].prescribed == 'false') { %>
-                                                    <div class="product-item border">
-                                                        <div class="product-inner">
-                                                            <div class="image">
-                                                                <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
-                                                                width: 300px;
-                                                                height: 300px; object-fit: contain; align-self: center;">
-                                                                <div class="image-overlay">
-                                                                    <div class="action-buttons">
-                                                                        <button>add to cart</button>
+                                                    <form action="view-item-process" method="post">
+                                                        <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
+                                                        <div class="product-item border">
+                                                            <div class="product-inner">
+                                                                <div class="image">
+                                                                    <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                                                    width: 300px;
+                                                                    height: 300px; object-fit: contain; align-self: center;">
+                                                                    <div class="image-overlay">
+                                                                        <div class="action-buttons">
+                                                                            <button>add to cart</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="content">
+                                                                    <div class="content-left">
+                                                                        <h4 class="title">
+                                                                           <a href="/view-item-process"><%= ItemDetails[i].name %></a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="content-right">
+                                                                        <span class="price"> <%= ItemDetails[i].unit_price %></span>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="content">
-                                                                <div class="content-left">
-                                                                    <h4 class="title">
-                                                                        <a href="#">
-                                                                            <%= ItemDetails[i].name %>
-                                                                        </a>
-                                                                    </h4>
-                                                                </div>
-                                                                <div class="content-right">
-                                                                    <span class="price"> <%= ItemDetails[i].unit_price %></span>
-                                                                </div>
-                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    </form>
                                                     <% } %>
                                                 </div>
                                                 <% } %>
@@ -237,11 +240,10 @@
                                             <div class="sidebar">
                                                 <h4 class="sidebar-title">Category</h4>
                                                 <ul class="sidebar-list">
-                                                    <li><a href="#">Groceries<span class="num">11</span></a></li>
-                                                    <li><a href="#">Wellness<span class="num">09</span></a></li>
-                                                    <li><a href="#">Medical Devices<span class="num">05</span></a></li>
-                                                    <li><a href="#">Personal Care <span class="num">03</span></a></li>
-                                                    <li><a href="#">Ayurvedic Products<span class="num">15</span></a></li>
+                                                    <li><a href="#">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
+                                                    <li><a href="#">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
+                                                    <li><a href="#">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
+                                                    <li><a href="#">Other<span class="num"><%= CategoryCount.other %></span></a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -265,9 +267,8 @@
                                     <div class="row row-30 mbn-40">
 
                                         <div class="col-xl-12 col-lg-12 col-12 order-1 order-lg-2 mb-40">
-                                            <div class="row">
-
-                                                <div class="col-12">
+                                            <div class="row">                                                
+                                                <div class="col-12"><!--
                                                     <div class="product-show">
                                                         <h4>Show:</h4>
                                                         <select class="nice-select">
@@ -287,7 +288,7 @@
                                                             <option>Price Ascending</option>
                                                             <option>Price Descending</option>
                                                         </select>
-                                                    </div>
+                                                    </div>-->
                                                 </div>
 
                                                 <% for(var i=0; i < ItemDetails.length; i++) { %>
