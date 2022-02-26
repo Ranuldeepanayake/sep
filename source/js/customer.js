@@ -232,11 +232,35 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 	//Enclose within a try-catch block for easier error handling.
 	try {
 		for(let i= 0; i< itemArray.length; i++){
+			//Insert into order item.
 			query= `insert into order_item (order_id, item_code, quantity) values (?, ?, ?)`;
 			values= [orderId, itemArray[i].itemId, itemArray[i].itemQuantity];
 
 			result= await connection.promise().query(query, values);
-			console.log('Added item ' + i);
+			console.log('Added order item ' + i);
+
+			//Get the existing quantity from item table.
+			query= `select quantity from item where item_code= ?`;
+			values= [itemArray[i].itemId];
+
+			result= await connection.promise().query(query, values);
+			var quantity= result[0][0].quantity;
+			console.log('Existing quantity: ' + quantity);
+
+			//Subtract and update the new quantity.
+			query= `update item set quantity= ? where item_code= ?`;
+			values= [(quantity- itemArray[i].itemQuantity), itemArray[i].itemId];
+
+			result= await connection.promise().query(query, values);
+
+			//Get the existing quantity from item table.
+			query= `select quantity from item where item_code= ?`;
+			values= [itemArray[i].itemId];
+
+			result= await connection.promise().query(query, values);
+			quantity= result[0][0].quantity;
+			console.log('New quantity: ' + quantity);
+
 		}
 		connection.end();
 		return callback("success");
