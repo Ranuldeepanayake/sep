@@ -62,14 +62,12 @@ app.set('view engine', 'ejs')
 //Routes for serving the front end.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get('/', function(req, res){
-	//res.redirect('/index');
-	//ejs
+	//Check if user is logged in
+	//Show all supplier data if user is not logged in.
 	if(typeof req.session.city== 'undefined'){
 		supplier.showSuppliersVisitor(function (result){
 			console.log("**************Showing all suppliers>");
 			console.log(result);
-			//res.json(result);	
-			//return;
 			res.render(krishniViews + 'Index.ejs', { userFName: '', suppliers: result});
 		});
 
@@ -78,28 +76,19 @@ app.get('/', function(req, res){
 		supplier.showSuppliersCustomer(req.session.city, function (result){
 			console.log("**************Showing suppliers in the nearest city>");
 			console.log(result);
-			//res.json(result);	
 			res.render(krishniViews + 'Index.ejs', { userFName: req.session.firstName, suppliers: result});
 		});
 	}
-  //res.render('Index.ejs', { userFName: req.session.firstName});
-	/*if(typeof req.session.userId== 'undefined'){
-		console.log("**************User not logged in!");
-		res.render('Index.ejs', { userFName: ''});
-
-	}else{
-		res.render('Index.ejs', { userFName: req.session.firstName});
-	}*/
 });
 
+//INDEX ROUTE: HOME
 app.get('/index', function (req, res){
-	//ejs 
+	//Check if user is logged in
+	//Show all supplier data if user is not logged in.
 	if(typeof req.session.city== 'undefined'){
 		supplier.showSuppliersVisitor(function (result){
 			console.log("**************Showing all suppliers>");
 			console.log(result);
-			//res.json(result);	
-			//return;
 			res.render('Index.ejs', { userFName: '', suppliers: result});
 		});
 
@@ -108,14 +97,12 @@ app.get('/index', function (req, res){
 		supplier.showSuppliersCustomer(req.session.city, function (result){
 			console.log("**************Showing suppliers in the nearest city>");
 			console.log(result);
-			//res.json(result);	
 			res.render('Index.ejs', { userFName: req.session.firstName, suppliers: result});
 		});
 	}
-	//res.render('Index.ejs', { userFName: req.session.firstName});
-	//res.redirect('/');
 });
 
+//LOGIN
 app.get('/login', function (req, res){
 	res.render('Login.ejs', { message :'', valmessage: '', loginerror: ''})
 });
@@ -125,6 +112,7 @@ app.get('/login-validate', function (req, res, next){
 
 });
 
+//REGISTER USER
 app.get('/register-supplier-validate', function (req, res, next){
 	res.render('Login.ejs', { message :'', valmessage : 'Please enter NMRA ID, Pharmasist ID and Description!', loginerror: ''});
 });
@@ -1093,10 +1081,11 @@ app.post('/view-supplier-products', function (req, res){
 			console.log("**************Showing the selected supplier's items>");
 			console.log(resultItems);
 
+			//Get Category Counts
 			var miscCount = 0
 			var mediCount = 0
 			var grocCount = 0
-			var otherCount = 0
+			var allCount = resultItems.length
 			let catCount = new Object();
 
 			for(var i=0; i < resultItems.length; i++)
@@ -1107,21 +1096,17 @@ app.post('/view-supplier-products', function (req, res){
 				} else if (resultItems[i].category == "Grocery")
 				{
 					grocCount += 1;
-				} else if (resultItems[i].category == "Misc")
+				} else 
 				{
 					miscCount += 1;
-				} else
-				{
-					otherCount += 1; 
 				}
 			}
 
 			catCount.medicine = mediCount;
 			catCount.groceries = grocCount;
 			catCount.misc = miscCount;
-			catCount.other = otherCount;
+			catCount.all = allCount;
 			console.log(catCount)
-
 
 			if(typeof req.session.loggedIn == "true")
 			{
@@ -1178,6 +1163,7 @@ app.post('/view-item-process', function (req, res){
 			}
 	});
 });
+
 
 app.get('/test', function(req, res){
 	customer.testPromises();
