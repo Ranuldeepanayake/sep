@@ -1107,11 +1107,6 @@ app.post('/view-supplier-products', function (req, res){
 	
 });
 
-app.get('/view-product-details', function (req, res){
-		console.log("**************Showing the selected item>");
-		console.log(req.body);
-});
-
 //This function delivers the add item form (Old UI).
 app.get('/add-item', function(req, res) {
 	res.sendFile(htmlPath + "add-item.html");
@@ -1139,8 +1134,18 @@ app.post('/view-item-process', function (req, res){
 	console.log(req.body.itemCode);
 
 	supplier.getItem(req.body.itemCode, function(result){
-		console.log(result);
-		res.json(result);	//Change this as res.render().
+		
+		//res.json(result);	//Change this as res.render().
+
+		if(typeof req.session.loggedIn == "true")
+			{
+				res.render('ProductDetails.ejs', { userFName: req.session.firstName,  ItemDetails: result});	
+			}
+			else
+			{
+				console.log(result);
+				res.render('ProductDetails.ejs', { userFName: '',  ItemDetails: result});
+			}
 	});
 });
 
