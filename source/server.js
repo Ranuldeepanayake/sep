@@ -995,6 +995,13 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 		} catch (error) {
 			console.log(error.message);
 		}
+
+		//Delete the existing image from the filesystem first.
+		try {
+			file.unlinkSync('./views/' + req.session.storeImage);
+		} catch (error) {
+			console.log(error.message);
+		}
 		
 		//Format the image file path name to be saved in the database.
 		storeImageFileName= newStoreImagePath + req.file.filename + '.jpg';
@@ -1002,14 +1009,6 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 
 	//If the conditions are not met to trigger a password change.
 	if(req.body.password == '' && req.body.confirmPassword.length == '' ){
-
-			//Delete the existing image from the filesystem first.
-			try {
-				file.unlinkSync('./views/' + req.session.storeImage);
-			} catch (error) {
-				console.log(error.message);
-			}
-
 			supplier.editProfile(req.body, req.session.userId, req.session.password, storeImageFileName, function(result){
 				console.log(result)
 				if(result == "success"){
@@ -1037,14 +1036,6 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 		}
 
 		else {
-
-			//Delete the existing image from the filesystem first.
-			try {
-				file.unlinkSync('./views/' + req.session.storeImage);
-			} catch (error) {
-				console.log(error.message);
-			}
-			
 			supplier.editProfile(req.body, req.session.userId, req.body.password, storeImageFileName, function(result){
 				console.log(result)
 				if(result == "success"){
