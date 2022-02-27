@@ -272,7 +272,87 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 	}
 }
 
-function createOrderPrescribed(itemArray, totalPrice, supplierId, customerId, imagePath, callback) {
+async function createOrderPrescribed(itemArray, totalPrice, supplierId, customerId, imagePath, callback) {
+	var query;
+	var values;
+	var result;
+	var orderId;
+
+	//Hard coded values for testing.
+	/*totalPrice= 1500;
+	supplierId= 3;
+	customerId= 1;
+	itemArray= [{'itemId': '1', 'itemQuantity' : '3'}, {'itemId': '2', 'itemQuantity' : '5'}];*/
+	//var date= '2022-02-26';
+
+	//Create a date object. This gives both the date and time but the database will filter out only the date when inserting since
+	//the column data type is date.
+	var date= new Date();
+
+	createDbConnection();
+
+	//Insert record into the order table first.
+	query= `insert into order_table (customer_id, supplier_id, date, prescription_needed, prescription_image, total_price) 
+			values (?, ?, ?, ?, ?, ?)`;
+	values= [customerId, supplierId, date, 'true', imagePath, totalPrice];
+
+	try {
+		//The await keyword waits for an asynchronous function's promise result (resolve/reject) effectively
+		//making it synchronous.
+		result= await connection.promise().query(query, values);
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+	
+	orderId= result[0].insertId;
+	console.log('Order ID: ' + orderId);
+
+
+	//Insert records into the order_item table in a loop.
+	//Enclose within a try-catch block for easier error handling.
+	try {
+		for(let i= 0; i< itemArray.length; i++){
+			//Insert into order item.
+			query= `insert into order_item (order_id, item_code, quantity) values (?, ?, ?)`;
+			values= [orderId, itemArray[i].itemId, itemArray[i].itemQuantity];
+
+			result= await connection.promise().query(query, values);
+			console.log('Added order item ' + i);
+
+			//Get the existing quantity from item table.
+			query= `select quantity from item where item_code= ?`;
+			values= [itemArray[i].itemId];
+
+			result= await connection.promise().query(query, values);
+			var quantity= result[0][0].quantity;
+			console.log('Existing quantity: ' + quantity);
+
+			//Subtract and update the new quantity.
+			query= `update item set quantity= ? where item_code= ?`;
+			values= [(quantity- itemArray[i].itemQuantity), itemArray[i].itemId];
+
+			result= await connection.promise().query(query, values);
+
+			//Get the existing quantity from item table.
+			query= `select quantity from item where item_code= ?`;
+			values= [itemArray[i].itemId];
+
+			result= await connection.promise().query(query, values);
+			quantity= result[0][0].quantity;
+			console.log('New quantity: ' + quantity);
+
+		}
+		connection.end();
+		return callback("success");
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
 }
 
 function testPromises(){
