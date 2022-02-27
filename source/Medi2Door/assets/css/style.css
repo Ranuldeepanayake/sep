@@ -96,6 +96,18 @@ button, input[type="submit"] {
     cursor: pointer;
 }
 
+.btn-primary-cs {
+    color: #fff;
+    background-color: #1b334d;
+    border-color: #1b334d;
+}
+
+    .btn-primary-cs:hover {
+        color: #fff;
+        background-color: #47cfca;
+        border-color: #47cfca;
+    }
+
 ul {
     list-style: outside none none;
     margin: 0;
@@ -726,6 +738,7 @@ img.mfp-img {
         .error-404 .back-btn:hover {
             background-color: #ff708a;
         }
+
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .error-404 h1 {
@@ -1761,7 +1774,7 @@ img.mfp-img {
     -webkit-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
     transform: translateX(-50%);
-    background-color:#fff;
+    background-color: #fff;
     padding: 10px;
     border-radius: 50px;
 }
@@ -3595,6 +3608,18 @@ img.mfp-img {
 /*  05. Product CSS
 /*----------------------------------------*/
 /*-- Noumber Of Product Show --*/
+
+.prescription-upload {
+    width: 80%;
+    border: 1px solid #333333;
+    background-color: transparent;
+    border-radius: 50px;
+    height: 44px;
+    line-height: 22px;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
 .product-show {
     float: left;
     display: -webkit-box;
@@ -3828,19 +3853,19 @@ img.mfp-img {
         -webkit-transition: all 0.3s ease 0s;
         -o-transition: all 0.3s ease 0s;
         transition: all 0.3s ease 0s;
-        padding: 20px 0;
+        padding: 20px 10px;
         position: absolute;
         left: 0;
         width: 100%;
-        bottom: -90px;
+        bottom: 0px;
         /*-- Content Left --*/
         /*-- Content Left --*/
     }
 
         .product-item .product-inner .content .content-left {
             -webkit-box-flex: 0;
-            -ms-flex: 0 0 calc(100% - 50px);
-            flex: 0 0 calc(100% - 50px);
+            -ms-flex: 0 0 calc(100% - 70px);
+            flex: 0 0 calc(100% - 70px);
             /*-- Title --*/
             /*-- Ratting --*/
             /*-- Size --*/
@@ -3949,14 +3974,14 @@ img.mfp-img {
         .product-item .product-inner .content .content-right {
             -webkit-box-flex: 0;
             -ms-flex: 0 0 50px;
-            flex: 0 0 50px;
+            flex: 0 0 70px;
             text-align: right;
         }
 
             .product-item .product-inner .content .content-right .price {
                 display: block;
                 font-family: "Dosis", sans-serif;
-                font-size: 24px;
+                font-size: 18px;
                 font-weight: 600;
                 color: #ff708a;
             }
@@ -5463,7 +5488,7 @@ img.mfp-img {
         width: 100%;
     }
 
-.checkout-form input {
+.checkout-form input, .checkout-form select {
     width: 100%;
     background-color: transparent;
     border: 1px solid #666666;
@@ -5815,7 +5840,7 @@ img.mfp-img {
 
 /*-- Sidebar List --*/
 .sidebar-list li {
-    margin-bottom: 15px;
+    margin-bottom: 30px;
 }
 
     .sidebar-list li:last-child {
@@ -5843,7 +5868,7 @@ img.mfp-img {
         }
 
         .sidebar-list li a:hover {
-            color: #ff708a;
+            color: #46ceca;
         }
 
 /*-- Sidebar Tag --*/
@@ -7075,10 +7100,10 @@ img.mfp-img {
         font-weight: 600;
     }
 
-            .login-register-form-wrap button:hover {
-                background-color: #47cfcb;
-                border-color: #47cfcb;
-            }
+        .login-register-form-wrap button:hover {
+            background-color: #47cfcb;
+            border-color: #47cfcb;
+        }
 
 
     .login-register-form-wrap select {
