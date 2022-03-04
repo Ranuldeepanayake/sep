@@ -34,11 +34,9 @@
                             <div class="header-top-right">
                                 <% if(userFName.length > 0) { %>
                                     <p>Hi <%= userFName %></p>                                        
-                                    <% } %>
-                                <p><a href="/my-account">My Account</a></p>
-                                <% if(userFName.length > 0) { %>
-                                    <p><a href="/logout-process">Logout</a></p>                                        
-                                    <% } else { %>
+                                    <p><a href="/my-account">My Account</a></p>
+                                    <p><a href="/logout-process">Logout</a></p>
+                                <% } else { %>
                                 <p><a href="/login">Register</a><a href="/login">Login</a></p>
                                 <% } %>
                             </div>
@@ -59,7 +57,7 @@
                         <div class="col order-2 order-lg-3">
                             <div class="header-shop-links">
                                 <div class="header-mini-cart">
-                                    <a href=""><img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.0</span></a>
+                                    <a href=""><img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.<%= totalPrice %></span></a>
                                 </div>
                             </div>
                         </div>
@@ -105,8 +103,28 @@
             </div>
         </div><!-- Page Banner Section End -->
         <!-- Product Section Start -->
-        <div class="product-section section pt-100">
+        <div class="product-section section pt-100">            
             <div class="container">
+                <div class="col-12 mb-15"> 
+                    <% if(message.length > 0) { %>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <%= message %>
+                            <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>                                  
+                    <% } else if (message.length == 0) { %>
+                        <span aria-hidden="true"></span>
+                    <% } else { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <span>Something went wrong!</span>
+                        <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <% } %>
+                </div>
+
                 <div class="row row-20 mb-10">
                     <div class="col-lg-4 col-12 mb-40">
                         <img src="<%= SupplierDetails.storeImage %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
@@ -135,8 +153,8 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row mb-50">
-                    
                     <!-- Tab panes -->
                     <!-- Landing -->
                     <div class="tab-content col-12" id="landing">
@@ -168,7 +186,11 @@
                                                                     height: 300px; object-fit: contain; align-self: center;">
                                                                     <div class="image-overlay">
                                                                         <div class="action-buttons">
-                                                                            <button>add to cart</button>
+                                                                            <% if(userFName.length > 0) { %>
+                                                                                <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                            <% } else { %>
+                                                                                <button title="Please log in!" disabled>add to cart</button>    
+                                                                            <% } %>
                                                                         </div>
                                                                     </div>
                                                                 </div>
