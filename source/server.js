@@ -625,7 +625,7 @@ app.get('/cart', function (req, res){
 			//Create the object.
 			var data= {cartItemNumber : '', cartItemId : '', cartItemCategory: '', cartItemName: '', 
 			cartItemDescription: '', cartItemPrescribed: '', cartItemQuantity : '', cartItemUnitPrice: '', 
-			cartItemImage: '', cartItemSupplierId: ''}
+			cartItemImage: '', cartItemSupplierId: '', cartItemSubTotal: ''}
 
 			//Assign session values to the object.
 			data.cartItemNumber= session.cartItemNumber[x];
@@ -641,8 +641,8 @@ app.get('/cart', function (req, res){
 
 			//Calculating sub total price.
 			var subtotal = 0;
-			subtotal= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
-			data.cartItemSubTotal = subtotal
+			subtotal= session.cartItemQuantity[x] * session.cartItemUnitPrice[x];
+			data.cartItemSubTotal = subtotal;
 
 			//Calculating total price.
 			totalPrice += subtotal;
@@ -783,7 +783,7 @@ app.post('/add-to-cart', function(req, res) {
 			i++;
 		});	
 
-		//calculate price
+		/*//calculate price
 		var totalPrice= 0;
 		totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
 		session.totalPrice = totalPrice
@@ -791,7 +791,7 @@ app.post('/add-to-cart', function(req, res) {
 		//redirect to page
 		supplier.getItem(req.body.itemCode, function(result){
 			res.render('ProductDetails.ejs', { totalPrice: session.totalPrice, userFName: session.userfirstname, ItemDetails: result});
-		});
+		});*/
 
 	}else{
 		//Create session arrays if they don't exist (ininitializing the cart).
@@ -846,6 +846,13 @@ app.post('/add-to-cart', function(req, res) {
 	var totalPrice= 0;
 	var prescribed= 'false';
 
+	//Need this when initiating the cart.
+	if((typeof session.totalPrice== 'undefined') || (session.totalPrice== 'null')){
+		totalPrice= 0;
+	}else{
+		totalPrice= session.totalPrice;
+	}
+
 	//Loop through all elements in the cart session array.
 	session.cartItemNumber.forEach(element => {
 
@@ -872,9 +879,9 @@ app.post('/add-to-cart', function(req, res) {
 		data.cartItemSupplierId = session.cartItemSupplierId[x];
 
 		//Calculating total price.
-		totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
-		session.totalPrice = totalPrice
-		console.log(session.totalPrice)
+		totalPrice= totalPrice + (session.cartItemQuantity[x] * session.cartItemUnitPrice[x]);
+		session.totalPrice = totalPrice;
+		console.log('Total price after item addition: ' + session.totalPrice);
 
 		//Check for prescribed items. Checking this once is enough. 
 		if(session.cartItemPrescribed== 'true'){
@@ -899,6 +906,7 @@ app.post('/add-to-cart', function(req, res) {
 		res.redirect('/view-supplier-products-redirect');	
 
 	});
+
 });
 
 //Test function to remove items from the cart. Currently, only the item at the tail can be deleted.
@@ -975,6 +983,13 @@ app.post('/remove-from-cart', function(req, res) {
 		var totalPrice= 0;
 		var prescribed= 'false';
 
+		//Need this when initiating the cart.
+		if(typeof session.totalPrice== 'undefined' || session.totalPrice== 'null'){
+			totalPrice= 0;
+		}else{
+			totalPrice= session.totalPrice;
+		}
+
 		//Loop through all elements in the cart session array.
 		session.cartItemNumber.forEach(element => {
 
@@ -1001,8 +1016,10 @@ app.post('/remove-from-cart', function(req, res) {
 			data.cartItemSupplierId = session.cartItemSupplierId[x];
 
 			//Calculating total price.
-			totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
-			
+			totalPrice= totalPrice + (session.cartItemQuantity[x] * session.cartItemUnitPrice[x]);
+			session.totalPrice = totalPrice;
+			console.log('Total price after item deletion: ' + session.totalPrice);
+
 			//Check for prescribed items. Checking this once is enough. 
 			if(session.cartItemPrescribed== 'true'){
 				prescribed= 'true';
