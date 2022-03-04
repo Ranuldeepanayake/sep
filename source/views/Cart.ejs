@@ -118,36 +118,35 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <% for(var i=0; i < cartItems.length; i++) { %>
                                         <tr>
-                                            <td class="pro-thumbnail"><a href="#"><img src="assets/images/product/homecare/p5.jpg" alt="" /></a></td>
-                                            <td class="pro-title"><a href="#">Dettol Antiseptic Liquid 210ml</a></td>
-                                            <td class="pro-price"><span class="amount">Rs. 262</span></td>
-                                            <td class="pro-quantity"><div class="pro-qty"><input type="text" value="1"></div></td>
-                                            <td class="pro-subtotal">Rs. 262</td>
-                                            <td class="pro-remove"><a href="#">×</a></td>
+                                            <td class="pro-thumbnail"><a href="#"><img src="<%= cartItems[i].cartItemImage %>" alt="" /></a></td>
+                                            <td class="pro-title"><a href="#"><%= cartItems[i].cartItemName %></a></td>
+                                            <td class="pro-price"><span class="amount"><%= cartItems[i].cartItemUnitPrice %></span></td>
+                                            <td class="pro-quantity"><div class="pro-qty"><input type="text" value="<%= cartItems[i].cartItemQuantity %>"></div></td>
+                                            <td class="pro-subtotal">Rs. <%= cartItems[i].cartItemSubTotal %></td>
+                                            <td class="pro-remove"><a href="/remove-from-cart">×</a></td>
                                         </tr>
-                                        <tr>
-                                            <td class="pro-thumbnail"><a href="#"><img src="assets/images/product/homecare/p1.jpg" alt="" /></a></td>
-                                            <td class="pro-title"><a href="#">Panadol Tab</a></td>
-                                            <td class="pro-price"><span class="amount">Rs. 100</span></td>
-                                            <td class="pro-quantity"><div class="pro-qty"><input type="text" value="1"></div></td>
-                                            <td class="pro-subtotal">Rs. 100</td>
-                                            <td class="pro-remove"><a href="#">×</a></td>
-                                        </tr>
+                                        <% } %>                                        
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        
                         <div class="col-lg-8 col-md-7 col-12 mb-40">
+                        <% if(reqPrescription == 1) { %>    
                             <p>*Please upload the prescription to checkout.</p>
                             <input class="prescription-upload" type="file" id="storeImage" name="storeImage">
                             <button class="btn btn-warning btn-round">Upload</button>
-
+                        <% } else { %> 
+                            <span></span>
+                        <% } %>
                             <div class="cart-buttons mt-30 mb-30">
                                 <button class="btn btn-primary-cs btn-round"><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
                                 <button class="btn btn-primary-cs btn-round"><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
                             </div>
                         </div>
+                        
                         <div class="col-lg-4 col-md-5 col-12 mb-40">
                             <div class="cart-total fix">
                                 <h3>Cart Totals</h3>
@@ -155,12 +154,12 @@
                                     <tbody>
                                         <tr class="cart-subtotal">
                                             <th>Subtotal</th>
-                                            <td><span class="amount">Rs. 362.00</span></td>
+                                            <td><span class="amount">Rs. <%= totalPrice %></span></td>
                                         </tr>
                                         <tr class="order-total">
                                             <th>Total</th>
                                             <td>
-                                                <strong><span class="amount">Rs. 362.00</span></strong>
+                                                <strong><span class="amount">Rs. <%= totalPrice %></span></strong>
                                             </td>
                                         </tr>
                                     </tbody>
