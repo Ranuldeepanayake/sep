@@ -316,15 +316,6 @@ app.get('/view-supplier-products-redirect', function (req, res){
 	
 });
 
-//Check cart ejs page
-app.get('/cart', function (req, res){
-	res.render('Cart.ejs')
-});
-
-//Check Checkout ejs page
-app.get('/checkout', function (req, res){
-	res.render('Checkout.ejs')
-});
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Common functions (back end)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -422,6 +413,7 @@ app.post("/sign-in-process", function(req, res){
 			req.session.city = result.city;
 			req.session.password = result.password;
 
+			//recreating as they are not accessible 
 			session.userfirstname = result.firstName;
 			session.userid = result.userId;
 			session.loggedstatus = "true";
@@ -611,7 +603,84 @@ function getSession(){
 //Cart functions (back end)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+app.get('/cart', function (req, res){
+	if(session.cartItemNumber){
+
+		//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
+
+		var x= 0;	//Incrementer.
+		var cartItems= []; //Array of cart item objects.
+		var objects= [];
+		var totalPrice= 0;
+		var prescribed= 'false';
+
+		//Loop through all elements in the cart session array.
+		session.cartItemNumber.forEach(element => {
+
+			//Code for debugging.
+			//console.log('Loop Item Number: ' + session.cartItemNumber[x]);
+			//console.log('Loop Item ID: ' + session.cartItemId[x]);
+			//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
+
+			//Create the object.
+			var data= {cartItemNumber : '', cartItemId : '', cartItemCategory: '', cartItemName: '', 
+			cartItemDescription: '', cartItemPrescribed: '', cartItemQuantity : '', cartItemUnitPrice: '', 
+			cartItemImage: '', cartItemSupplierId: ''}
+
+			//Assign session values to the object.
+			data.cartItemNumber= session.cartItemNumber[x];
+			data.cartItemId = session.cartItemId[x];
+			data.cartItemCategory= session.cartItemCategory[x];
+			data.cartItemName= session.cartItemName[x];
+			data.cartItemDescription = session.cartItemDescription[x];
+			data.cartItemPrescribed= session.cartItemPrescribed[x];
+			data.cartItemQuantity= session.cartItemQuantity[x];
+			data.cartItemUnitPrice= session.cartItemUnitPrice[x];
+			data.cartItemImage = session.cartItemImage[x];
+			data.cartItemSupplierId = session.cartItemSupplierId[x];
+
+			//Calculating sub total price.
+			var subtotal = 0;
+			subtotal= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
+			data.cartItemSubTotal = subtotal
+
+			//Calculating total price.
+			totalPrice += subtotal;
+			session.totalPrice = totalPrice
+
+			//Check for prescribed items. Checking this once is enough. 
+			if(session.cartItemPrescribed== 'true'){
+				prescribed= 'true';
+			}
+
+			x++; //Increment to the next set of session elements.
+
+			//Push the object into an object array
+			cartItems.push(data); 
+		});	
+
+		//objects.push(array);
+		//objects.push({'totalPrice': totalPrice});
+		//objects.push({'prescribed': prescribed});
+
+		
+		console.log(objects);
+		if(prescribed == 'false'){
+			res.render('Cart.ejs', {cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0})
+		}
+		else{
+			res.render('Cart.ejs', {cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1})
+		}
+		
+
+	}else{
+		res.json({'status': 'Cart empty'});
+	}
+	
+});
+
 //Test function to fetch items in the cart.
+/*
 app.post('/get-cart', function(req, res) {
 	console.log('**************Fetching items in the cart>');
 
@@ -676,6 +745,7 @@ app.post('/get-cart', function(req, res) {
 		res.json({'status': 'Cart empty'});
 	}
 });
+*/
 
 //Test function to add items to the cart.
 //The 'add item to cart' request must send the required parameters.
@@ -1014,14 +1084,37 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 	}
 });
 
+//Work in progress////////////////
+app.get('/checkout', function (req, res){
+	customer.getProfileData(session.userid, function (result){
+		console.log(result);
+
+		var billingInfo = []
+
+		if(result!= 'failure'){
+			res.render('Checkout.ejs', {billingInfo: billingInfo, totalPrice: session.totalPrice, message: "Unable to retrieve billing information!"})
+		} else {
+			//Update session variables.
+			billingInfo.push(session.useremail = result.email);
+			billingInfo.push(session.userfirstName = result.firstName);
+			billingInfo.push(session.userlastName = result.lastName);
+			billingInfo.push(session.userstreet = result.street);
+			billingInfo.push(session.usercity = result.city);
+			console.log(billingInfo)
+			res.render('Checkout.ejs', {billingInfo: billingInfo, totalPrice: session.totalPrice, message: "Unable to retrieve billing information!"})
+		}
+	});			
+});
+///////////////////
+
 //Test function for checking out the cart.
 //Create an order.
 //Create order items from the cart session array.
 //Send the required variables in the form.
-app.post('/checkout-process', function(req, res) {
+app.get('/checkout-process', function(req, res) {
 	console.log('**************Creating order from the cart>');
 	console.log(req.body);
-
+	console.log(session.cartItemNumber)
 	//Check if session array exists.
 	if(session.cartItemNumber){
 
