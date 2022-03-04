@@ -262,15 +262,69 @@ app.get('/supplier-update-validate-fail', function (req, res, next){
 
 });
 
-//Product catalog related routes.
-app.get('/customer-product-catalog', function (req, res){
-	//res.render('Login.ejs', { message :'', valmessage: '', loginerror: ''})
+//Redirected to this route after an item is added to cart
+app.get('/view-supplier-products-redirect', function (req, res){
+	console.log("**************Showing the selected supplier's data and items>");
+	console.log(req.body);
+
+	//Get supplier data first.
+	//////////Supplier ID is hardcoded for testing.
+	//supplier.getSupplierData(req.body.supplierId, function (resultSupplier)
+	supplier.getSupplierData(session.supplieridpharm, function (resultSupplier){
+		console.log("**************Showing the selected supplier's profile data>");
+		console.log(resultSupplier);
+
+		//Then get the respective supplier's items list.
+		//supplier.getItemsList(req.body.supplierId, req.body.prescribed, request.body.itemCategory, function (resultItems)
+		supplier.getItemsList(session.supplieridpharm, 'false', 'null', function (resultItems){
+			console.log("**************Showing the selected supplier's items>");
+			console.log(resultItems);
+
+			//Get Category Counts
+			var miscCount = 0
+			var mediCount = 0
+			var grocCount = 0
+			var allCount = resultItems.length
+			let catCount = new Object();
+
+			for(var i=0; i < resultItems.length; i++)
+			{
+				if(resultItems[i].category == "Medicine")
+				{
+					mediCount += 1;
+				} else if (resultItems[i].category == "Grocery")
+				{
+					grocCount += 1;
+				} else 
+				{
+					miscCount += 1;
+				}
+			}
+
+			catCount.medicine = mediCount;
+			catCount.groceries = grocCount;
+			catCount.misc = miscCount;
+			catCount.all = allCount;
+			console.log(catCount)
+
+			console.log("price in redirect", session.totalPrice)
+
+			res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: "Item added to cart!"});	
+			
+		});
+	});
+	
 });
 
-app.get('/customer-product-detail', function (req, res){
-	//res.render('Login.ejs', { message :'', valmessage: '', loginerror: ''})
+//Check cart ejs page
+app.get('/cart', function (req, res){
+	res.render('Cart.ejs')
 });
 
+//Check Checkout ejs page
+app.get('/checkout', function (req, res){
+	res.render('Checkout.ejs')
+});
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Common functions (back end)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -367,6 +421,10 @@ app.post("/sign-in-process", function(req, res){
 			req.session.street = result.street;
 			req.session.city = result.city;
 			req.session.password = result.password;
+
+			session.userfirstname = result.firstName;
+			session.userid = result.userId;
+			session.loggedstatus = "true";
 
 			res.locals.userFname = result.firstName;
 			//res.sendFile(htmlPath + 'success.html');
@@ -655,6 +713,16 @@ app.post('/add-to-cart', function(req, res) {
 			i++;
 		});	
 
+		//calculate price
+		var totalPrice= 0;
+		totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
+		session.totalPrice = totalPrice
+
+		//redirect to page
+		supplier.getItem(req.body.itemCode, function(result){
+			res.render('ProductDetails.ejs', { totalPrice: session.totalPrice, userFName: session.userfirstname, ItemDetails: result});
+		});
+
 	}else{
 		//Create session arrays if they don't exist (ininitializing the cart).
 		session.itemCount= 0;	//To keep track of the number of items in the session arrays (incrementer).
@@ -698,6 +766,7 @@ app.post('/add-to-cart', function(req, res) {
 			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
 			i++;
 		});	
+		
 	}
 
 	//The below code creates an object array using the cart session variables and passes the object as JSON to the API caller. 
@@ -734,6 +803,8 @@ app.post('/add-to-cart', function(req, res) {
 
 		//Calculating total price.
 		totalPrice= totalPrice + (session.cartItemQuantity * session.cartItemUnitPrice);
+		session.totalPrice = totalPrice
+		console.log(session.totalPrice)
 
 		//Check for prescribed items. Checking this once is enough. 
 		if(session.cartItemPrescribed== 'true'){
@@ -751,7 +822,13 @@ app.post('/add-to-cart', function(req, res) {
 	objects.push({'prescribed': prescribed});
 
 	//Send the object array to the caller as JSON.
-	res.json(objects);
+	//res.json(objects);
+
+	//redirect to page
+	supplier.getItem(req.body.itemCode, function(result){
+		res.redirect('/view-supplier-products-redirect');	
+
+	});
 });
 
 //Test function to remove items from the cart. Currently, only the item at the tail can be deleted.
@@ -1141,13 +1218,16 @@ app.post('/view-supplier-products', function (req, res){
 	//Get supplier data first.
 	//////////Supplier ID is hardcoded for testing.
 	//supplier.getSupplierData(req.body.supplierId, function (resultSupplier)
-	supplier.getSupplierData(req.body.user_id, function (resultSupplier){
+	session.supplieridpharm = ''
+	session.supplieridpharm = req.body.user_id
+
+	supplier.getSupplierData(session.supplieridpharm, function (resultSupplier){
 		console.log("**************Showing the selected supplier's profile data>");
 		console.log(resultSupplier);
 
 		//Then get the respective supplier's items list.
 		//supplier.getItemsList(req.body.supplierId, req.body.prescribed, request.body.itemCategory, function (resultItems)
-		supplier.getItemsList(req.body.user_id, 'false', 'null', function (resultItems){
+		supplier.getItemsList(session.supplieridpharm, 'false', 'null', function (resultItems){
 			console.log("**************Showing the selected supplier's items>");
 			console.log(resultItems);
 
@@ -1178,13 +1258,17 @@ app.post('/view-supplier-products', function (req, res){
 			catCount.all = allCount;
 			console.log(catCount)
 
-			if(typeof req.session.loggedIn == "true")
+			//Check if user is logged in
+			if(session.userfirstname != null)
 			{
-				res.render('Pharmacy.ejs', { userFName: req.session.firstName,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount});	
+				//user is logged in
+				console.log(session.userfirstname)
+				res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, message: '', totalPrice: 0});	
 			}
 			else
 			{
-				res.render('Pharmacy.ejs', { userFName: '',  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount});
+				//user is not logged in
+				res.render('Pharmacy.ejs', { userFName: '',  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, message: '', totalPrice: 0});
 			}
 			
 		});
@@ -1222,14 +1306,14 @@ app.post('/view-item-process', function (req, res){
 		
 		//res.json(result);	//Change this as res.render().
 
-		if(typeof req.session.loggedIn == "true")
+		if(typeof session.userfirstname != null)
 			{
-				res.render('ProductDetails.ejs', { userFName: req.session.firstName,  ItemDetails: result});	
+				res.render('ProductDetails.ejs', { userFName: session.userfirstname,  ItemDetails: result, totalPrice: 0});	
 			}
 			else
 			{
 				console.log(result);
-				res.render('ProductDetails.ejs', { userFName: '',  ItemDetails: result});
+				res.render('ProductDetails.ejs', { userFName: '',  ItemDetails: result, totalPrice: 0});
 			}
 	});
 });
