@@ -62,7 +62,7 @@
                         <div class="col order-2 order-lg-3">
                             <div class="header-shop-links">
                                 <div class="header-mini-cart">
-                                    <a href=""><img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.0</span></a>
+                                    <a href=""><img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.<%= totalPrice %></span></a>
                                 </div>
                             </div>
                         </div>
@@ -108,6 +108,7 @@
             </div>
         </div>
 
+        <form method="post" action="/add-to-cart">
         <div class="page-section section section-padding">
             <div class="container">
                 <div class="row row-30 mbn-50">
@@ -121,9 +122,8 @@
                                 height: 300px; object-fit: contain; align-self: center;">
                             </div>
 
-                            <div class="col-lg-6 col-12 mb-40">
-                                <div class="single-product-content">
-
+                            <div class="col-lg-6 col-12 mb-40">        
+                                <div class="single-product-content">                                                                            
                                     <div class="head">
                                         <div class="head-left">
                                             <h3 class="title"><%= ItemDetails[0].name %></h3>
@@ -149,7 +149,7 @@
                                     <div class="quantity-colors">
                                         <div class="quantity">
                                             <h5>Quantity:</h5>
-                                            <div class="pro-qty"><input type="text" value="<%= ItemDetails[0].quantity %>"></div>
+                                            <div><input type="number" value="<%= ItemDetails[0].quantity %>" max="<%= ItemDetails[0].quantity %>" id="itemQuantity" name="itemQuantity"></div>
                                         </div>
                                         <button class="btn btn-primary-cs btn-round"><i class="ti-shopping-cart"></i><span>ADD TO CART</span></button>
                                     </div>
@@ -159,9 +159,9 @@
                                         <p><%= ItemDetails[0].category %></p>
                                     </div>
                                 </div>
-                            </div>
-
+                            </div>                           
                         </div>
+                    
 
                         <div class="row mb-50">
                             <!-- Nav tabs -->
@@ -183,7 +183,16 @@
                 </div>
             </div>
         </div><!-- Page Section End -->
-
+        <!-- For the purpose of sending value to route -->
+        <input id="itemCode" name="itemCode" style="visibility: hidden;" value="<%= ItemDetails[0].item_code%>">
+        <input id="itemPrescribed" name="itemPrescribed" style="visibility: hidden;" value="<%= ItemDetails[0].prescribed%>">
+        <input id="itemSupplierId" name="itemSupplierId" style="visibility: hidden;" value="<%= ItemDetails[0].supplier_id%>">
+        <input id="itemUnitPrice" name="itemUnitPrice" style="visibility: hidden;" value="<%= ItemDetails[0].unit_price%>">
+        <input id="itemDescription" name="itemDescription" style="visibility: hidden;" value="<%= ItemDetails[0].description%>">
+        <input id="itemName" name="itemName" style="visibility: hidden;" value="<%= ItemDetails[0].name%>">
+        <input id="itemCategory" name="itemCategory" style="visibility: hidden;" value="<%= ItemDetails[0].category%>">                                            
+        <input id="itemImage" name="itemImage" style="visibility: hidden;" value="<%= ItemDetails[0].image%>">
+        </form>
 
         <div class="footer-top-section section bg-theme-two-light section-padding">
             <div class="container">
