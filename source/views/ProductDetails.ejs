@@ -62,7 +62,12 @@
                         <div class="col order-2 order-lg-3">
                             <div class="header-shop-links">
                                 <div class="header-mini-cart">
-                                    <a href=""><img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.<%= totalPrice %></span></a>
+                                    <img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.<%= totalPrice %></span>
+                                    <% if (totalPrice == 0) { %>
+                                    <span></span>
+                                    <% } else { %>
+                                    &nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm"><a href="/cart">View Cart</a></button> 
+                                    <% } %>  
                                 </div>
                             </div>
                         </div>
