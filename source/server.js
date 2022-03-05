@@ -617,11 +617,6 @@ app.get('/cart', function (req, res){
 		//Loop through all elements in the cart session array.
 		session.cartItemNumber.forEach(element => {
 
-			//Code for debugging.
-			//console.log('Loop Item Number: ' + session.cartItemNumber[x]);
-			//console.log('Loop Item ID: ' + session.cartItemId[x]);
-			//console.log('Loop Item Number: ' + session.cartItemQuantity[x]);
-
 			//Create the object.
 			var data= {cartItemNumber : '', cartItemId : '', cartItemCategory: '', cartItemName: '', 
 			cartItemDescription: '', cartItemPrescribed: '', cartItemQuantity : '', cartItemUnitPrice: '', 
@@ -659,17 +654,14 @@ app.get('/cart', function (req, res){
 			cartItems.push(data); 
 		});	
 
-		//objects.push(array);
-		//objects.push({'totalPrice': totalPrice});
-		//objects.push({'prescribed': prescribed});
-
-		
 		console.log(objects);
+
 		if(prescribed == 'false'){
-			res.render('Cart.ejs', {cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0})
+			//cartEmpty: 0 => Cart not empty
+			res.render('Cart.ejs', {cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0})
 		}
 		else{
-			res.render('Cart.ejs', {cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1})
+			res.render('Cart.ejs', {cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0})
 		}
 		
 
@@ -677,6 +669,11 @@ app.get('/cart', function (req, res){
 		res.json({'status': 'Cart empty'});
 	}
 	
+});
+
+//Cart Empty Redirect
+app.get('/cart-empty', function (req, res){
+	res.render('Cart.ejs', {cartItems: {}, totalPrice: 0, reqPrescription: 0, isCartEmpty: 1})
 });
 
 //Test function to fetch items in the cart.
@@ -909,6 +906,7 @@ app.post('/add-to-cart', function(req, res) {
 
 });
 
+
 //Test function to remove items from the cart. Currently, only the item at the tail can be deleted.
 app.post('/remove-from-cart', function(req, res) {
 	console.log('**************Item details received for removal from cart>');
@@ -916,6 +914,7 @@ app.post('/remove-from-cart', function(req, res) {
 
 	//Item number has to be received from the form. This has been passed to the views using JSON.
 	var removeIndex= req.body.itemNumber;	 
+	console.log("Remove cart - Item Number:", removeIndex)
 
 	if(session.cartItemNumber){
 
@@ -933,8 +932,11 @@ app.post('/remove-from-cart', function(req, res) {
 			session.cartItemImage= null;
 			session.cartItemSupplierId= null;
 
-			res.json({'status': 'Cart empty'});
-			return;
+			//res.json({'status': 'Cart empty'});
+			//return;
+
+			//redirect to cart empty page
+			res.redirect('/cart-empty')
 		}
 
 		//Remove item. 
@@ -1036,11 +1038,15 @@ app.post('/remove-from-cart', function(req, res) {
 		objects.push({'prescribed': prescribed});
 
 		//Send the object array to the caller as JSON.
-		res.json(objects);
+		//res.json(objects);
+
+		//Redirect to cart page
+		res.redirect('/cart')
 
 	}else{
 		console.log('**************No cart sessions!');
-		res.json({'status': 'Cart empty'});
+		//res.json({'status': 'Cart empty'});
+		res.redirect('/cart-empty')
 	}
 });
 
@@ -1104,7 +1110,7 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 //Work in progress////////////////
 app.get('/checkout', function (req, res){
 	customer.getProfileData(session.userid, function (result){
-		console.log(result);
+		console.log("Checkout - Billing Info: ", result);
 
 		var billingInfo = []
 
@@ -1418,12 +1424,12 @@ app.post('/view-item-process', function (req, res){
 
 		if(typeof session.userfirstname != null)
 			{
-				res.render('ProductDetails.ejs', { userFName: session.userfirstname,  ItemDetails: result, totalPrice: 0});	
+				res.render('ProductDetails.ejs', { userFName: session.userfirstname,  ItemDetails: result, totalPrice: 0 });	
 			}
 			else
 			{
 				console.log(result);
-				res.render('ProductDetails.ejs', { userFName: '',  ItemDetails: result, totalPrice: 0});
+				res.render('ProductDetails.ejs', { userFName: '',  ItemDetails: result, totalPrice: session.totalPrice });
 			}
 	});
 });
