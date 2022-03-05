@@ -33,8 +33,15 @@
                         </div>
                         <div class="col mt-10 mb-10">
                             <div class="header-top-right">
+                                <% if(userFName.length > 0) { %>
+                                    <p>Hi <%= userFName %></p>                                        
+                                    <% } %>
                                 <p><a href="/my-account">My Account</a></p>
+                                <% if(userFName.length > 0) { %>
+                                    <p><a href="/logout-process">Logout</a></p>                                        
+                                    <% } else { %>
                                 <p><a href="/login">Register</a><a href="/login">Login</a></p>
+                                <% } %>
                             </div>
                         </div>
                     </div>
@@ -102,9 +109,8 @@
         <!-- Page Section Start -->
         <div class="page-section section section-padding">
             <div class="container">
-
                 <!-- Checkout Form s-->
-                <form action="#" class="checkout-form">
+                <form class="checkout-form">
                     <div class="row row-50 mbn-40">
 
                         <div class="col-lg-7">
@@ -117,12 +123,13 @@
 
                                     <div class="col-md-6 col-12 mb-5">
                                         <label>First Name*</label>
-                                        <input type="text" placeholder="First Name" value="<%= billingInfo[0].firstname %>">
+                                        <input type="text" placeholder="First Name" placeholder="testing" value="<%= billingInfo[0].firstName %>">
+                                        
                                     </div>
 
                                     <div class="col-md-6 col-12 mb-5">
                                         <label>Last Name*</label>
-                                        <input type="text" placeholder="Last Name" value="<%= billingInfo[0].lastname %>">
+                                        <input type="text" placeholder="Last Name" value="<%= billingInfo[0].lastName %>">
                                     </div>
 
                                     <div class="col-md-6 col-12 mb-5">
@@ -138,7 +145,7 @@
                                     <div class="col-md-6 col-12 mb-5">
                                         <label>Town/City*</label>
                                         <select id="city" name="city">
-                                            <option value="<%= billingInfo[0].city %>">Nearest City</option>
+                                            <option value="<%= billingInfo[0].city %>"><%= billingInfo[0].city %></option>
                                             <option value="Kottawa">Kottawa</option>
                                             <option value="Rajagiriya">Rajagiriya</option>
                                             <option value="Nugegoda">Nugegoda</option>
@@ -156,12 +163,12 @@
 
                                     <div class="col-md-6 col-12 mb-5">
                                         <label>First Name*</label>
-                                        <input type="text" placeholder="First Name" value="<%= billingInfo[0].firstname %>">
+                                        <input type="text" placeholder="First Name" value="<%= billingInfo[0].firstName %>">
                                     </div>
 
                                     <div class="col-md-6 col-12 mb-5">
                                         <label>Last Name*</label>
-                                        <input type="text" placeholder="Last Name" value="<%= billingInfo[0].lastname %>">
+                                        <input type="text" placeholder="Last Name" value="<%= billingInfo[0].lastName %>">
                                     </div>
 
                                     <div class="col-md-6 col-12 mb-5">
@@ -177,7 +184,7 @@
                                     <div class="col-md-6 col-12 mb-5">
                                         <label>Town/City*</label>
                                         <select id="city" name="city">
-                                            <option value="<%= billingInfo[0].city %>">Nearest City</option>
+                                            <option value="<%= billingInfo[0].city %>"><%= billingInfo[0].city %></option>
                                             <option value="Kottawa">Kottawa</option>
                                             <option value="Rajagiriya">Rajagiriya</option>
                                             <option value="Nugegoda">Nugegoda</option>
@@ -202,9 +209,9 @@
                                         <h4>Product <span>Total</span></h4>
 
                                         <ul>
-                                            <li>Test1<span>Rs. 262.00</span></li>
-                                            <li>Test<span>Rs. 100.00</span></li>
-                                        
+                                        <% for(var i=0; i < cartItems.length; i++) { %>
+                                            <li><%= cartItems[i].cartItemName %><span>Rs. <%= cartItems[i].cartItemSubTotal %></span></li>
+                                        <% } %>  
                                         </ul>
 
                                       
@@ -228,7 +235,7 @@
                                         </div>
 
                                     </div>
-                                    <button class="btn btn-primary-cs btn-round mt-20"><i class="ti-shopping-cart"></i>&nbsp;<span>Return to Cart</span></button>
+                                    <button class="btn btn-primary-cs btn-round mt-20"><i class="ti-shopping-cart"></i>&nbsp;<span><a href="/cart">Return to Cart</a></span></button>
                                     <button class="btn btn-primary-cs btn-round mt-20"><i class="ti-check"></i>&nbsp;<span>Place Order</span></button>
                                 </div>
 
