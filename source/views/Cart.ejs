@@ -53,7 +53,12 @@
                         <div class="col order-2 order-lg-3">
                             <div class="header-shop-links">
                                 <div class="header-mini-cart">
-                                    <a href="Cart.html"><img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.0</span></a>
+                                    img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.<%= totalPrice %></span>
+                                    <% if (totalPrice == 0) { %>
+                                    <span></span>
+                                    <% } else { %>
+                                    &nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm"><a href="/cart">View Cart</a></button> 
+                                    <% } %>  
                                 </div>
                             </div>
                         </div>
@@ -101,8 +106,16 @@
         <!-- Page Section Start -->
         <div class="page-section section section-padding">
             <div class="container">
-
-                <form action="#">
+                <% if (isCartEmpty==1) { %>
+                    <div class="row mbn-40">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            Cart is empty!
+                            <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                <% } else { %>
                     <div class="row mbn-40">
                         <div class="col-12 mb-40">
                             <div class="cart-table table-responsive">
@@ -114,19 +127,24 @@
                                             <th class="pro-price">Price</th>
                                             <th class="pro-quantity">Quantity</th>
                                             <th class="pro-subtotal">Total</th>
-                                            <th class="pro-remove">Remove</th>
+                                            <th class="pro-remove">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <% for(var i=0; i < cartItems.length; i++) { %>
-                                        <tr>
-                                            <td class="pro-thumbnail"><a href="#"><img src="<%= cartItems[i].cartItemImage %>" alt="" /></a></td>
-                                            <td class="pro-title"><a href="#"><%= cartItems[i].cartItemName %></a></td>
-                                            <td class="pro-price"><span class="amount"><%= cartItems[i].cartItemUnitPrice %></span></td>
-                                            <td class="pro-quantity"><div class="pro-qty"><input type="text" value="<%= cartItems[i].cartItemQuantity %>"></div></td>
-                                            <td class="pro-subtotal">Rs. <%= cartItems[i].cartItemSubTotal %></td>
-                                            <td class="pro-remove"><a href="/remove-from-cart">×</a></td>
-                                        </tr>
+                                            <tr>                        
+                                                <td class="pro-thumbnail"><a href="#"><img src="<%= cartItems[i].cartItemImage %>" alt="" /></a></td>
+                                                <td class="pro-title"><a href="#"><%= cartItems[i].cartItemName %></a></td>
+                                                <td class="pro-price"><span class="amount"><%= cartItems[i].cartItemUnitPrice %></span></td>
+                                                <td class="pro-quantity"><div class="pro-qty">
+                                                    <input type="number" value="<%= cartItems[i].cartItemQuantity %>" max="<%= cartItems[i].cartItemQuantity %>">
+                                                </td>
+                                                <td class="pro-subtotal">Rs. <%= cartItems[i].cartItemSubTotal %></td>
+                                                <form method="post" action="remove-from-cart">
+                                                    <input style="visibility: hidden;" id="itemNumber" name="itemNumber" value="<%= cartItems[i].cartItemNumber %>"/>  
+                                                    <td class="pro-remove"><button type="submit" class="btn btn-danger btn-sm">Remove</button></td>
+                                                </form>                                                
+                                            </tr>
                                         <% } %>                                        
                                     </tbody>
                                 </table>
@@ -142,8 +160,8 @@
                             <span></span>
                         <% } %>
                             <div class="cart-buttons mt-30 mb-30">
-                                <button class="btn btn-primary-cs btn-round"><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
-                                <button class="btn btn-primary-cs btn-round"><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
+                                <button class="btn btn-primary-cs btn-round" onclick="continueShopping()"><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
+                                <button class="btn btn-primary-cs btn-round" onclick="checkout()"><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
                             </div>
                         </div>
                         
@@ -168,8 +186,7 @@
                             </div>
                         </div>
                     </div>
-                </form>
-
+                <% } %>
             </div>
         </div><!-- Page Section End -->
 
@@ -230,5 +247,10 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+        var continueShopping = function() {
+            window.location = '/view-supplier-products-redirect';
+        }
+    </script>
 </body>
 </html>
