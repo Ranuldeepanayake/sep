@@ -57,11 +57,11 @@
                         <div class="col order-2 order-lg-3">
                             <div class="header-shop-links">
                                 <div class="header-mini-cart">
-                                    <img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.<%= totalPrice %></span>
+                                    <img src="assets/images/icons/cart.png" alt="Cart"> 
                                     <% if (totalPrice == 0) { %>
-                                    <span></span>
+                                        <span>Rs.<%= totalPrice %></span>
                                     <% } else { %>
-                                    &nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm"><a href="/cart">View Cart</a></button> 
+                                        <span>Rs.<%= totalPrice %></span>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm"><a href="/cart">View Cart</a></button> 
                                     <% } %>               
                                 </div>
                             </div>
