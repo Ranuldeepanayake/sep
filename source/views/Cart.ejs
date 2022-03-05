@@ -33,8 +33,13 @@
                         </div>
                         <div class="col mt-10 mb-10">
                             <div class="header-top-right">
-                                <p><a href="Account.html">My Account</a></p>
-                                <p><a href="Login.html">Register</a><a href="Login.html">Login</a></p>
+                                <% if(userFName.length > 0) { %>
+                                    <p>Hi <%= userFName %></p>                                        
+                                    <p><a href="/my-account">My Account</a></p>
+                                    <p><a href="/logout-process">Logout</a></p>
+                                <% } else { %>
+                                <p><a href="/login">Register</a><a href="/login">Login</a></p>
+                                <% } %>
                             </div>
                         </div>
                     </div>
@@ -53,12 +58,12 @@
                         <div class="col order-2 order-lg-3">
                             <div class="header-shop-links">
                                 <div class="header-mini-cart">
-                                    img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.<%= totalPrice %></span>
+                                    <img src="assets/images/icons/cart.png" alt="Cart"> 
                                     <% if (totalPrice == 0) { %>
-                                    <span></span>
+                                        <span>Rs.<%= totalPrice %></span>
                                     <% } else { %>
-                                    &nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm"><a href="/cart">View Cart</a></button> 
-                                    <% } %>  
+                                        <span>Rs.<%= totalPrice %></span>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm"><a href="/cart">View Cart</a></button> 
+                                    <% } %> 
                                 </div>
                             </div>
                         </div>
@@ -68,7 +73,7 @@
                                 <nav>
                                     <ul>
                                         <li>
-                                            <a class="active" href="index.html">HOME</a>
+                                            <a class="active" href="/index">HOME</a>
                                         </li>
                                         <li>
                                             <a href="#">ABOUT</a>
@@ -94,7 +99,7 @@
 
                         <h1>Cart</h1>
                         <ul class="page-breadcrumb">
-                            <li><a href="index.html">Medi2Door</a></li>
+                            <li><a href="/index">Medi2Door</a></li>
                             <li><a href="Cart.html">Cart</a></li>
                         </ul>
 
@@ -108,11 +113,14 @@
             <div class="container">
                 <% if (isCartEmpty==1) { %>
                     <div class="row mbn-40">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            Cart is empty!
-                            <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
+                        <div class="col-12 mb-40">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Cart is empty!
+                                <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <button type="button" class="btn btn-info btn-sm btn-block"><a href="/view-supplier-products-redirect">Return to Store</a></button>
                         </div>
                     </div>
                 <% } else { %>
@@ -136,8 +144,8 @@
                                                 <td class="pro-thumbnail"><a href="#"><img src="<%= cartItems[i].cartItemImage %>" alt="" /></a></td>
                                                 <td class="pro-title"><a href="#"><%= cartItems[i].cartItemName %></a></td>
                                                 <td class="pro-price"><span class="amount"><%= cartItems[i].cartItemUnitPrice %></span></td>
-                                                <td class="pro-quantity"><div class="pro-qty">
-                                                    <input type="number" value="<%= cartItems[i].cartItemQuantity %>" max="<%= cartItems[i].cartItemQuantity %>">
+                                                <td class="pro-quantity">
+                                                    <input type="number" value="<%= cartItems[i].cartItemQuantity %>" max="<%= cartItems[i].cartItemQuantity %>"/>
                                                 </td>
                                                 <td class="pro-subtotal">Rs. <%= cartItems[i].cartItemSubTotal %></td>
                                                 <form method="post" action="remove-from-cart">
@@ -161,7 +169,7 @@
                         <% } %>
                             <div class="cart-buttons mt-30 mb-30">
                                 <button class="btn btn-primary-cs btn-round" onclick="continueShopping()"><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
-                                <button class="btn btn-primary-cs btn-round" onclick="checkout()"><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
+                                <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()"><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
                             </div>
                         </div>
                         
@@ -250,6 +258,10 @@
     <script>
         var continueShopping = function() {
             window.location = '/view-supplier-products-redirect';
+        }
+
+        var checkoutItems = function() {
+            window.location = '/checkout';
         }
     </script>
 </body>
