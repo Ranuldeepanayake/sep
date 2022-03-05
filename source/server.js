@@ -307,10 +307,16 @@ app.get('/view-supplier-products-redirect', function (req, res){
 			catCount.all = allCount;
 			console.log(catCount)
 
-			console.log("price in redirect", session.totalPrice)
+			console.log("Session Item Count:", session.totalPrice)
 
-			res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: "Item added to cart!"});	
-			
+			//Check the cart is empty to display alert
+			if(session.itemCount == null || session.itemCount == 0){
+				res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: ''});	
+			}
+			else{
+				res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: "Item added to cart!"});	
+			}
+						
 		});
 	});
 	
@@ -658,22 +664,26 @@ app.get('/cart', function (req, res){
 
 		if(prescribed == 'false'){
 			//cartEmpty: 0 => Cart not empty
-			res.render('Cart.ejs', {cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0})
+			res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0})
 		}
 		else{
-			res.render('Cart.ejs', {cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0})
+			res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0})
 		}
 		
 
 	}else{
-		res.json({'status': 'Cart empty'});
+		//res.json({'status': 'Cart empty'});
+		res.redirect('/cart-empty')
 	}
 	
 });
 
 //Cart Empty Redirect
 app.get('/cart-empty', function (req, res){
-	res.render('Cart.ejs', {cartItems: {}, totalPrice: 0, reqPrescription: 0, isCartEmpty: 1})
+	//Reset totalPrice session variable	
+	session.totalPrice = 0
+	
+	res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: {}, totalPrice: session.totalPrice, reqPrescription: 0, isCartEmpty: 1})
 });
 
 //Test function to fetch items in the cart.
@@ -914,10 +924,8 @@ app.post('/remove-from-cart', function(req, res) {
 
 	//Item number has to be received from the form. This has been passed to the views using JSON.
 	var removeIndex= req.body.itemNumber;	 
-	console.log("Remove cart - Item Number:", removeIndex)
 
 	if(session.cartItemNumber){
-
 		//Handle if itemCount is 0. Destroy the cart session arrays.
 		if(session.itemCount== 0){
 			session.itemCount= null;
@@ -943,16 +951,30 @@ app.post('/remove-from-cart', function(req, res) {
 		console.log('**************Removing item from cart session arrays>');
 		//var cartItemNumber= session.itemCount; //Will only delete the last item in the cart.
 
-		session.cartItemNumber.splice(removeIndex, removeIndex);
-		session.cartItemId.splice(removeIndex, removeIndex);
-		session.cartItemCategory.splice(removeIndex, removeIndex);
-		session.cartItemName.splice(removeIndex, removeIndex);
-		session.cartItemDescription.splice(removeIndex, removeIndex);
-		session.cartItemPrescribed.splice(removeIndex, removeIndex);
-		session.cartItemQuantity.splice(removeIndex, removeIndex);
-		session.cartItemUnitPrice.splice(removeIndex, removeIndex);
-		session.cartItemImage.splice(removeIndex, removeIndex);
-		session.cartItemSupplierId.splice(removeIndex, removeIndex);
+		//Check if item number is 0
+		if(req.body.itemNumber == 0){
+			session.cartItemNumber.splice(removeIndex, 	1);
+			session.cartItemId.splice(removeIndex, 1);
+			session.cartItemCategory.splice(removeIndex, 1);
+			session.cartItemName.splice(removeIndex, 1);
+			session.cartItemDescription.splice(removeIndex, 1);
+			session.cartItemPrescribed.splice(removeIndex, 1);
+			session.cartItemQuantity.splice(removeIndex, 1);
+			session.cartItemUnitPrice.splice(removeIndex, 1);
+			session.cartItemImage.splice(removeIndex, 1);
+			session.cartItemSupplierId.splice(removeIndex, 1);
+		} else {
+			session.cartItemNumber.splice(removeIndex, removeIndex);
+			session.cartItemId.splice(removeIndex, removeIndex);
+			session.cartItemCategory.splice(removeIndex, removeIndex);
+			session.cartItemName.splice(removeIndex, removeIndex);
+			session.cartItemDescription.splice(removeIndex, removeIndex);
+			session.cartItemPrescribed.splice(removeIndex, removeIndex);
+			session.cartItemQuantity.splice(removeIndex, removeIndex);
+			session.cartItemUnitPrice.splice(removeIndex, removeIndex);
+			session.cartItemImage.splice(removeIndex, removeIndex);
+			session.cartItemSupplierId.splice(removeIndex, removeIndex);
+		}
 
 		//Rewrite the cartItemNumber array with consolidated index values after removing an item.
 		var k= 0;
@@ -1110,26 +1132,53 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 //Work in progress////////////////
 app.get('/checkout', function (req, res){
 	customer.getProfileData(session.userid, function (result){
-		console.log("Checkout - Billing Info: ", result);
 
+		var x = 0
 		var billingInfo = []
+		var cartItems = []
 
-		if(result!= 'failure'){
-			res.render('Checkout.ejs', {billingInfo: billingInfo, totalPrice: session.totalPrice, message: "Unable to retrieve billing information!"})
+		if(result == 'failure'){
+			res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: cartItems, totalPrice: session.totalPrice, message: "Unable to retrieve billing information!"})
 		} else {
-			//Update session variables.
-			billingInfo.push(session.useremail = result.email);
-			billingInfo.push(session.userfirstName = result.firstName);
-			billingInfo.push(session.userlastName = result.lastName);
-			billingInfo.push(session.userstreet = result.street);
-			billingInfo.push(session.usercity = result.city);
+			//Get billing info
+			var userData = {email: result.email
+						,firstName: result.firstName
+						,lastName: result.lastName
+						,street: result.street
+						,city: result.city}
+			
+			billingInfo.push(userData);
+
+			//Get item list
+			session.cartItemNumber.forEach(element => {
+
+				//Create the object.
+				var data = {cartItemName: '' 
+							,cartItemSubTotal: ''}
+	
+				//Assign session values to the object.
+				data.cartItemName= session.cartItemName[x];
+
+				//Calculating sub total price.
+				var subtotal = 0;
+				subtotal= session.cartItemQuantity[x] * session.cartItemUnitPrice[x];
+				data.cartItemSubTotal = subtotal;
+	
+				x++; //Increment to the next set of session elements.
+	
+				//Push the object into an object array
+				cartItems.push(data); 
+			});	
+
 			console.log(billingInfo)
-			res.render('Checkout.ejs', {billingInfo: billingInfo, totalPrice: session.totalPrice, message: "Unable to retrieve billing information!"})
+
+			res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: cartItems, totalPrice: session.totalPrice, message: ''})
 		}
 	});			
 });
 ///////////////////
 
+/*
 //Test function for checking out the cart.
 //Create an order.
 //Create order items from the cart session array.
@@ -1243,6 +1292,7 @@ app.get('/checkout-process', function(req, res) {
 		res.json({'status': 'Cart empty'});
 	}
 });
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Supplier functions (back end)
@@ -1424,12 +1474,17 @@ app.post('/view-item-process', function (req, res){
 
 		if(typeof session.userfirstname != null)
 			{
-				res.render('ProductDetails.ejs', { userFName: session.userfirstname,  ItemDetails: result, totalPrice: 0 });	
+				if(session.totalPrice != null){
+					res.render('ProductDetails.ejs', { userFName: session.userfirstname,  ItemDetails: result, totalPrice: session.totalPrice });	
+				} else {
+					res.render('ProductDetails.ejs', { userFName: session.userfirstname,  ItemDetails: result, totalPrice: 0 });	
+				}
+				
 			}
 			else
 			{
 				console.log(result);
-				res.render('ProductDetails.ejs', { userFName: '',  ItemDetails: result, totalPrice: session.totalPrice });
+				res.render('ProductDetails.ejs', { userFName: '',  ItemDetails: result, totalPrice: 0 });
 			}
 	});
 });
