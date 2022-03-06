@@ -250,6 +250,8 @@
                                                 <% for(var i=0; i < ItemDetails.length; i++) { %>
                                                      <% if(ItemDetails[i].prescribed == 'true') { %>
                                                         <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                        <form action="view-item-process" method="post">
+                                                        <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>    
                                                         <div class="product-item border">
                                                             <div class="product-inner">
                                                                 <div class="image">
@@ -276,6 +278,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        </form>
                                                     </div>
                                                     <% } %> 
                                                     <% } %>
@@ -305,7 +308,6 @@
                                         <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
                                             <div class="row">
                                                 <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                               
                                                     <% if(ItemDetails[i].category == 'Medicine') { %>
                                                         <% if(ItemDetails[i].prescribed == 'false') { %> 
                                                         <div class="col-xl-4 col-md-6 col-12 mb-40">
@@ -335,8 +337,8 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        </form>
+                                                        </form> 
+                                                    </div>
                                                         <% } %>
                                                     <% } %>
                                                 
@@ -377,7 +379,9 @@
                                                         <% if(ItemDetails[i].category == 'Medicine') { %>
                                                             <% if(ItemDetails[i].prescribed == 'true') { %>
                                                             <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                            <div class="product-item border">
+                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>    
+                                                                <form action="view-item-process" method="post">
+                                                                <div class="product-item border">
                                                                 <div class="product-inner">
                                                                     <div class="image">
                                                                         <img src="<%= ItemDetails[i].image %>" alt="" style="background-size: 150px;
@@ -403,6 +407,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            </form>
                                                         </div>
                                                             <% } %>
                                                         <% } %>
@@ -496,6 +501,8 @@
                                                     <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                     <% for(var i=0; i < ItemDetails.length; i++) { %>
                                                         <% if(ItemDetails[i].prescribed == 'true' && ItemDetails[i].category == 'Grocery') { %>
+                                                            <form action="view-item-process" method="post">
+                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>    
                                                             <div class="product-item border">
                                                                 <div class="product-inner">
                                                                     <div class="image">
@@ -522,6 +529,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            </form>
                                                         <% } } %>
                                                     </div>
                                             </div>
@@ -616,6 +624,8 @@
                                                 <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                     <% for(var i=0; i < ItemDetails.length; i++) { %>
                                                         <% if(ItemDetails[i].category == 'Misc'&& ItemDetails[i].prescribed == 'true') { %>
+                                                            <form action="view-item-process" method="post">
+                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>    
                                                             <div class="product-item border">
                                                                 <div class="product-inner">
                                                                     <div class="image">
@@ -642,6 +652,8 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            </form>
+                                                        </div>
                                                     <% } } %>
                                                     </div>
                                             </div>
