@@ -160,17 +160,38 @@
                         </div>
                         
                         <div class="col-lg-8 col-md-7 col-12 mb-40">
-                        <% if(reqPrescription == 1) { %>    
-                            <p>*Please upload the prescription to checkout.</p>
-                            <input class="prescription-upload" type="file" id="storeImage" name="storeImage">
-                            <button class="btn btn-warning btn-round">Upload</button>
+                        <% if(reqPrescription == 1) { %> 
+                            <form method="post" action="upload-prescription-process">
+                              <p>*Please upload the prescription to checkout.</p>
+                                <input class="prescription-upload" type="file" id="storeImage" name="storeImage" onchange="checkData()">
+                                <button class="btn btn-warning btn-round" type="submit" id="upload-btn" onkeyup="checkPrescription()" disabled>Upload</button>  
+                            </form>  
                         <% } else { %> 
                             <span></span>
                         <% } %>
                             <div class="cart-buttons mt-30 mb-30">
-                                <button class="btn btn-primary-cs btn-round" onclick="continueShopping()"><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
-                                <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()"><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
+                                <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn" disabled><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
+                                <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" disabled><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
                             </div>
+                            <br>
+                            <% if(prescriptionUploaded == 0) { %> 
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    Error in uploading prescription!
+                                    <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            <% } else if(prescriptionUploaded == 1){ %> 
+                                <br>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    Prescription uploaded successfully!
+                                    <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            <% } else if(prescriptionUploaded == 'undefined') { %>
+                                <span aria-hidden="true">&times;</span>
+                            <% } %>
                         </div>
                         
                         <div class="col-lg-4 col-md-5 col-12 mb-40">
@@ -256,12 +277,28 @@
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
+        var checkData = function() {
+            if (document.getElementById('storeImage').value.length > 0) {
+            document.getElementById("upload-btn").disabled = false;
+            }
+            else{
+                document.getElementById("upload-btn").disabled = true;
+            }
+        }
+
         var continueShopping = function() {
             window.location = '/view-supplier-products-redirect';
         }
 
         var checkoutItems = function() {
             window.location = '/checkout';
+        }
+
+        var checkPrescription = function() {
+            if (document.getElementById('storeImage').value.length > 0) {
+            document.getElementById("continue-shopping-btn").disabled = false;
+            document.getElementById("check-out-btn").disabled = false;
+            }
         }
     </script>
 </body>
