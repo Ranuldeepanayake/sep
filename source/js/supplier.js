@@ -348,13 +348,13 @@ function addItem(request, imagePath, supplierId, callback) {
 }
 
 //Handle showing items of a supplier to a customer or visitor.
-function getItemsList(userId, prescribed, itemCategory, callback) {
+function getItemsList(userId, callback) {
 	var query;
 	var values = [];
 
 	//console.log(userId,prescribed, itemCategory, callback)
 
-	//Check for undefined input.
+	/*//Check for undefined input.
 	if(typeof prescribed== 'undefined' || typeof itemCategory== 'undefined'){
 		return callback("failure");
 	}
@@ -369,7 +369,11 @@ function getItemsList(userId, prescribed, itemCategory, callback) {
 		query= `select item_code, category, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
 		where supplier_id= ? and prescribed= ?  and type like ?`;	
 		values= [userId, prescribed, itemCategory];
-	}
+	}*/
+
+	query= `select item_code, category, name, description, prescribed, quantity, unit_price, image, supplier_id from item 
+		where supplier_id= ?`;
+	values= [userId];
 
 	createDbConnection();
 

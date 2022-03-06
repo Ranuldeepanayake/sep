@@ -1393,7 +1393,7 @@ app.post('/view-supplier-products', function (req, res){
 
 		//Then get the respective supplier's items list.
 		//supplier.getItemsList(req.body.supplierId, req.body.prescribed, request.body.itemCategory, function (resultItems)
-		supplier.getItemsList(session.supplieridpharm, 'false', 'null', function (resultItems){
+		supplier.getItemsList(session.supplieridpharm, function (resultItems){
 			console.log("**************Showing the selected supplier's items>");
 			console.log(resultItems);
 
