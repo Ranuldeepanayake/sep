@@ -179,8 +179,8 @@
                                         <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40">
                                             <div class="row">
                                                 <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <% if(ItemDetails[i].prescribed == 'false') { %>
+                                                <% if(ItemDetails[i].prescribed == 'false') { %>
+                                                    <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                     <form action="view-item-process" method="post">
                                                         <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
                                                         <div class="product-item border">
@@ -212,8 +212,8 @@
                                                             </div>
                                                         </div>
                                                     </form>
-                                                    <% } %>
                                                 </div>
+                                                <% } %>
                                                 <% } %>
                                             </div>
                                         </div>
@@ -248,8 +248,8 @@
                                         <div class="col-xl-12 col-lg-12 col-12 order-1 order-lg-2 mb-40">
                                             <div class="row">    
                                                 <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                                    <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                        <% if(ItemDetails[i].prescribed == 'true') { %>
+                                                     <% if(ItemDetails[i].prescribed == 'true') { %>
+                                                        <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                         <div class="product-item border">
                                                             <div class="product-inner">
                                                                 <div class="image">
@@ -276,8 +276,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <% } %>
                                                     </div>
+                                                    <% } %> 
                                                     <% } %>
                                             </div>
                                         </div>
@@ -305,9 +305,10 @@
                                         <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
                                             <div class="row">
                                                 <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                               
                                                     <% if(ItemDetails[i].category == 'Medicine') { %>
-                                                        <% if(ItemDetails[i].prescribed == 'false') { %>
+                                                        <% if(ItemDetails[i].prescribed == 'false') { %> 
+                                                        <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                         <form action="view-item-process" method="post">
                                                             <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
                                                             <div class="product-item border">
@@ -334,10 +335,11 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
                                                         </form>
                                                         <% } %>
                                                     <% } %>
-                                                </div>
+                                                
                                                 <% } %>
                                             </div>
                                         </div>
@@ -372,9 +374,9 @@
                                         <div class="col-xl-12 col-lg-12 col-12 order-1 order-lg-2 mb-40" style="float: left;">
                                             <div class="row">    
                                                 <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                                    <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                         <% if(ItemDetails[i].category == 'Medicine') { %>
                                                             <% if(ItemDetails[i].prescribed == 'true') { %>
+                                                            <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                             <div class="product-item border">
                                                                 <div class="product-inner">
                                                                     <div class="image">
@@ -401,9 +403,9 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
                                                             <% } %>
                                                         <% } %>
-                                                    </div>
                                                     <% } %>
                                             </div>
                                         </div>
