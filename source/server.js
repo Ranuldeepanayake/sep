@@ -267,6 +267,8 @@ app.get('/view-supplier-products-redirect', function (req, res){
 	console.log("**************Showing the selected supplier's data and items>");
 	console.log(req.body);
 
+	console.log("session.supplieridpharm:", session.supplieridpharm)
+
 	//Get supplier data first.
 	//////////Supplier ID is hardcoded for testing.
 	//supplier.getSupplierData(req.body.supplierId, function (resultSupplier)
@@ -276,7 +278,7 @@ app.get('/view-supplier-products-redirect', function (req, res){
 
 		//Then get the respective supplier's items list.
 		//supplier.getItemsList(req.body.supplierId, req.body.prescribed, request.body.itemCategory, function (resultItems)
-		supplier.getItemsList(session.supplieridpharm, 'false', 'null', function (resultItems){
+		supplier.getItemsList(session.supplieridpharm, function (resultItems){
 			console.log("**************Showing the selected supplier's items>");
 			console.log(resultItems);
 
@@ -307,10 +309,8 @@ app.get('/view-supplier-products-redirect', function (req, res){
 			catCount.all = allCount;
 			console.log(catCount)
 
-			console.log("Session Item Count:", session.totalPrice)
-
 			//Check the cart is empty to display alert
-			if(session.itemCount == null || session.itemCount == 0){
+			if(session.itemCount == null){
 				res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: ''});	
 			}
 			else{
@@ -616,9 +616,7 @@ app.get('/cart', function (req, res){
 
 		var x= 0;	//Incrementer.
 		var cartItems= []; //Array of cart item objects.
-		var objects= [];
 		var totalPrice= 0;
-		var prescribed= 'false';
 
 		//Loop through all elements in the cart session array.
 		session.cartItemNumber.forEach(element => {
@@ -649,10 +647,12 @@ app.get('/cart', function (req, res){
 			totalPrice += subtotal;
 			session.totalPrice = totalPrice
 
+			//Does not work as the value will get replaced each iteration
+			/*
 			//Check for prescribed items. Checking this once is enough. 
-			if(session.cartItemPrescribed== 'true'){
+			if(session.cartItemPrescribed == 'true'){
 				prescribed= 'true';
-			}
+			}*/
 
 			x++; //Increment to the next set of session elements.
 
@@ -660,17 +660,26 @@ app.get('/cart', function (req, res){
 			cartItems.push(data); 
 		});	
 
-		console.log(objects);
+		//Check if there are prescribed items in the cartItems object array
+		let filtered = cartItems.filter(row => row.cartItemPrescribed === 'true');
 
-		if(prescribed == 'false'){
-			//cartEmpty: 0 => Cart not empty
-			res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0})
-		}
-		else{
-			res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0})
+		//check if its the first time viewing the cart
+		if (session.prescriptionUploaded == "undefined" || session.prescriptionUploaded == null){
+			if (filtered.length > 0) { 
+			res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 'undefined'})
+			}
+			else{
+				res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0, prescriptionUploaded: 'undefined'})
+			}
+		}else{
+			if (filtered.length > 0) { 
+				res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: session.prescriptionUploaded})
+			}
+			else{
+				res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0, prescriptionUploaded: session.prescriptionUploaded})
+			}
 		}
 		
-
 	}else{
 		//res.json({'status': 'Cart empty'});
 		res.redirect('/cart-empty')
@@ -1076,7 +1085,7 @@ app.post('/remove-from-cart', function(req, res) {
 app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single('prescriptionImage'), function(req, res){
 	console.log('**************Saving the prescription temporarily till checkout>');
 	console.log(req.file);
-
+	
 	//Check if the cart sessions exist.
 	//Code.
 
@@ -1084,6 +1093,10 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 	if(typeof req.file== 'undefined' || req.file== null || req.file.filename== ''){
 		res.json({'status': 'failure'}); //Return if prescription is null.
 		return;
+
+		//redirect to page
+		//session.prescriptionUploaded = 0
+		//res.redirect('/cart')
 
 	}else{
 		//Check if a prescription was uploaded previously.
@@ -1098,8 +1111,8 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 
 			//Rename the new image.
 			try {
-				file.renameSync(prescriptionImagePathTemporary + req.file.filename, prescriptionImagePathTemporary + req.file.filename 
-					+ '.jpg');
+				file.renameSync(prescriptionImagePathTemporary + req.file.filename, prescriptionImagePathTemporary + req.file.filename + '.jpg');
+					
 			} catch (error) {
 				console.log(error.message);
 			}
@@ -1109,14 +1122,17 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 
 			//Redirect as necessary.
 			res.json({'prescription': newPrescriptionImagePathTemporary + session.prescriptionImage });
+			
+			//session.prescriptionUploaded = 1
+			//res.redirect('/cart')
 
 		}else{
 			//Rename the new image.
 			try {
-				file.renameSync(prescriptionImagePathTemporary + req.file.filename, prescriptionImagePathTemporary + req.file.filename 
-					+ '.jpg');
+				file.renameSync(prescriptionImagePathTemporary + req.file.filename, prescriptionImagePathTemporary + req.file.filename + '.jpg');
 			} catch (error) {
 				console.log(error.message);
+				
 			}
 
 			//Create a session to store the prescription image if it doesn't exist.
@@ -1124,6 +1140,9 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 
 			//Redirect as necessary.
 			res.json({'prescription': newPrescriptionImagePathTemporary + session.prescriptionImage });
+			
+			//session.prescriptionUploaded = 1
+			//res.redirect('/cart')
 
 		}
 	}
