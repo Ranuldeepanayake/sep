@@ -275,7 +275,7 @@ app.get('/view-supplier-products-redirect', function (req, res){
 	supplier.getSupplierData(session.supplieridpharm, function (resultSupplier){
 		console.log("**************Showing the selected supplier's profile data>");
 		console.log(resultSupplier);
-
+		
 		//Then get the respective supplier's items list.
 		//supplier.getItemsList(req.body.supplierId, req.body.prescribed, request.body.itemCategory, function (resultItems)
 		supplier.getItemsList(session.supplieridpharm, function (resultItems){
@@ -624,7 +624,7 @@ app.get('/cart', function (req, res){
 			//Create the object.
 			var data= {cartItemNumber : '', cartItemId : '', cartItemCategory: '', cartItemName: '', 
 			cartItemDescription: '', cartItemPrescribed: '', cartItemQuantity : '', cartItemUnitPrice: '', 
-			cartItemImage: '', cartItemSupplierId: '', cartItemSubTotal: ''}
+			cartItemImage: '', cartItemSupplierId: '', cartItemSubTotal: '', dbQuantity: '', remainingQuantity: ''}
 
 			//Assign session values to the object.
 			data.cartItemNumber= session.cartItemNumber[x];
@@ -634,6 +634,8 @@ app.get('/cart', function (req, res){
 			data.cartItemDescription = session.cartItemDescription[x];
 			data.cartItemPrescribed= session.cartItemPrescribed[x];
 			data.cartItemQuantity= session.cartItemQuantity[x];
+			data.dbQuantity= session.dbQuantity[x]; //Quantity from Db
+			data.remainingQuantity= session.remainingQuantity[x]; //Quantity left
 			data.cartItemUnitPrice= session.cartItemUnitPrice[x];
 			data.cartItemImage = session.cartItemImage[x];
 			data.cartItemSupplierId = session.cartItemSupplierId[x];
@@ -663,23 +665,21 @@ app.get('/cart', function (req, res){
 		//Check if there are prescribed items in the cartItems object array
 		let filtered = cartItems.filter(row => row.cartItemPrescribed === 'true');
 
-		//check if its the first time viewing the cart
-		if (session.prescriptionUploaded == "undefined" || session.prescriptionUploaded == null){
 			if (filtered.length > 0) { 
-			res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 'undefined'})
+				//check if its the first time loading the page
+				if (session.prescriptionUploaded == "undefined" || session.prescriptionUploaded == null){
+					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 'undefined'})
+					}
+				else{
+					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: session.prescriptionUploaded})
+				}
 			}
-			else{
+			else
+			{
 				res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0, prescriptionUploaded: 'undefined'})
+
 			}
-		}else{
-			if (filtered.length > 0) { 
-				res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: session.prescriptionUploaded})
-			}
-			else{
-				res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0, prescriptionUploaded: session.prescriptionUploaded})
-			}
-		}
-		
+				 ///////////////////////////
 	}else{
 		//res.json({'status': 'Cart empty'});
 		res.redirect('/cart-empty')
@@ -782,7 +782,9 @@ app.post('/add-to-cart', function(req, res) {
 		session.cartItemName.push(req.body.itemName);
 		session.cartItemDescription.push(req.body.itemDescription);
 		session.cartItemPrescribed.push(req.body.itemPrescribed);
-		session.cartItemQuantity.push(req.body.itemQuantity);
+		session.cartItemQuantity.push(req.body.itemQuantity); //Quantity added
+		session.dbQuantity.push(req.body.itemDbQuantity); //Quantity from Db
+		session.remainingQuantity.push(req.body.itemDbQuantity - req.body.itemQuantity); //Quantity left
 		session.cartItemUnitPrice.push(req.body.itemUnitPrice);
 		session.cartItemImage.push(req.body.itemImage);
 		session.cartItemSupplierId.push(req.body.itemSupplierId);
@@ -820,6 +822,8 @@ app.post('/add-to-cart', function(req, res) {
 		session.cartItemDescription= [];
 		session.cartItemPrescribed= [];
 		session.cartItemQuantity= [];
+		session.dbQuantity=[]; //Quantity from Db
+		session.remainingQuantity=[]; //Quantity left
 		session.cartItemUnitPrice= [];
 		session.cartItemImage= [];
 		session.cartItemSupplierId= [];
@@ -834,6 +838,8 @@ app.post('/add-to-cart', function(req, res) {
 		session.cartItemDescription.push(req.body.itemDescription);
 		session.cartItemPrescribed.push(req.body.itemPrescribed);
 		session.cartItemQuantity.push(req.body.itemQuantity);
+		session.dbQuantity.push(req.body.itemDbQuantity); //Quantity from Db
+		session.remainingQuantity.push(req.body.itemDbQuantity - req.body.itemQuantity); //Quantity left
 		session.cartItemUnitPrice.push(req.body.itemUnitPrice);
 		session.cartItemImage.push(req.body.itemImage);
 		session.cartItemSupplierId.push(req.body.itemSupplierId);
@@ -850,6 +856,8 @@ app.post('/add-to-cart', function(req, res) {
 			console.log('Item ID: ' + session.cartItemId[i]);
 			console.log('Item Name: ' + session.cartItemName[i]);
 			console.log('Item Quantity: ' + session.cartItemQuantity[i]);
+			console.log('Item Quantity in DB: ' + session.dbQuantity[i]);
+			console.log('Item Quantity remaining: ' + session.remainingQuantity[i]);
 			i++;
 		});	
 		
@@ -880,7 +888,7 @@ app.post('/add-to-cart', function(req, res) {
 		//Create the object.
 		var data= {cartItemNumber : '', cartItemId : '', cartItemCategory: '', cartItemName: '', 
 		cartItemDescription: '', cartItemPrescribed: '', cartItemQuantity : '', cartItemUnitPrice: '', 
-		cartItemImage: '', cartItemSupplierId: ''}
+		cartItemImage: '', cartItemSupplierId: '', dbItemQuantity: '', remainingItemQuantity: ''}
 
 		//Assign session values to the object.
 		data.cartItemNumber= session.cartItemNumber[x];
@@ -890,6 +898,8 @@ app.post('/add-to-cart', function(req, res) {
 		data.cartItemDescription = session.cartItemDescription[x];
 		data.cartItemPrescribed= session.cartItemPrescribed[x];
 		data.cartItemQuantity= session.cartItemQuantity[x];
+		data.dbQuantity= session.dbQuantity[x];
+		data.remainingQuantity= session.remainingQuantity[x];
 		data.cartItemUnitPrice= session.cartItemUnitPrice[x];
 		data.cartItemImage = session.cartItemImage[x];
 		data.cartItemSupplierId = session.cartItemSupplierId[x];
@@ -945,6 +955,8 @@ app.post('/remove-from-cart', function(req, res) {
 			session.cartItemDescription= null;
 			session.cartItemPrescribed= null;
 			session.cartItemQuantity= null;
+			session.dbQuantity= null;
+			session.remainingQuantity= null;
 			session.cartItemUnitPrice= null;
 			session.cartItemImage= null;
 			session.cartItemSupplierId= null;
@@ -969,6 +981,8 @@ app.post('/remove-from-cart', function(req, res) {
 			session.cartItemDescription.splice(removeIndex, 1);
 			session.cartItemPrescribed.splice(removeIndex, 1);
 			session.cartItemQuantity.splice(removeIndex, 1);
+			session.dbQuantity.splice(removeIndex, 1);
+			session.remainingQuantity.splice(removeIndex, 1);
 			session.cartItemUnitPrice.splice(removeIndex, 1);
 			session.cartItemImage.splice(removeIndex, 1);
 			session.cartItemSupplierId.splice(removeIndex, 1);
@@ -980,6 +994,8 @@ app.post('/remove-from-cart', function(req, res) {
 			session.cartItemDescription.splice(removeIndex, removeIndex);
 			session.cartItemPrescribed.splice(removeIndex, removeIndex);
 			session.cartItemQuantity.splice(removeIndex, removeIndex);
+			session.dbQuantity.splice(removeIndex, 1);
+			session.remainingQuantity.splice(removeIndex, 1);
 			session.cartItemUnitPrice.splice(removeIndex, removeIndex);
 			session.cartItemImage.splice(removeIndex, removeIndex);
 			session.cartItemSupplierId.splice(removeIndex, removeIndex);
@@ -1044,6 +1060,8 @@ app.post('/remove-from-cart', function(req, res) {
 			data.cartItemDescription = session.cartItemDescription[x];
 			data.cartItemPrescribed= session.cartItemPrescribed[x];
 			data.cartItemQuantity= session.cartItemQuantity[x];
+			data.dbQuantity= session.dbQuantity[x];
+			data.remainingQuantity= session.remainingQuantity[x];
 			data.cartItemUnitPrice= session.cartItemUnitPrice[x];
 			data.cartItemImage = session.cartItemImage[x];
 			data.cartItemSupplierId = session.cartItemSupplierId[x];
@@ -1095,7 +1113,7 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 		return;
 
 		//redirect to page
-		//session.prescriptionUploaded = 0
+		session.prescriptionUploaded = 0
 		//res.redirect('/cart')
 
 	}else{
@@ -1123,7 +1141,7 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 			//Redirect as necessary.
 			res.json({'prescription': newPrescriptionImagePathTemporary + session.prescriptionImage });
 			
-			//session.prescriptionUploaded = 1
+			session.prescriptionUploaded = 1
 			//res.redirect('/cart')
 
 		}else{
@@ -1141,7 +1159,7 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 			//Redirect as necessary.
 			res.json({'prescription': newPrescriptionImagePathTemporary + session.prescriptionImage });
 			
-			//session.prescriptionUploaded = 1
+			session.prescriptionUploaded = 1
 			//res.redirect('/cart')
 
 		}
@@ -1487,12 +1505,42 @@ app.post('/view-item-process', function (req, res){
 	console.log("**************Showing the selected item details>");
 	console.log(req.body.itemCode);
 
+	//Variables for replacing DB quantity with cart quantity
+	var sessionData= [];
+	var x= 0;
 	supplier.getItem(req.body.itemCode, function(result){
-		
-		//res.json(result);	//Change this as res.render().
-
 		if(typeof session.userfirstname != null)
 			{
+			//Replace dbQuantity with remainingQuantity
+			if(session.cartItemNumber){
+				session.cartItemNumber.forEach(element => {
+	
+					//Create the object.
+					var data= { item_code : '', quantity: ''}
+		
+					//Assign session values to the object.
+					data.item_code = session.cartItemId[x];
+					data.quantity= session.remainingQuantity[x]; //Quantity left
+	
+					sessionData.push(data)
+					x++
+				});
+	
+				//var commonItems = []
+				
+				for (var i = 0; i < sessionData.length; i++) {
+					for (var k = 0; k < result.length; k++) {
+						console.log(sessionData[i].item_code , result[k].item_code)
+						if (sessionData[i].item_code == result[k].item_code) {
+						result[k].quantity = sessionData[i].quantity
+						//commonItems.push(result[k].item_code)
+						break;
+						}
+					}
+				}
+				}
+				/////////////////////
+
 				if(session.totalPrice != null){
 					res.render('ProductDetails.ejs', { userFName: session.userfirstname,  ItemDetails: result, totalPrice: session.totalPrice });	
 				} else {
@@ -1505,7 +1553,8 @@ app.post('/view-item-process', function (req, res){
 				console.log(result);
 				res.render('ProductDetails.ejs', { userFName: '',  ItemDetails: result, totalPrice: 0 });
 			}
-	});
+
+		});
 });
 
 
