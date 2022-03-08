@@ -1275,7 +1275,6 @@ app.get('/checkout', function (req, res){
 					
 					//res.json(result);
 				});
-				console.log("Here 1")
 			//If prescribed items are not in the cart.
 			}else {
 				customer.createOrder(cartItems, session.totalPrice, session.supplieridpharm, session.userid, function(result){
@@ -1291,12 +1290,9 @@ app.get('/checkout', function (req, res){
 					req.session.prescriptionImage= null;
 	
 					//res.json(result);
-					console.log("Here 2")
 				});
 			}
 	
-			
-
 			res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: cartItems, totalPrice: session.totalPrice, message: ''})
 		}
 	});			
