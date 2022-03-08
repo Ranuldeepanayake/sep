@@ -154,7 +154,7 @@
                                         <div class="quantity-colors">
                                             <div class="quantity">
                                                 <h5>Quantity:</h5>
-                                                <div><input type="number" value="<%= ItemDetails[0].quantity %>" max="<%= ItemDetails[0].quantity %>" id="itemQuantity" name="itemQuantity"></div>
+                                                <div><input type="number" value="<%= ItemDetails[0].quantity %>" min="1" max="<%= ItemDetails[0].quantity %>" id="itemQuantity" name="itemQuantity"></div>
                                             </div>
                                             <button class="btn btn-primary-cs btn-round" type="submit"><i class="ti-shopping-cart"></i><span>ADD TO CART</span></button>
                                         </div>
@@ -193,6 +193,7 @@
                 <input id="itemSupplierId" name="itemSupplierId" style="visibility: hidden;" value="<%= ItemDetails[0].supplier_id%>">
                 <input id="itemUnitPrice" name="itemUnitPrice" style="visibility: hidden;" value="<%= ItemDetails[0].unit_price%>">
                 <input id="itemDescription" name="itemDescription" style="visibility: hidden;" value="<%= ItemDetails[0].description%>">
+                <input type="number" value="<%= ItemDetails[0].quantity %>" max="<%= ItemDetails[0].quantity %>" id="itemDbQuantity" name="itemDbQuantity" style="visibility: hidden;">
                 <input id="itemName" name="itemName" style="visibility: hidden;" value="<%= ItemDetails[0].name%>">
                 <input id="itemCategory" name="itemCategory" style="visibility: hidden;" value="<%= ItemDetails[0].category%>">                                            
                 <input id="itemImage" name="itemImage" style="visibility: hidden;" value="<%= ItemDetails[0].image%>">
