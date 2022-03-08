@@ -145,7 +145,8 @@
                                                 <td class="pro-title"><a href="#"><%= cartItems[i].cartItemName %></a></td>
                                                 <td class="pro-price"><span class="amount"><%= cartItems[i].cartItemUnitPrice %></span></td>
                                                 <td class="pro-quantity">
-                                                    <input type="number" value="<%= cartItems[i].cartItemQuantity %>" max="<%= cartItems[i].cartItemQuantity %>"/>
+                                                    <input type="number" id = "cartQuantity" value="<%= cartItems[i].cartItemQuantity %>" max="<%= cartItems[i].dbQuantity %>" onchange="checkQuantity()"/>
+                                                    <input type="number" id = "dbQuantity" value="<%= cartItems[i].dbQuantity %>" hidden/>
                                                 </td>
                                                 <td class="pro-subtotal">Rs. <%= cartItems[i].cartItemSubTotal %></td>
                                                 <form method="post" action="remove-from-cart">
@@ -163,17 +164,20 @@
                         <% if(reqPrescription == 1) { %> 
                             <form method="post" action="upload-prescription-process">
                               <p>*Please upload the prescription to checkout.</p>
-                                <input class="prescription-upload" type="file" id="storeImage" name="storeImage" onchange="checkData()">
+                                <input class="prescription-upload" type="file" id="prescriptionImage" name="prescriptionImage" onchange="checkData()">
                                 <button class="btn btn-warning btn-round" type="submit" id="upload-btn" onkeyup="checkPrescription()" disabled>Upload</button>  
+                                <div class="cart-buttons mt-30 mb-30">
+                                    <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn" disabled><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
+                                    <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" disabled><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
+                                </div>
                             </form>  
                         <% } else { %> 
-                            <span></span>
-                        <% } %>
                             <div class="cart-buttons mt-30 mb-30">
-                                <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn" disabled><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
-                                <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" disabled><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
+                                <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn" ><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
+                                <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" ><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
                             </div>
-                            <br>
+                        <% } %>
+                            <div class="col-lg-8 col-md-7 col-12 mb-40">&nbsp;</div>
                             <% if(prescriptionUploaded == 0) { %> 
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     Error in uploading prescription!
@@ -278,7 +282,7 @@
     <script src="assets/js/main.js"></script>
     <script>
         var checkData = function() {
-            if (document.getElementById('storeImage').value.length > 0) {
+            if (document.getElementById('prescriptionImage').value.length > 0) {
             document.getElementById("upload-btn").disabled = false;
             }
             else{
@@ -295,9 +299,15 @@
         }
 
         var checkPrescription = function() {
-            if (document.getElementById('storeImage').value.length > 0) {
+            if (document.getElementById('prescriptionImage').value.length > 0) {
             document.getElementById("continue-shopping-btn").disabled = false;
             document.getElementById("check-out-btn").disabled = false;
+            }
+        }
+
+        var checkQuantity = function() {
+            if (document.getElementById('cartQuantity').value > document.getElementById('dbQuantity').value ) {
+            document.getElementById("cartQuantity").value = document.getElementById('dbQuantity').value ;
             }
         }
     </script>
