@@ -1103,6 +1103,7 @@ app.post('/remove-from-cart', function(req, res) {
 app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single('prescriptionImage'), function(req, res){
 	console.log('**************Saving the prescription temporarily till checkout>');
 	console.log(req.file);
+	//console.log('Filename: ' + req.file.filename);
 	
 	//Check if the cart sessions exist.
 	//Code.
@@ -1122,7 +1123,7 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 
 			//Delete the existing image from the filesystem first.
 			try {
-				file.unlinkSync(prescriptionImagePathTemporary + req.session.prescriptionImage);
+				file.unlinkSync(prescriptionImagePathTemporary + session.prescriptionImage);
 			} catch (error) {
 				console.log(error.message);
 			}

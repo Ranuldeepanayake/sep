@@ -162,7 +162,7 @@
                         
                         <div class="col-lg-8 col-md-7 col-12 mb-40">
                         <% if(reqPrescription == 1) { %> 
-                            <form method="post" action="upload-prescription-process">
+                            <form method="post" action="upload-prescription-process" enctype="multipart/form-data">
                               <p>*Please upload the prescription to checkout.</p>
                                 <input class="prescription-upload" type="file" id="prescriptionImage" name="prescriptionImage" onchange="checkData()">
                                 <button class="btn btn-warning btn-round" type="submit" id="upload-btn" onkeyup="checkPrescription()" disabled>Upload</button>  
