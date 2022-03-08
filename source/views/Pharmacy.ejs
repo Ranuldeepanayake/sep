@@ -321,7 +321,13 @@
                                                                         height: 300px; object-fit: contain; align-self: center;">
                                                                         <div class="image-overlay">
                                                                             <div class="action-buttons">
-                                                                                <button>add to cart</button>
+                                                                                <div class="action-buttons">
+                                                                                    <% if(userFName.length > 0) { %>
+                                                                                        <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                    <% } else { %>
+                                                                                        <button title="Please log in!" disabled>add to cart</button>    
+                                                                                    <% } %>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -450,7 +456,13 @@
                                                                         height: 300px; object-fit: contain; align-self: center;">
                                                                         <div class="image-overlay">
                                                                             <div class="action-buttons">
-                                                                                <button>add to cart</button>
+                                                                                <div class="action-buttons">
+                                                                                    <% if(userFName.length > 0) { %>
+                                                                                        <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                    <% } else { %>
+                                                                                        <button title="Please log in!" disabled>add to cart</button>    
+                                                                                    <% } %>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -570,7 +582,13 @@
                                                                         height: 300px; object-fit: contain; align-self: center;">
                                                                         <div class="image-overlay">
                                                                             <div class="action-buttons">
-                                                                                <button>add to cart</button>
+                                                                                <div class="action-buttons">
+                                                                                    <% if(userFName.length > 0) { %>
+                                                                                        <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                    <% } else { %>
+                                                                                        <button title="Please log in!" disabled>add to cart</button>    
+                                                                                    <% } %>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
