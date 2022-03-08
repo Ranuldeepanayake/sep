@@ -1279,31 +1279,31 @@ app.get('/checkout-process', function(req, res) {
 		if(req.body.prescribed== 'true'){
 
 			//Check if a temporary prescription image file is actually uploaded or not.
-			if(!req.session.prescriptionImage){
+			if(!session.prescriptionImage){
 				res.json({'status': 'failure'}); //Return if prescription image session doesn't exist.
 				return;
 			}
 
 			//Move the image from the temporary path to the permanent path. Yes, the rename function has to be used.
 			try {
-				file.renameSync(prescriptionImagePathTemporary + req.session.prescriptionImage, 
-					prescriptionImagePath + req.session.prescriptionImage);
+				file.renameSync(prescriptionImagePathTemporary + session.prescriptionImage, 
+					prescriptionImagePath + session.prescriptionImage);
 			} catch (error) {
 				console.log(error.message);
 			}
 
 			customer.createOrderPrescribed(array, totalPrice, req.supplierId, req.session.userId, 
-				newPrescriptionImagePath + req.session.prescriptionImage, function(result){
+				newPrescriptionImagePath + session.prescriptionImage, function(result){
 
 				//Delete the temporary image from the filesystem after saving the permanent prescription.
 				try {
-					file.unlinkSync(prescriptionImagePathTemporary + req.session.prescriptionImage);
+					file.unlinkSync(prescriptionImagePathTemporary + session.prescriptionImage);
 				} catch (error) {
 					console.log(error.message);
 				}
 
 				//Delete the session for the temporary prescription.
-				req.session.prescriptionImage= null;
+				session.prescriptionImage= null;
 				
 				res.json(result);
 			});
