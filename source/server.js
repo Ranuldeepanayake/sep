@@ -1314,7 +1314,14 @@ app.get('/place-order', function (req, res){
 
 					//res.json(result);
 					//res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: 'Success'})
-					res.render('Success.ejs')
+					if(result == "success")
+					{
+						res.render('Success.ejs')
+					}
+					else
+					{
+						res.json(result);
+					}
 				});
 
 			//If prescribed items are not in the cart.
@@ -1322,7 +1329,14 @@ app.get('/place-order', function (req, res){
 				customer.createOrder(array, totalPrice, session.supplieridpharm, session.userid, function(result){
 					//res.json(result);
 					//res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: 'Success'})
-					res.render('Success.ejs')
+					if(result == "success")
+					{
+						res.render('Success.ejs')
+					}
+					else
+					{
+						res.json(result);
+					}
 				});
 			}
 	
