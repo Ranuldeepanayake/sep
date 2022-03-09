@@ -22,6 +22,7 @@ const cookieParser = require("cookie-parser");
 const { Session } = require('express-session');
 const { serialize } = require('v8');
 const { error } = require('console');
+const { resolve } = require('path');
 
 //Global constants.
 const app = express();
@@ -1300,26 +1301,16 @@ app.get('/place-order', function (req, res){
 				customer.createOrderPrescribed(array, totalPrice, session.supplieridpharm, session.userid, 
 					newPrescriptionImagePath + session.prescriptionImage, function(result){
 					
-					//This is not needed as it is moved from temp to images 
-					/*
-					//Delete the temporary image from the filesystem after saving the permanent prescription.
-					try {
-						file.unlinkSync(prescriptionImagePathTemporary + session.prescriptionImage);
-					} catch (error) {
-						console.log(error.message);
-					}
-
-					//Delete the session for the temporary prescription.
-					session.prescriptionImage= null;*/
-
-					//res.json(result);
-					//res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: 'Success'})
-					if(result == "success")
+					// check if order was created successfully
+					console.log(result)
+					if(result == 'success')
 					{
+						console.log("1")
 						res.render('Success.ejs')
 					}
 					else
 					{
+						console.log("2")
 						res.json(result);
 					}
 				});
@@ -1328,7 +1319,8 @@ app.get('/place-order', function (req, res){
 			}else if(session.prescribed.length == 0){
 				customer.createOrder(array, totalPrice, session.supplieridpharm, session.userid, function(result){
 					//res.json(result);
-					//res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: 'Success'})
+					
+					// check if order was created successfully
 					if(result == "success")
 					{
 						res.render('Success.ejs')
