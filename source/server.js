@@ -664,15 +664,18 @@ app.get('/cart', function (req, res){
 
 		//Check if there are prescribed items in the cartItems object array
 		let filtered = cartItems.filter(row => row.cartItemPrescribed === 'true');
-		console.log("session.prescriptionUploaded in /cart:",session.prescriptionUploaded)
+		session.prescribed = filtered
+		console.log("session.prescriptionImage in /cart:",session.prescriptionImage)
 			
 			//check if its the first time loading the page
 			
 			if (filtered.length > 0) {
-				if (session.prescriptionUploaded == 'undefined'){
+				if (typeof session.prescriptionImage === 'undefined'){
 					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 'null'})
+				} else if (session.prescriptionImage.length > 1){
+					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 1})
 				} else {
-					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: session.prescriptionUploaded})
+					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 0})
 				}
 			}
 			else
@@ -1117,7 +1120,7 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 		//return;
 
 		//redirect to page
-		session.prescriptionUploaded = 0
+		//session.prescriptionUploaded = 0
 		console.log("1")
 		res.redirect('/cart')
 
@@ -1146,13 +1149,13 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 			//Redirect as necessary.
 			//res.json({'prescription': newPrescriptionImagePathTemporary + session.prescriptionImage });
 			
-			session.prescriptionUploaded = 1
-			console.log("2")
+			//session.prescriptionUploaded = 1
 			res.redirect('/cart')
 
 		}else{
 			//Rename the new image.
 			try {
+				console.log("rename", prescriptionImagePathTemporary + req.file.filename, prescriptionImagePathTemporary + req.file.filename + '.jpg')
 				file.renameSync(prescriptionImagePathTemporary + req.file.filename, prescriptionImagePathTemporary + req.file.filename + '.jpg');
 			} catch (error) {
 				console.log(error.message);
@@ -1165,8 +1168,7 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 			//Redirect as necessary.
 			//res.json({'prescription': newPrescriptionImagePathTemporary + session.prescriptionImage });
 			
-			session.prescriptionUploaded = 1
-			console.log("3")
+			//.prescriptionUploaded = 1
 			res.redirect('/cart')
 
 		}
@@ -1180,7 +1182,6 @@ app.get('/checkout', function (req, res){
 		var x = 0
 		var billingInfo = []
 		var cartItems = []
-		var totalPrice = 0
 
 		if(result == 'failure'){
 			res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: cartItems, totalPrice: session.totalPrice, message: "Unable to retrieve billing information!"})
@@ -1194,6 +1195,54 @@ app.get('/checkout', function (req, res){
 			
 			billingInfo.push(userData);
 
+			//Get item list
+			session.cartItemNumber.forEach(element => {
+				//Create the object.
+				var data = {cartItemName: '' 
+							,cartItemSubTotal: ''}
+	
+				//Assign session values to the object.
+				data.cartItemName= session.cartItemName[x];
+
+				//Calculating sub total price.
+				var subtotal = 0;
+				subtotal= session.cartItemQuantity[x] * session.cartItemUnitPrice[x];
+				data.cartItemSubTotal = subtotal;
+	
+				x++; //Increment to the next set of session elements.
+	
+				//Push the object into an object array*/
+				cartItems.push(data); 
+			});	
+
+			console.log(billingInfo)	
+			res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: cartItems, totalPrice: session.totalPrice, message: ''})		
+		}
+	});	
+	
+});
+///////////////////
+
+app.get('/place-order', function (req, res){
+	console.log('**************Place-order>');
+	customer.getProfileData(session.userid, function (result){
+		var x = 0
+		var billingInfo = []
+		var array = []
+		var totalPrice = 0
+
+		//Get billing info
+		var userData = {email: result.email
+			,firstName: result.firstName
+			,lastName: result.lastName
+			,street: result.street
+			,city: result.city}
+
+		billingInfo.push(userData);
+
+		if(result == 'failure'){
+			res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: "Unable to retrieve billing information!"})
+		} else {
 			//Get item list
 			session.cartItemNumber.forEach(element => {
 
@@ -1226,32 +1275,20 @@ app.get('/checkout', function (req, res){
 				x++; //Increment to the next set of session elements.
 
 				//Push the object into an object array
-				//array.push(data); 
-
-
-				/*
-				//Create the object.
-				var data = {cartItemName: '' 
-							,cartItemSubTotal: ''}
-	
-				//Assign session values to the object.
-				data.cartItemName= session.cartItemName[x];
-
-				//Calculating sub total price.
-				var subtotal = 0;
-				subtotal= session.cartItemQuantity[x] * session.cartItemUnitPrice[x];
-				data.cartItemSubTotal = subtotal;
-	
-				x++; //Increment to the next set of session elements.
-	
-				//Push the object into an object array*/
-				cartItems.push(data); 
+				array.push(data); 
 			});	
 
 			console.log(billingInfo)
 			
-			console.log("session.prescriptionUploaded", session.prescriptionUploaded)
-			if (session.prescriptionUploaded == 1) {
+			//Choose the function depending on whether prescribed items are present or not.
+			//If prescribed items are in the cart.
+			if(session.prescribed.length > 0){
+				//Check if a temporary prescription image file is actually uploaded or not.
+				if(!session.prescriptionImage){
+					res.json({'status': 'failure'}); //Return if prescription image session doesn't exist.
+					return;
+				}
+
 				//Move the image from the temporary path to the permanent path. Yes, the rename function has to be used.
 				try {
 					file.renameSync(prescriptionImagePathTemporary + session.prescriptionImage, 
@@ -1259,45 +1296,40 @@ app.get('/checkout', function (req, res){
 				} catch (error) {
 					console.log(error.message);
 				}
-	
-				customer.createOrderPrescribed(cartItems, session.totalPrice, session.supplieridpharm, session.userid, 
+
+				customer.createOrderPrescribed(array, totalPrice, session.supplieridpharm, session.userid, 
 					newPrescriptionImagePath + session.prescriptionImage, function(result){
-	
+					
+					//This is not needed as it is moved from temp to images 
+					/*
 					//Delete the temporary image from the filesystem after saving the permanent prescription.
 					try {
 						file.unlinkSync(prescriptionImagePathTemporary + session.prescriptionImage);
 					} catch (error) {
 						console.log(error.message);
 					}
-	
+
 					//Delete the session for the temporary prescription.
-					session.prescriptionImage= null;
-					
+					session.prescriptionImage= null;*/
+
 					//res.json(result);
+					//res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: 'Success'})
+					res.render('Success.ejs')
 				});
+
 			//If prescribed items are not in the cart.
-			}else {
-				customer.createOrder(cartItems, session.totalPrice, session.supplieridpharm, session.userid, function(result){
-	
-					//Delete the temporary image from the filesystem after saving the permanent prescription.
-					try {
-						file.unlinkSync(prescriptionImagePathTemporary + req.session.prescriptionImage);
-					} catch (error) {
-						console.log(error.message);
-					}
-	
-					//Delete the session for the temporary prescription.
-					req.session.prescriptionImage= null;
-	
+			}else if(session.prescribed.length == 0){
+				customer.createOrder(array, totalPrice, session.supplieridpharm, session.userid, function(result){
 					//res.json(result);
+					//res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: 'Success'})
+					res.render('Success.ejs')
 				});
 			}
 	
-			res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: cartItems, totalPrice: session.totalPrice, message: ''})
+			
 		}
 	});			
 });
-///////////////////
 
 /*
 //Test function for checking out the cart.
