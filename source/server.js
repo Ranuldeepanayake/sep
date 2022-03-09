@@ -1305,12 +1305,10 @@ app.get('/place-order', function (req, res){
 					console.log(result)
 					if(result == 'success')
 					{
-						console.log("1")
 						res.render('Success.ejs')
 					}
 					else
 					{
-						console.log("2")
 						res.json(result);
 					}
 				});
@@ -1319,7 +1317,7 @@ app.get('/place-order', function (req, res){
 			}else if(session.prescribed.length == 0){
 				customer.createOrder(array, totalPrice, session.supplieridpharm, session.userid, function(result){
 					//res.json(result);
-					
+
 					// check if order was created successfully
 					if(result == "success")
 					{
