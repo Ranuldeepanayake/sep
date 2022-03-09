@@ -1156,7 +1156,7 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 		}else{
 			//Rename the new image.
 			try {
-				console.log("rename", prescriptionImagePathTemporary + req.file.filename, prescriptionImagePathTemporary + req.file.filename + '.jpg')
+				//console.log("rename", prescriptionImagePathTemporary + req.file.filename, prescriptionImagePathTemporary + req.file.filename + '.jpg')
 				file.renameSync(prescriptionImagePathTemporary + req.file.filename, prescriptionImagePathTemporary + req.file.filename + '.jpg');
 			} catch (error) {
 				console.log(error.message);
