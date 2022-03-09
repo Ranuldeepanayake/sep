@@ -196,8 +196,8 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 	var result;
 	var orderId;
 
-	console.log('###Data passed to the order>');
-	console.log(itemArray);
+	//console.log('###Data passed to the order>');
+	//console.log(itemArray);
 
 	//Hard coded values for testing.
 	/*totalPrice= 1500;
@@ -234,7 +234,7 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 	//Insert records into the order_item table in a loop.
 	//Enclose within a try-catch block for easier error handling.
 	try {
-		console.log('###Entering order items now (DB)>');
+		//console.log('###Entering order items now (DB)>');
 
 		for(let i= 0; i< itemArray.length; i++){
 

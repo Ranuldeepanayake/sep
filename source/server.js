@@ -1216,7 +1216,7 @@ app.get('/checkout', function (req, res){
 				cartItems.push(data); 
 			});	
 
-			console.log(billingInfo)	
+			//console.log(billingInfo)	
 			res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: cartItems, totalPrice: session.totalPrice, message: ''})		
 		}
 	});	
@@ -1279,7 +1279,8 @@ app.get('/place-order', function (req, res){
 				array.push(data); 
 			});	
 
-			console.log(billingInfo)
+			//console.log(billingInfo)
+			console.log('**************Deciding the order type>');
 			
 			//Choose the function depending on whether prescribed items are present or not.
 			//If prescribed items are in the cart.
@@ -1300,6 +1301,7 @@ app.get('/place-order', function (req, res){
 
 				customer.createOrderPrescribed(array, totalPrice, session.supplieridpharm, session.userid, 
 					newPrescriptionImagePath + session.prescriptionImage, function(result){
+						console.log('**************Placing a prescribed order>');
 					
 					// check if order was created successfully
 					console.log(result)
@@ -1316,6 +1318,7 @@ app.get('/place-order', function (req, res){
 			//If prescribed items are not in the cart.
 			}else if(session.prescribed.length == 0){
 				customer.createOrder(array, totalPrice, session.supplieridpharm, session.userid, function(result){
+					console.log('**************Placing a non-prescribed order>');
 					//res.json(result);
 
 					// check if order was created successfully
