@@ -196,6 +196,9 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 	var result;
 	var orderId;
 
+	console.log('###Data passed to the order>');
+	console.log(itemArray);
+
 	//Hard coded values for testing.
 	/*totalPrice= 1500;
 	supplierId= 3;
@@ -231,7 +234,12 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 	//Insert records into the order_item table in a loop.
 	//Enclose within a try-catch block for easier error handling.
 	try {
+		console.log('###Entering order items now (DB)>');
+
 		for(let i= 0; i< itemArray.length; i++){
+
+			//As a fix for the lost connection issue.
+			createDbConnection();
 			//Insert into order item.
 			query= `insert into order_item (order_id, item_code, quantity) values (?, ?, ?)`;
 			values= [orderId, itemArray[i].itemId, itemArray[i].itemQuantity];
@@ -260,6 +268,8 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 			result= await connection.promise().query(query, values);
 			quantity= result[0][0].quantity;
 			console.log('New quantity: ' + quantity);
+
+			connection.end();
 
 		}
 		connection.end();
@@ -315,6 +325,10 @@ async function createOrderPrescribed(itemArray, totalPrice, supplierId, customer
 	//Enclose within a try-catch block for easier error handling.
 	try {
 		for(let i= 0; i< itemArray.length; i++){
+
+			//As a fix for the lost connection issue.
+			createDbConnection();
+
 			//Insert into order item.
 			query= `insert into order_item (order_id, item_code, quantity) values (?, ?, ?)`;
 			values= [orderId, itemArray[i].itemId, itemArray[i].itemQuantity];
@@ -343,6 +357,8 @@ async function createOrderPrescribed(itemArray, totalPrice, supplierId, customer
 			result= await connection.promise().query(query, values);
 			quantity= result[0][0].quantity;
 			console.log('New quantity: ' + quantity);
+
+			connection.end();
 
 		}
 		connection.end();
