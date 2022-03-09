@@ -162,10 +162,11 @@
                         
                         <div class="col-lg-8 col-md-7 col-12 mb-40">
                         <% if(reqPrescription == 1) { %> 
-                            <!--<form method="post" action="upload-prescription-process" enctype="multipart/form-data">-->
+                            <form method="post" action="upload-prescription-process" enctype="multipart/form-data">
                               <p>*Please upload the prescription to checkout.</p>
                                 <input class="prescription-upload" type="file" id="prescriptionImage" name="prescriptionImage" onchange="checkData()">
-                                <button class="btn btn-warning btn-round" type="submit" id="upload-btn" onclick="checkPrescription()" disabled>Upload</button>  
+                                <button class="btn btn-warning btn-round" type="submit" id="upload-btn" onkeyup="checkPrescription()" disabled>Upload</button>  
+                            </form>
                                 <div class="cart-buttons mt-30 mb-30">
                                     <% if(prescriptionUploaded == 1) { %>
                                         <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn" ><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
@@ -175,7 +176,7 @@
                                         <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" disabled><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
                                     <% } %>
                                 </div>
-                             <!--</form>--> 
+                             
                         <% } else { %> 
                             <div class="cart-buttons mt-30 mb-30">
                                 <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn" ><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
