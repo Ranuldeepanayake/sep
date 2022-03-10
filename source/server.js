@@ -609,6 +609,11 @@ function getSession(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Cart functions (back end)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function clearCart()
+{
+	session.cartItemNumber = ''
+	session.totalPrice = 0
+}
 
 app.get('/cart', function (req, res){
 	if(session.cartItemNumber){
@@ -666,7 +671,6 @@ app.get('/cart', function (req, res){
 		//Check if there are prescribed items in the cartItems object array
 		let filtered = cartItems.filter(row => row.cartItemPrescribed === 'true');
 		session.prescribed = filtered
-		console.log("session.prescriptionImage in /cart:",session.prescriptionImage)
 			
 			//check if its the first time loading the page
 			
@@ -1307,11 +1311,13 @@ app.get('/place-order', function (req, res){
 					console.log(result)
 					if(result == 'success')
 					{
-						res.render('Success.ejs')
+						//res.render('Success.ejs')
+						clearCart()
+						res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: result})	
 					}
 					else
 					{
-						res.json(result);
+						res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: 'Something went wrong! Please try again!'})	
 					}
 				});
 
@@ -1324,11 +1330,14 @@ app.get('/place-order', function (req, res){
 					// check if order was created successfully
 					if(result == "success")
 					{
-						res.render('Success.ejs')
+						//res.render('Success.ejs')
+						res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: result})	
+
 					}
 					else
 					{
-						res.json(result);
+						//res.json(result);
+						res.render('Checkout.ejs', {userFName: session.userfirstname, billingInfo: billingInfo, cartItems: array, totalPrice: session.totalPrice, message: result})	
 					}
 				});
 			}
