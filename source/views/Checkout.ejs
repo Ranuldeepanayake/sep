@@ -117,31 +117,18 @@
                 <!-- Checkout Form s-->
                 <form class="checkout-form">
                     <div class="row row-50 mbn-40">
-
+                        
+                        <% if (message.length > 10) { %>
                         <div class="col-lg-7">
-                            <% if (message.length > 10) { %>
-                                    <div class="col-12 mb-40">
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <%= message %>
-                                            <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
-                                            <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                            <% } else if (message.length == 7) { %>{ %>
-                              
-                                    <div class="col-12 mb-40">
-                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                            Order placed successfully!
-                                            <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
-                                            <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                               
-                            <% } else { %>  
-                                <span>&nbsp;</span> 
-                            <% } %>
+                            <div class="col-12 mb-40">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <%= message %>
+                                    <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+
                             <!-- Billing Address -->
                             <div id="billing-form" class="mb-20">
                                 <h4 class="checkout-title">Billing Address</h4>
@@ -179,48 +166,7 @@
                                         </select>
                                     </div>
                                 </div>
-
                             </div>
-
-                            <!-- Shipping Address -->
-                            <div id="billing-form" class="mb-20">
-                                <h4 class="checkout-title">Billing Address</h4>
-
-                                <div class="row">
-
-                                    <div class="col-md-6 col-12 mb-5">
-                                        <label>First Name*</label>
-                                        <input type="text" placeholder="First Name" value="<%= billingInfo[0].firstName %>">
-                                    </div>
-
-                                    <div class="col-md-6 col-12 mb-5">
-                                        <label>Last Name*</label>
-                                        <input type="text" placeholder="Last Name" value="<%= billingInfo[0].lastName %>">
-                                    </div>
-
-                                    <div class="col-md-6 col-12 mb-5">
-                                        <label>Email Address*</label>
-                                        <input type="email" placeholder="Email Address" value="<%= billingInfo[0].email %>">
-                                    </div>
-
-                                    <div class="col-12 mb-5">
-                                        <label>Address*</label>
-                                        <input type="text" placeholder="Address" value="<%= billingInfo[0].street %>">
-                                    </div>
-
-                                    <div class="col-md-6 col-12 mb-5">
-                                        <label>Town/City*</label>
-                                        <select id="city">
-                                            <option value="<%= billingInfo[0].city %>"><%= billingInfo[0].city %></option>
-                                            <option value="Kottawa">Kottawa</option>
-                                            <option value="Rajagiriya">Rajagiriya</option>
-                                            <option value="Nugegoda">Nugegoda</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
                         </div>
 
                         <div class="col-lg-5">
@@ -228,26 +174,20 @@
 
                                 <!-- Cart Total -->
                                 <div class="col-12 mb-40">
-
                                     <h4 class="checkout-title">Cart Total</h4>
-
                                     <div class="checkout-cart-total">
-
                                         <h4>Product <span>Total</span></h4>
-
                                         <ul>
                                         <% for(var i=0; i < cartItems.length; i++) { %>
                                             <li><%= cartItems[i].cartItemName %><span>Rs. <%= cartItems[i].cartItemSubTotal %></span></li>
                                         <% } %>  
                                         </ul>
 
-                                      
                                         <h4>Grand Total <span><%= totalPrice %></span></h4>
-
                                     </div>
-
                                 </div>
-                </form>
+                            </div>
+                
                                 <!-- Payment Method -->
                                 
                                 <div class="col-12 mb-40">
@@ -269,9 +209,105 @@
                                 
                             </div>
                         </div>
-
+                        <% } else if (message.length == 7) { %>
+                        <div class="container">
+                            <div class="row mbn-40">
+                                <div class="col-12 mb-40">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        Order placed successfully!
+                                        <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-info btn-sm btn-block"><a href="/view-supplier-products-redirect">Return to Store</a></button>
+                            </div>
+                            <br><br>
+                        </div>
+                        <% } else { %>  
+                            <div class="col-lg-7">
+                                <!-- Billing Address -->
+                                <div id="billing-form" class="mb-20">
+                                    <h4 class="checkout-title">Billing Address</h4>
+    
+                                    <div class="row">
+    
+                                        <div class="col-md-6 col-12 mb-5">
+                                            <label>First Name*</label>
+                                            <input type="text" placeholder="First Name" placeholder="testing" value="<%= billingInfo[0].firstName %>">
+                                            
+                                        </div>
+    
+                                        <div class="col-md-6 col-12 mb-5">
+                                            <label>Last Name*</label>
+                                            <input type="text" placeholder="Last Name" value="<%= billingInfo[0].lastName %>">
+                                        </div>
+    
+                                        <div class="col-md-6 col-12 mb-5">
+                                            <label>Email Address*</label>
+                                            <input type="email" placeholder="Email Address" value="<%= billingInfo[0].email %>">
+                                        </div>
+    
+                                        <div class="col-12 mb-5">
+                                            <label>Address*</label>
+                                            <input type="text" placeholder="Address" value="<%= billingInfo[0].street %>">
+                                        </div>
+    
+                                        <div class="col-md-6 col-12 mb-5">
+                                            <label>Town/City*</label>
+                                            <select id="city">
+                                                <option value="<%= billingInfo[0].city %>"><%= billingInfo[0].city %></option>
+                                                <option value="Kottawa">Kottawa</option>
+                                                <option value="Rajagiriya">Rajagiriya</option>
+                                                <option value="Nugegoda">Nugegoda</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-lg-5">
+                                <div class="row">
+    
+                                    <!-- Cart Total -->
+                                    <div class="col-12 mb-40">
+                                        <h4 class="checkout-title">Cart Total</h4>
+                                        <div class="checkout-cart-total">
+                                            <h4>Product <span>Total</span></h4>
+                                            <ul>
+                                            <% for(var i=0; i < cartItems.length; i++) { %>
+                                                <li><%= cartItems[i].cartItemName %><span>Rs. <%= cartItems[i].cartItemSubTotal %></span></li>
+                                            <% } %>  
+                                            </ul>
+    
+                                            <h4>Grand Total <span><%= totalPrice %></span></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                                    <!-- Payment Method -->
+                                    
+                                    <div class="col-12 mb-40">
+    
+                                        <h4 class="checkout-title">Payment Method</h4>
+    
+                                        <div class="checkout-payment-method">
+    
+                                            <div class="single-method">
+                                                <input type="radio" id="payment_cash" name="payment-method" value="cash">
+                                                <label for="payment_cash">Cash on Delivery</label>
+                                                <p data-method="cash">Please send a Check to Store name with Store Street, Store Town, Store State, Store Postcode, Store Country.</p>
+                                            </div>
+    
+                                        </div>
+                                        <button class="btn btn-primary-cs btn-round mt-20"><i class="ti-shopping-cart"></i>&nbsp;<span><a href="/cart">Return to Cart</a></span></button>
+                                        <button class="btn btn-primary-cs btn-round mt-20"><i class="ti-check"></i>&nbsp;<span><a href="/place-order">Place Order</a></span></button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <% } %>
                     </div>
-                
+                </form>
 
             </div>
         </div><!-- Page Section End -->
