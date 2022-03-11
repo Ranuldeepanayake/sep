@@ -8,7 +8,7 @@ var connection;
 //Create a connection to a database.
 function createDbConnection() {
 	connection = sql.createConnection({
-		host: "54.255.248.164",
+		host: "54.169.116.74",
   		user: "sep",
   		password: "RHFkwLSa62uXb7vQ",
 		database: 'sep'
