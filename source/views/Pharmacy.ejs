@@ -111,7 +111,7 @@
         <div class="product-section section pt-100">            
             <div class="container">
                 <div class="col-12 mb-15"> 
-                    <% if(message.length > 0) { %>
+                    <% if(message.length > 5) { %>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <%= message %>
                             <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
@@ -119,6 +119,8 @@
                             </button>
                         </div>                                  
                     <% } else if (message.length == 0) { %>
+                        <span aria-hidden="true"></span>
+                    <% } else if (message.length == 4) { %>
                         <span aria-hidden="true"></span>
                     <% } else { %>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
