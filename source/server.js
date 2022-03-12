@@ -311,7 +311,7 @@ app.get('/view-supplier-products-redirect', function (req, res){
 			console.log(catCount)
 
 			
-
+			if(session.cartItemNumber){
 				//Calculate total price
 				var totalPrice = 0
 				session.totalPrice = 0
@@ -327,10 +327,9 @@ app.get('/view-supplier-products-redirect', function (req, res){
 					//Calculating total price.
 					totalPrice += subtotal;
 					session.totalPrice = totalPrice
-
 					x++
-
 				});	
+			}
 
 			//Check the cart is empty to display alert
 			if(session.itemCount == null){
