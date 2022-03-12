@@ -327,6 +327,7 @@ app.get('/view-supplier-products-redirect', function (req, res){
 					//Calculating total price.
 					totalPrice += subtotal;
 					session.totalPrice = totalPrice
+
 					x++
 				});	
 			}
@@ -338,6 +339,89 @@ app.get('/view-supplier-products-redirect', function (req, res){
 			else{
 				console.log(session.totalPrice)
 				res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: "Item added to cart!"});	
+			}
+						
+		});
+	});
+	
+});
+
+//Redirected to this route after continue shopping is clicked
+app.get('/continue-shopping', function (req, res){
+	console.log("**************Continue shopping>");
+	console.log(req.body);
+
+	console.log("session.supplieridpharm:", session.supplieridpharm)
+
+	//Get supplier data first.
+	//////////Supplier ID is hardcoded for testing.
+	//supplier.getSupplierData(req.body.supplierId, function (resultSupplier)
+	supplier.getSupplierData(session.supplieridpharm, function (resultSupplier){
+		console.log("**************Showing the selected supplier's profile data>");
+		console.log(resultSupplier);
+		
+		//Then get the respective supplier's items list.
+		//supplier.getItemsList(req.body.supplierId, req.body.prescribed, request.body.itemCategory, function (resultItems)
+		supplier.getItemsList(session.supplieridpharm, function (resultItems){
+			console.log("**************Showing the selected supplier's items>");
+			console.log(resultItems);
+
+			//Get Category Counts
+			var miscCount = 0
+			var mediCount = 0
+			var grocCount = 0
+			var allCount = resultItems.length
+			let catCount = new Object();
+
+			for(var i=0; i < resultItems.length; i++)
+			{
+				if(resultItems[i].category == "Medicine")
+				{
+					mediCount += 1;
+				} else if (resultItems[i].category == "Grocery")
+				{
+					grocCount += 1;
+				} else 
+				{
+					miscCount += 1;
+				}
+			}
+
+			catCount.medicine = mediCount;
+			catCount.groceries = grocCount;
+			catCount.misc = miscCount;
+			catCount.all = allCount;
+			console.log(catCount)
+
+			
+			if(session.cartItemNumber){
+				//Calculate total price
+				var totalPrice = 0
+				session.totalPrice = 0
+				var x = 0
+				//Loop through all elements in the cart session array.
+				session.cartItemNumber.forEach(element => {
+	
+		
+					//Calculating sub total price.
+					var subtotal = 0;
+					subtotal= session.cartItemQuantity[x] * session.cartItemUnitPrice[x];
+					
+					//Calculating total price.
+					totalPrice += subtotal;
+					session.totalPrice = totalPrice
+
+					x++
+				});	
+			}
+
+			//Check the cart is empty to display alert
+			if(session.itemCount == null){
+				res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: ''});	
+			}
+			else{
+				console.log(session.totalPrice)
+				res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: "none"});	
 			}
 						
 		});
@@ -698,16 +782,16 @@ app.get('/cart', function (req, res){
 			
 			if (filtered.length > 0) {
 				if (typeof session.prescriptionImage === 'undefined'){
-					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 'null'})
+					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 'null', prescriptionFile: ''})
 				} else if (session.prescriptionImage.length > 1){
-					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 1})
+					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 1, prescriptionFile: session.prescriptionImage})
 				} else {
-					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 0})
+					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 0, prescriptionFile: ''})
 				}
 			}
 			else
 			{
-				res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0, prescriptionUploaded: 'null'})
+				res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 0, isCartEmpty: 0, prescriptionUploaded: 'null', prescriptionFile: ''})
 
 			}
 				 ///////////////////////////
@@ -726,7 +810,7 @@ app.get('/cart-empty', function (req, res){
 	//Reset totalPrice session variable	
 	session.totalPrice = 0
 	
-	res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: {}, totalPrice: session.totalPrice, reqPrescription: 0, isCartEmpty: 1})
+	res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: {}, totalPrice: session.totalPrice, reqPrescription: 0, isCartEmpty: 1, prescriptionFile: ''})
 });
 
 //Test function to fetch items in the cart.
