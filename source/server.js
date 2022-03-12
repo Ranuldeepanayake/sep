@@ -310,11 +310,34 @@ app.get('/view-supplier-products-redirect', function (req, res){
 			catCount.all = allCount;
 			console.log(catCount)
 
+			
+
+				//Calculate total price
+				var totalPrice = 0
+				session.totalPrice = 0
+				var x = 0
+				//Loop through all elements in the cart session array.
+				session.cartItemNumber.forEach(element => {
+	
+		
+					//Calculating sub total price.
+					var subtotal = 0;
+					subtotal= session.cartItemQuantity[x] * session.cartItemUnitPrice[x];
+					
+					//Calculating total price.
+					totalPrice += subtotal;
+					session.totalPrice = totalPrice
+
+					x++
+
+				});	
+
 			//Check the cart is empty to display alert
 			if(session.itemCount == null){
 				res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: ''});	
 			}
 			else{
+				console.log(session.totalPrice)
 				res.render('Pharmacy.ejs', { userFName: session.userfirstname,  ItemDetails: resultItems, SupplierDetails: resultSupplier, CategoryCount: catCount, totalPrice: session.totalPrice, message: "Item added to cart!"});	
 			}
 						
