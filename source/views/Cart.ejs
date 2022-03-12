@@ -169,6 +169,8 @@
                             </form>
                                 <div class="cart-buttons mt-30 mb-30">
                                     <% if(prescriptionUploaded == 1) { %>
+                                        <p>File Uploaded: <%= prescriptionFile %></p>
+                                        <br>
                                         <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn" ><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
                                         <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" ><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
                                     <% } else { %> 
@@ -183,23 +185,23 @@
                                 <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" ><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
                             </div>
                         <% } %>
-                            <div class="col-lg-8 col-md-7 col-12 mb-40">&nbsp;</div>
+                        <br>
                             <% if(prescriptionUploaded == 0) { %> 
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    Error in uploading prescription!
+                                    Error in saving prescription!
                                     <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                             <% } else if(prescriptionUploaded == 1){ %> 
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    Prescription uploaded successfully!
+                                    Prescription saved successfully!
                                     <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                             <% } else if(prescriptionUploaded == 'null') { %>
-                                <span aria-hidden="true">&times;</span>
+                                <span aria-hidden="true"></span>
                             <% } %>
                         </div>
                         
@@ -296,7 +298,7 @@
         }
 
         var continueShopping = function() {
-            window.location = '/view-supplier-products-redirect';
+            window.location = '/continue-shopping';
         }
 
         var checkoutItems = function() {
