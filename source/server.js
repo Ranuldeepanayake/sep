@@ -820,7 +820,7 @@ app.get('/cart', function (req, res){
 				if (typeof session.prescriptionImage === 'undefined'){
 					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 'null', prescriptionFile: ''})
 				} else if (session.prescriptionImage.length > 1){
-					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 1, prescriptionFile: session.prescriptionImage})
+					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 1, prescriptionFile: session.prescriptionOriginalName})
 				} else {
 					res.render('Cart.ejs', {userFName: session.userfirstname, cartItems: cartItems, totalPrice: totalPrice, reqPrescription: 1, isCartEmpty: 0, prescriptionUploaded: 0, prescriptionFile: ''})
 				}
@@ -1190,6 +1190,9 @@ app.post('/upload-prescription-process', uploadPrescriptionImageTemporary.single
 	//console.log('Filename: ' + req.file.filename);
 	//Check if the cart sessions exist.
 	//Code.
+
+	//assign original file name
+	session.prescriptionOriginalName = req.file.originalname
 
 	//Check if an image file is actually uploaded or not.
 	if(typeof req.file== 'undefined' || req.file== null || req.file.filename== ''){
