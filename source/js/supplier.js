@@ -2,6 +2,8 @@
 This class provides back end functionality to the supplier class.
 */
 const sql = require("mysql2");
+const bcrypt = require('bcrypt');	//For hashing passwords.
+const saltRounds = 2;	//Number of salt rounds for hashing.
 
 var connection;
 
@@ -24,10 +26,14 @@ function createDbConnection() {
 	
 }
 
-//Handles the user sign up process.
+//Handles the supplier sign up process.
 function signUp(request, callback) {
 	var query;
 	var values;
+	var passHash;
+
+	//Hash the password with the number of salt rounds.
+	passHash= bcrypt.hashSync(request.password, saltRounds);
 
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
@@ -65,61 +71,80 @@ function signUp(request, callback) {
 	});
 }
 
-//Handles the user sign in process.
-function signIn(request, callback) {
+//Handles the supplier sign in process.
+async function signIn(request, callback) {
 	var query;
 	var values;
+	var result;
+
 	var email= request.email;
 	var password= request.password;
 
 	//console.log(request.email + request.firstName + request.age + request.password);
-	createDbConnection();
 	query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
 	user.password, supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description, 
-	supplier.store_image from user, supplier where user.user_id= supplier.supplier_id and user.email= ? and 
-	user.password= ? and user.type='supplier'`;
-	values= [email, password];
+	supplier.store_image from user, supplier where user.user_id= supplier.supplier_id and user.email= ? and user.type='supplier'`;
+	values= [email];
 
-	connection.query(query, values,function(err, result, fields) {
-		if(err){
-			console.log(err.message);
-			connection.end();
-			return callback("failure");
+	//Check if the account exists.
+	try {
+		createDbConnection();
+		result= await connection.promise().query(query, values);
+		console.log(result[0]);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	//Check if at least account with the provide email exists. 
+	if(result[0].length> 0){
+		console.log('Account exists');
+
+		console.log('Hash stored in the database: ' + result[0][0].password);
+
+		//Check if password hashes are matching.
+		if(bcrypt.compareSync(password, result[0][0].password)){
+
+			var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
+			lastName: "", street: "", city: "", password: "", nmraRegistration: "", pharmacistRegistration: "", 
+			storeDescription: "", storeImage: ""}
+
+			authObject.loggedIn= "true";
+			authObject.userId= result[0][0].user_id;
+			authObject.userType= result[0][0].type;
+			authObject.email= result[0][0].email;
+			authObject.firstName= result[0][0].first_name;
+			authObject.lastName= result[0][0].last_name;
+			authObject.street= result[0][0].street;
+			authObject.city= result[0][0].city;
+			authObject.password= result[0][0].password;
+			authObject.nmraRegistration= result[0][0].nmra_registration;
+			authObject.pharmacistRegistration= result[0][0].pharmacist_registration;
+			authObject.storeDescription= result[0][0].store_description;
+			authObject.storeImage= result[0][0].store_image;
+			
+			console.log('User authenticated!');
+			console.log(authObject);
+			return callback(authObject);
 
 		}else{
-			if (result.length > 0) {
-				connection.end();
+			console.log('DB authentication failure!');
 
-				var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
-				lastName: "", street: "", city: "", password: "", nmraRegistration: "", pharmacistRegistration: "", 
-				storeDescription: "", storeImage: ""}
-
-				authObject.loggedIn= "true";
-				authObject.userId= result[0].user_id;
-				authObject.userType= result[0].type;
-				authObject.email= result[0].email;
-				authObject.firstName= result[0].first_name;
-				authObject.lastName= result[0].last_name;
-				authObject.street= result[0].street;
-				authObject.city= result[0].city;
-				authObject.password= result[0].password;
-				authObject.nmraRegistration= result[0].nmra_registration;
-				authObject.pharmacistRegistration= result[0].pharmacist_registration;
-				authObject.storeDescription= result[0].store_description;
-				authObject.storeImage= result[0].store_image;
-				
-				console.log(authObject);
-				return callback(authObject);
-			} else {
-				connection.end();
-				console.log('DB authentication failure: '+ result);
-
-				var authObject = {loggedIn : ""}
-				authObject.loggedIn= "false";
-				return callback(authObject);
-			}
+			var authObject = {loggedIn : ""}
+			authObject.loggedIn= "false";
+			return callback(authObject);
 		}
-	});
+
+	}else{
+		console.log('Account does not exist!');
+
+		var authObject = {loggedIn : ""}
+		authObject.loggedIn= "false";
+		return callback(authObject);
+	}
 }
 
 //Lists all suppliers.
@@ -170,14 +195,28 @@ function showSuppliersCustomer(city, callback) {
 }
 
 //Updates supplier data.
-function editProfile(request, userId, password, storeImage, callback) {
+function editProfile(request, userId, password, storeImage, changePassword, callback) {
 	var query;
 	var values;
 
-	//console.log(request.email + request.firstName + request.age + request.password);
+	console.log('Change password: ' + changePassword);
+	console.log('Password: ' + password);
+
+	if(changePassword== 'false'){
+		query= `update user set email= ?, first_name= ?, last_name= ?, street= ?, city= ? where user_id= ?`;
+		values= [request.email, request.firstName, request.lastName, request.street, request.city, userId];
+
+	}else if(changePassword== 'true'){
+		password= bcrypt.hashSync(password, saltRounds);
+		console.log('Password hash: ' + password);
+
+		query= `update user set email= ?, first_name= ?, last_name= ?, street= ?, city= ?, password= ? where user_id= ?`
+		values= [request.email, request.firstName, request.lastName, request.street, request.city, password, userId];
+	}
+
 	createDbConnection();
-	query= `update user set email= ?, first_name= ?, last_name= ?, street= ?, city= ?, password= ? where user_id= ?`;
-	values= [request.email, request.firstName, request.lastName, request.street, request.city, password, userId];
+	//query= `update user set email= ?, first_name= ?, last_name= ?, street= ?, city= ?, password= ? where user_id= ?`;
+	//values= [request.email, request.firstName, request.lastName, request.street, request.city, password, userId];
 
 	connection.query(query, values, (err, result)=>{
 		if(err){
