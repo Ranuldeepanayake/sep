@@ -57,7 +57,7 @@ function signUp(request, callback) {
 }
 
 //Handles the customer sign in process.
-async function signIn(request, callback) {
+/* async function signIn(request, callback) {
 	var query;
 	var values;
 	var result;
@@ -126,7 +126,142 @@ async function signIn(request, callback) {
 		authObject.loggedIn= "false";
 		return callback(authObject);
 	}
+} */
+
+async function signIn(request, callback){
+	var query;
+	var values;
+	var result;
+	
+	var email= request.email;
+	var password= request.password;
+	//Hash the password with the number of salt rounds for hash comparison.
+	//var password= bcrypt.hashSync(request.password, saltRounds);
+	//console.log('Hashed password: ' + password);
+
+	//console.log(request.email + request.firstName + request.age + request.password);
+	query= `select user_id, type, email, password from user where email= ?`;
+	values= [email];
+
+	//Check if the account exists.
+	try {
+		createDbConnection();
+		result= await connection.promise().query(query, values);
+		console.log(result[0]);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	//Check if at least account with the provide email exists. 
+	if(result[0].length> 0){
+		console.log('Account exists');
+		console.log('Hash stored in the database: ' + result[0][0].password);
+
+		//Check if password hashes are matching.
+		if(bcrypt.compareSync(password, result[0][0].password)){
+			console.log('Credentials are correct>');
+
+			//Check the account type.
+			if(result[0][0].type== 'customer'){
+				query= `select user_id, type, email, first_name, last_name, street, city, password from user where user_id= ?`;
+				values= [result[0][0].user_id];
+
+				try {
+					createDbConnection();
+					result= await connection.promise().query(query, values);
+					console.log(result[0]);
+					connection.end();
+
+					var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
+					lastName: "", street: "", city: "", password: ""}
+
+					authObject.loggedIn= "true";
+					authObject.userId= result[0][0].user_id;
+					authObject.userType= result[0][0].type;
+					authObject.email= result[0][0].email;
+					authObject.firstName= result[0][0].first_name;
+					authObject.lastName= result[0][0].last_name;
+					authObject.street= result[0][0].street;
+					authObject.city= result[0][0].city;
+					authObject.password= result[0][0].password;
+					
+					console.log(authObject);
+					return callback(authObject);
+			
+				} catch (error) {
+					console.log(error.message);
+					connection.end();
+					return callback("failure");
+				}
+
+			}else if(result[0][0].type== 'supplier'){
+				query= `select user.user_id, user.type, user.email, user.first_name, user.last_name, user.street, user.city, 
+				user.password, supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description, 
+				supplier.store_image from user, supplier where user.user_id= supplier.supplier_id and user.user_id= ?`;
+				values= [result[0][0].user_id];
+
+				try {
+					createDbConnection();
+					result= await connection.promise().query(query, values);
+					console.log(result[0]);
+					connection.end();
+
+					var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
+					lastName: "", street: "", city: "", password: "", nmraRegistration: "", pharmacistRegistration: "", 
+					storeDescription: "", storeImage: ""}
+
+					authObject.loggedIn= "true";
+					authObject.userId= result[0][0].user_id;
+					authObject.userType= result[0][0].type;
+					authObject.email= result[0][0].email;
+					authObject.firstName= result[0][0].first_name;
+					authObject.lastName= result[0][0].last_name;
+					authObject.street= result[0][0].street;
+					authObject.city= result[0][0].city;
+					authObject.password= result[0][0].password;
+					authObject.nmraRegistration= result[0][0].nmra_registration;
+					authObject.pharmacistRegistration= result[0][0].pharmacist_registration;
+					authObject.storeDescription= result[0][0].store_description;
+					authObject.storeImage= result[0][0].store_image;
+
+					console.log(authObject);
+					return callback(authObject);
+
+				}catch (error) {
+					console.log(error.message);
+					connection.end();
+					return callback("failure");
+				}
+
+			}else{
+				console.log('Incorrect account type!');
+
+				var authObject = {loggedIn : ""}
+				authObject.loggedIn= "false";
+				return callback(authObject);
+			}
+
+		}else{
+			console.log('Incorrect credentials!');
+
+			var authObject = {loggedIn : ""}
+			authObject.loggedIn= "false";
+			return callback(authObject);
+		}
+		
+	}else{
+		console.log('Account does not exist!');
+
+		var authObject = {loggedIn : ""}
+		authObject.loggedIn= "false";
+		return callback(authObject);
+	}
 }
+
 
 //Handles showing data of a particular user.
 function getProfileData(userId, callback) {

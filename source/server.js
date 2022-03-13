@@ -478,8 +478,69 @@ app.post("/sign-up-process", function(req, res){
 	}
 });
 
-//This function processes the login form.
 app.post("/sign-in-process", function(req, res){
+	console.log('**************Received sign in form data>');
+	console.log(req.body);
+
+	customer.signIn(req.body, function (result){
+		console.log(result);
+
+		if(result.loggedIn== 'true'){
+			
+			if(result.userType== 'customer'){
+				//Session creation.
+				req.session.loggedIn = "true";
+				req.session.userId = result.userId;
+				req.session.userType = result.userType;
+				req.session.email = result.email;
+				req.session.firstName = result.firstName;
+				req.session.lastName = result.lastName;
+				req.session.street = result.street;
+				req.session.city = result.city;
+				req.session.password = result.password;
+
+				//recreating as they are not accessible 
+				session.userfirstname = result.firstName;
+				session.userid = result.userId;
+				session.loggedstatus = "true";
+
+				res.locals.userFname = result.firstName;
+				//res.sendFile(htmlPath + 'success.html');
+				//res.redirect('/');
+				console.log("**************Logged in!");
+				res.redirect('/index');
+
+			}else if(result.userType== 'supplier'){
+				//Session creation.
+				req.session.loggedIn = "true";
+				req.session.userId = result.userId;
+				req.session.userType = result.userType;
+				req.session.email = result.email;
+				req.session.firstName = result.firstName;
+				req.session.lastName = result.lastName;
+				req.session.street = result.street;
+				req.session.city = result.city;
+				req.session.password = result.password;
+				req.session.nmraRegistration = result.nmraRegistration;
+				req.session.pharmacistRegistration = result.pharmacistRegistration;
+				req.session.storeDescription = result.storeDescription;
+				req.session.storeImage= result.storeImage;
+	
+				//res.sendFile(htmlPath + 'success.html');
+				console.log("**************Logged in!");
+				res.redirect('/my-account-supplier');
+			}
+
+		}else{
+			req.session.loggedIn = "false";
+			console.log("**************Invalid credentials!");
+			res.redirect('/login-validate');
+		}
+	});
+});
+
+//This function processes the login form.
+/* app.post("/sign-in-process", function(req, res){
 	console.log('**************Received sign in form data>');
 	console.log(req.body);
 
@@ -556,7 +617,7 @@ app.post("/sign-in-process", function(req, res){
 			}
 		});
 	}	
-});
+}); */
 
 //This function processes the logout form.
 app.get("/logout-process", function(req, res){
