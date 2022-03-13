@@ -550,6 +550,96 @@ async function createOrderPrescribed(itemArray, totalPrice, supplierId, customer
 	}
 }
 
+//Handle showing the order history of a customer.
+function getOrders(userId, callback) {
+	var query;
+	var values= [userId];
+
+	createDbConnection();
+	query= `select order_id, customer_id, supplier_id, date, prescription_needed, prescription_image, approval_status, total_price
+	from order_table where customer_id= ?`;
+
+	connection.query(query, values,function(err, result, fields) {
+		//console.log(results); // Results contains rows returned by server.
+		//console.log(fields); // Fields contains extra meta data about results, if available.
+	  if(err){
+		  console.log(err.message);
+		  connection.end();
+		  return callback("failure");
+
+	  }else{
+		  connection.end();
+		  return callback(result);
+	  }
+  });
+}
+
+//Handle showing a particular order.
+async function getOrder(orderId, callback) {
+	var query;
+	var values= [orderId];
+	var resultOrder, resultOrderItems, resultOrderSupplier;
+	
+	//Get data of the order first.
+	query= `select order_id, customer_id, supplier_id, date, prescription_needed, prescription_image, approval_status, total_price
+	from order_table where order_id= ?`;
+	var values= [orderId];
+
+	try {
+		createDbConnection();
+		resultOrder= await connection.promise().query(query, values);
+		resultOrder= resultOrder[0][0];
+		console.log(resultOrder);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	//Get data of order items.
+	query= `select order_item.item_code, order_item.quantity, item.category, item.name, item.description, item.prescribed, 
+	item.unit_price, item.image from order_item, item where order_item.item_code= item.item_code and order_id= ?`;
+	var values= [orderId];
+
+	try {
+		createDbConnection();
+		resultOrderItems= await connection.promise().query(query, values);
+		resultOrderItems= resultOrderItems[0];
+		console.log(resultOrderItems);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	//Get data of the supplier.
+	query= `select user.email, user.first_name, user.last_name, user.street, user.city, 
+	supplier.nmra_registration, supplier.pharmacist_registration, supplier.store_description, 
+	supplier.store_image from user, supplier where user.user_id= supplier.supplier_id and user.user_id= ?`;
+	values= [resultOrder.supplier_id];
+
+	try {
+		createDbConnection();
+		resultOrderSupplier= await connection.promise().query(query, values);
+		resultOrderSupplier= resultOrderSupplier[0][0];
+		console.log(resultOrderSupplier);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	var object= [];
+	object.push(resultOrder, resultOrderItems, resultOrderSupplier);
+	return callback(object);
+}
+
 function testPromises(){
 	/*createOrder([{'itemId': '1', 'itemQuantity' : '3'}, {'itemId': '2', 'itemQuantity' : '5'}], 1500, 
 	3, 1,).then(function(result){
@@ -573,5 +663,8 @@ module.exports.getProfileData= getProfileData;
 
 module.exports.createOrder= createOrder;
 module.exports.createOrderPrescribed= createOrderPrescribed;
+
+module.exports.getOrders= getOrders;
+module.exports.getOrder= getOrder;
 
 module.exports.testPromises= testPromises;

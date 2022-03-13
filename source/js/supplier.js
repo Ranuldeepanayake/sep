@@ -455,7 +455,201 @@ function getItem(itemCode, callback) {
   });
 }
 
-//Handle creating an order.
+//Handle showing orders placed on a supplier.
+function getOrders(userId, callback) {
+	var query;
+	var values= [userId];
+
+	createDbConnection();
+	query= `select order_id, customer_id, supplier_id, date, prescription_needed, prescription_image, approval_status, total_price
+	from order_table where supplier_id= ?`;
+
+	connection.query(query, values,function(err, result, fields) {
+		//console.log(results); // Results contains rows returned by server.
+		//console.log(fields); // Fields contains extra meta data about results, if available.
+	  if(err){
+		  console.log(err.message);
+		  connection.end();
+		  return callback("failure");
+
+	  }else{
+		  connection.end();
+		  return callback(result);
+	  }
+  });
+}
+
+//Handle showing a particular order.
+async function getOrder(orderId, callback) {
+	var query;
+	var values= [orderId];
+	var resultOrder, resultOrderItems;
+
+	//Get data of the order first.
+	query= `select order_id, customer_id, supplier_id, date, prescription_needed, prescription_image, approval_status, total_price
+	from order_table where order_id= ?`;
+	var values= [orderId];
+
+	try {
+		createDbConnection();
+		resultOrder= await connection.promise().query(query, values);
+		resultOrder= resultOrder[0][0];
+		console.log(resultOrder);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	//Get data of order items.
+	query= `select order_item.item_code, order_item.quantity, item.category, item.name, item.description, item.prescribed, 
+	item.unit_price, item.image from order_item, item where order_item.item_code= item.item_code and order_id= ?`;
+	var values= [orderId];
+
+	try {
+		createDbConnection();
+		resultOrderItems= await connection.promise().query(query, values);
+		resultOrderItems= resultOrderItems[0];
+		console.log(resultOrderItems);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	var object= [];
+	object.push(resultOrder, resultOrderItems);
+	return callback(object);
+}
+
+//Handle approving an order.
+async function approveOrder(orderId, callback){
+	var query;
+	var values= [orderId];
+	var result;
+
+	query= `update order_table set approval_status='approved' where order_id= ?`;
+	var values= [orderId];
+
+	try {
+		createDbConnection();
+		result= await connection.promise().query(query, values);
+		//console.log(result[0]);
+		connection.end();
+		return callback("success");
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+}
+
+//Handle rejecting an order.
+async function rejectOrder(orderId, callback){
+	var query;
+	var values;
+	var result, resultItems;
+
+	//Check if order was already rejected to prevent inventory quantity manipulation.
+	query= `select approval_status from order_table where order_id= ?`;
+	values= [orderId];
+
+	try {
+		createDbConnection();
+		result= await connection.promise().query(query, values);
+		console.log('Current order status: ' + result[0][0].approval_status);
+		connection.end();
+
+		if(result[0][0].approval_status== 'rejected'){
+			return callback("Order already rejected!");
+		}
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	//Update the order table first.
+	query= `update order_table set approval_status='rejected' where order_id= ?`;
+	values= [orderId];
+
+	try {
+		createDbConnection();
+		result= await connection.promise().query(query, values);
+		//console.log(result[0]);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	//Get the order item quantities to be added back to the inventory.
+	query= `select item_code, quantity from order_item where order_id= ?`;
+	values= [orderId];
+
+	try {
+		createDbConnection();
+		resultItems= await connection.promise().query(query, values);
+		console.log(result[0]);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	//Add the order item quantities back to the inventory.
+	try {
+		for(let i= 0; i< resultItems[0].length; i++){
+
+			//As a fix for the lost connection issue.
+			createDbConnection();
+
+			//Get the existing quantity from item table.
+			query= `select quantity from item where item_code= ?`;
+			values= [resultItems[0][i].item_code];
+
+			result= await connection.promise().query(query, values);
+			quantity= result[0][0].quantity;
+			console.log('Old quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
+
+			//Update the quantity.
+			query= `update item set quantity= ? where item_code= ?`;
+			values= [quantity + resultItems[0][i].quantity, resultItems[0][i].item_code];
+
+			result= await connection.promise().query(query, values);
+			console.log('Affected rows: ' + result[0].affectedRows);
+
+			//Get the new quantity from the item table.
+			query= `select quantity from item where item_code= ?`;
+			values= [resultItems[0][i].item_code];
+
+			result= await connection.promise().query(query, values);
+			quantity= result[0][0].quantity;
+			console.log('New quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
+
+			connection.end();
+
+		}
+		connection.end();
+		return callback("success");
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+}
+
 
 //Exporting class members to the public.
 module.exports.signUp= signUp;
@@ -471,3 +665,8 @@ module.exports.addItem= addItem;
 module.exports.getSupplierData= getSupplierData;
 module.exports.getItemsList= getItemsList;
 module.exports.getItem= getItem;
+
+module.exports.getOrders= getOrders;
+module.exports.getOrder= getOrder;
+module.exports.approveOrder= approveOrder;
+module.exports.rejectOrder= rejectOrder;

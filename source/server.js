@@ -720,7 +720,40 @@ app.get('/get-session', function(req, res) {
 	
 	console.log(object);
 	res.json(object);
-})
+});
+
+//This function shows the order history of the logged in customer.
+app.get('/view-customer-orders-process', function(req, res){
+	console.log("**************Showing orders of the logged in customer>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		customer.getOrders(req.session.userId, function(result){
+			res.json(result);
+		});
+	}
+});
+
+//This function shows the selected order of customer.
+app.get('/view-customer-order-process', function(req, res){
+	console.log("**************Showing details of a selected order>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Order ID has to be sent as the first argument.
+		customer.getOrder(105, function(result){
+			res.json(result);
+		});
+	}
+});
 
 //Function which might help Krishni for intergration. Same as the above but returns a JS obect rather than returning
 //a JSON response. This object can be returned to the front end using EJS res.render() if using EJS. 
@@ -1647,6 +1680,73 @@ app.post('/view-item-process', function (req, res){
 			}
 
 		});
+});
+
+//This function shows the orders placed for a certain supplier.
+app.get('/view-supplier-orders-process', function(req, res){
+	console.log("**************Showing orders of the logged in supplier>");
+
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		supplier.getOrders(req.session.userId, function(result){
+			res.json(result);
+		});
+	}
+});
+
+//This function shows the selected order of customer.
+app.get('/view-supplier-order-process', function(req, res){
+	console.log("**************Showing details of a selected order>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Order ID has to be sent as the first argument.
+		supplier.getOrder(105, function(result){
+			res.json(result);
+		});
+	}
+});
+
+//This function approves a selected order.
+app.get('/supplier-approve-order-process', function(req, res){
+	console.log("**************Approving a selected order>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Order ID has to be sent as the first argument.
+		supplier.approveOrder(105, function(result){
+			res.json(result);
+		});
+	}
+});
+
+//This function rejects a selected order.
+app.get('/supplier-reject-order-process', function(req, res){
+	console.log("**************Rejecting a selected order>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Order ID has to be sent as the first argument.
+		supplier.rejectOrder(105, function(result){
+			res.json(result);
+		});
+	}
 });
 
 
