@@ -392,7 +392,7 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 	createDbConnection();
 
 	//Insert record into the order table first.
-	query= `insert into order_table (customer_id, supplier_id, date, total_price) values (?, ?, ?, ?)`;
+	query= `insert into order_table (customer_id, supplier_id, date, approval_status, total_price) values (?, ?, ?, 'approved', ?)`;
 	values= [customerId, supplierId, date, totalPrice];
 
 	try {
@@ -556,8 +556,8 @@ function getOrders(userId, callback) {
 	var values= [userId];
 
 	createDbConnection();
-	query= `select order_id, customer_id, supplier_id, date, prescription_needed, prescription_image, approval_status, total_price
-	from order_table where customer_id= ?`;
+	query= `select order_id, customer_id, supplier_id, date, prescription_needed, prescription_image, approval_status, approval_message, 
+	total_price from order_table where customer_id= ?`;
 
 	connection.query(query, values,function(err, result, fields) {
 		//console.log(results); // Results contains rows returned by server.
@@ -581,8 +581,8 @@ async function getOrder(orderId, callback) {
 	var resultOrder, resultOrderItems, resultOrderSupplier;
 	
 	//Get data of the order first.
-	query= `select order_id, customer_id, supplier_id, date, prescription_needed, prescription_image, approval_status, total_price
-	from order_table where order_id= ?`;
+	query= `select order_id, customer_id, supplier_id, date, prescription_needed, prescription_image, approval_status, approval_message, 
+	total_price from order_table where order_id= ?`;
 	var values= [orderId];
 
 	try {

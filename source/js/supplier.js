@@ -494,8 +494,26 @@ async function getOrder(orderId, callback) {
 async function approveOrder(orderId, callback){
 	var query;
 	var values;
-	var result;
+	var result, resultItems, status;
 
+	//Check if order was previously rejected. If so, the quantities re-added to the inventory will have to be deducted.
+	query= `select approval_status from order_table where order_id= ?`;
+	values= [orderId];
+
+	try {
+		createDbConnection();
+		result= await connection.promise().query(query, values);
+		status= result[0][0].approval_status;
+		console.log('Current order status: ' + status);
+		connection.end();
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+
+	//Set the order to approved.
 	query= `update order_table set approval_status='approved' where order_id= ?`;
 	values= [orderId];
 
@@ -504,17 +522,79 @@ async function approveOrder(orderId, callback){
 		result= await connection.promise().query(query, values);
 		//console.log(result[0]);
 		connection.end();
-		return callback("success");
 
 	} catch (error) {
 		console.log(error.message);
 		connection.end();
 		return callback("failure");
 	}
+
+	//The re-added quantities will have to be deducted.
+	if(status== 'rejected'){
+		//Get the order item quantities to be added back to the inventory.
+		query= `select item_code, quantity from order_item where order_id= ?`;
+		values= [orderId];
+
+		try {
+			createDbConnection();
+			resultItems= await connection.promise().query(query, values);
+			console.log(result[0]);
+			connection.end();
+
+		} catch (error) {
+			console.log(error.message);
+			connection.end();
+			return callback("failure");
+		}
+
+		try {
+			for(let i= 0; i< resultItems[0].length; i++){
+	
+				//As a fix for the lost connection issue.
+				createDbConnection();
+	
+				//Get the existing quantity from item table.
+				query= `select quantity from item where item_code= ?`;
+				values= [resultItems[0][i].item_code];
+	
+				result= await connection.promise().query(query, values);
+				quantity= result[0][0].quantity;
+				console.log('Old quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
+	
+				//Update the quantity.
+				query= `update item set quantity= ? where item_code= ?`;
+				values= [quantity - resultItems[0][i].quantity, resultItems[0][i].item_code];
+	
+				result= await connection.promise().query(query, values);
+				console.log('Affected rows: ' + result[0].affectedRows);
+	
+				//Get the new quantity from the item table.
+				query= `select quantity from item where item_code= ?`;
+				values= [resultItems[0][i].item_code];
+	
+				result= await connection.promise().query(query, values);
+				quantity= result[0][0].quantity;
+				console.log('New quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
+	
+				connection.end();
+	
+			}
+			connection.end();
+			//return callback("success");
+	
+		} catch (error) {
+			console.log(error.message);
+			connection.end();
+			return callback("failure");
+		}
+	}
+
+	//After everything completes.
+	return callback("success");
 }
 
 //Handle rejecting an order.
-async function rejectOrder(orderId, callback){
+async function rejectOrder(orderId, rejectReason, callback){
 	var query;
 	var values;
 	var result, resultItems;
@@ -540,8 +620,8 @@ async function rejectOrder(orderId, callback){
 	}
 
 	//Update the order table first.
-	query= `update order_table set approval_status='rejected' where order_id= ?`;
-	values= [orderId];
+	query= `update order_table set approval_status='rejected', approval_message= ? where order_id= ?`;
+	values= [rejectReason, orderId];
 
 	try {
 		createDbConnection();

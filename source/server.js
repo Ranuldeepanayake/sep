@@ -1645,8 +1645,8 @@ app.get('/supplier-reject-order-process', function(req, res){
 		res.redirect('/my-account-error')
 
 	}else{
-		//Order ID has to be sent as the first argument.
-		supplier.rejectOrder(105, function(result){
+		//Order ID and the rejection reason has to be sent as arguments.
+		supplier.rejectOrder(105, 'Bad prescription', function(result){
 			res.json(result);
 		});
 	}
