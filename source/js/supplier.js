@@ -673,7 +673,7 @@ async function removeItem(itemId, callback){
 }
 
 //Handle updating an item.
-async function updateItem(request, imagePath, callback){
+async function updateItem(request, imagePath, saveImage, callback){
 	var query;
 	var values;
 	var itemPrescribed;
@@ -688,10 +688,19 @@ async function updateItem(request, imagePath, callback){
 
 	console.log(itemPrescribed);
 
-	query= `update item set category= ?, name= ?, description= ?, prescribed= ?, quantity= ?, unit_price= ?, image= ?, supplier_id= ?
-	where item_code= ?`;
-	values= [request.itemCategory, request.itemName, request.itemDescription, itemPrescribed, request.itemQuantity, 
-		request.itemUnitPrice, imagePath, request.supplierId, request.itemCode];
+	//Select the query depending on whether an image will be saved or not.
+	if(saveImage== 'true'){
+		query= `update item set category= ?, name= ?, description= ?, prescribed= ?, quantity= ?, unit_price= ?, image= ?, supplier_id= ?
+		where item_code= ?`;
+		values= [request.itemCategory, request.itemName, request.itemDescription, itemPrescribed, request.itemQuantity, 
+			request.itemUnitPrice, imagePath, request.supplierId, request.itemCode];
+
+	}else{
+		query= `update item set category= ?, name= ?, description= ?, prescribed= ?, quantity= ?, unit_price= ?, supplier_id= ?
+		where item_code= ?`;
+		values= [request.itemCategory, request.itemName, request.itemDescription, itemPrescribed, request.itemQuantity, 
+			request.itemUnitPrice, request.supplierId, request.itemCode];
+	}
 
 	try {
 		createDbConnection();

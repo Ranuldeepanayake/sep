@@ -539,86 +539,6 @@ app.post("/sign-in-process", function(req, res){
 	});
 });
 
-//This function processes the login form.
-/* app.post("/sign-in-process", function(req, res){
-	console.log('**************Received sign in form data>');
-	console.log(req.body);
-
-	if(req.body.userType== 'customer'){
-	customer.signIn(req.body, function (result){
-		console.log(result);
-
-		if(result.loggedIn== "true"){
-			console.log("**************Logged in!")
-
-			//Session creation.
-			req.session.loggedIn = "true";
-			req.session.userId = result.userId;
-			req.session.userType = result.userType;
-			req.session.email = result.email;
-			req.session.firstName = result.firstName;
-			req.session.lastName = result.lastName;
-			req.session.street = result.street;
-			req.session.city = result.city;
-			req.session.password = result.password;
-
-			//recreating as they are not accessible 
-			session.userfirstname = result.firstName;
-			session.userid = result.userId;
-			session.loggedstatus = "true";
-
-			res.locals.userFname = result.firstName;
-			//res.sendFile(htmlPath + 'success.html');
-			//res.redirect('/');
-			res.redirect('/index');
-
-
-		}else {
-			req.session.loggedIn = "false";
-			console.log("**************Invalid credentials!");
-			res.redirect('/login-validate');
-			//res.json({'result' : 'Invalid credentials!'});
-			//res.sendFile(htmlPath + 'invalid-credentials.html');
-		}
-	});
-
-	}else if(req.body.userType== 'supplier'){
-		supplier.signIn(req.body, function (result){
-			console.log(result);
-	
-			if(result.loggedIn== "true"){
-				console.log("**************Logged in!")
-	
-				//Session creation.
-				req.session.loggedIn = "true";
-				req.session.userId = result.userId;
-				req.session.userType = result.userType;
-				req.session.email = result.email;
-				req.session.firstName = result.firstName;
-				req.session.lastName = result.lastName;
-				req.session.street = result.street;
-				req.session.city = result.city;
-				req.session.password = result.password;
-				req.session.nmraRegistration = result.nmraRegistration;
-				req.session.pharmacistRegistration = result.pharmacistRegistration;
-				req.session.storeDescription = result.storeDescription;
-				req.session.storeImage= result.storeImage;
-	
-				//res.sendFile(htmlPath + 'success.html');
-				res.redirect('/my-account-supplier');
-				
-	
-			}else{
-				req.session.loggedIn = "false";
-				console.log("**************Invalid credentials!");
-				//res.json({'result' : 'Invalid credentials!'});
-				//res.sendFile(htmlPath + 'invalid-credentials.html');
-				res.redirect('/login-validate');
-			}
-		});
-	}	
-}); */
-
 //This function processes the logout form.
 app.get("/logout-process", function(req, res){
 	//Destroying the session.
@@ -1534,7 +1454,6 @@ app.post('/edit-supplier-process', uploadStoreImage.single('storeImage'), functi
 
 });
 
-
 //An API which sends a supplier's product data to the caller.
 //The request must include the supplier ID which will be passed into the back end function.
 //Request must also include the type of product (prescribed or not).
@@ -1767,22 +1686,51 @@ app.get('/remove-item-process', function(req, res){
 });
 
 //This function updates an item.
+//Data has to be sent from the form.
+//The old item image path has to be sent in an input named 'oldItemImage'.
 //Handle image uploads.
-app.post('/update-item-process', function(req, res){
+app.post('/update-item-process', uploadItemImage.single('itemImage'), function(req, res){
 	console.log("**************Updating the selected item>");
 	console.log(req.body);
-	
+	console.log(req.file);
+
 	//Check session status.
 	if(typeof req.session.userId== 'undefined'){
 		console.log("**************User not logged in!");
 		res.redirect('/my-account-error')
+		return;
+	}
+
+	var itemImageFileName;
+
+	//Check if an image file is actually uploaded or not.
+	if(typeof req.file== 'undefined' || req.file== null || req.file.filename== ''){
+
+		//Do not change the existing file if a file is not uploaded.
+		supplier.updateItem(req.body, itemImageFileName, 'false', function(result){
+			res.json(result);
+			return;	//Exit the function from here.
+		});	
 
 	}else{
-		//Data has to be sent from the form.
-		supplier.updateItem(req.body, imageTemp, function(result){
-			res.json(result);
-		});
-	}
+		//Save the new image.
+		//Handle other file types and limit the maximum file size.
+		file.renameSync(itemImagePath + req.file.filename, itemImagePath + req.file.filename + '.jpg');
+		itemImageFileName= newItemImagePath + req.file.filename + '.jpg';
+
+		//Delete the old image.
+		//Delete the existing image from the filesystem first.
+		try {
+			file.unlinkSync('./views/' + req.body.oldItemImage);
+		} catch (error) {
+			console.log(error.message);
+		}
+	}	
+	
+	//If the image has to be saved.
+	supplier.updateItem(req.body, itemImageFileName, 'true', function(result){
+		res.json(result);
+	});
 });
 
 app.get('/test', function(req, res){
@@ -2233,4 +2181,86 @@ app.get('/checkout-process', function(req, res) {
 		res.json({'status': 'Cart empty'});
 	}
 });
+
+//This function processes the login form.
+/* app.post("/sign-in-process", function(req, res){
+	console.log('**************Received sign in form data>');
+	console.log(req.body);
+
+	if(req.body.userType== 'customer'){
+	customer.signIn(req.body, function (result){
+		console.log(result);
+
+		if(result.loggedIn== "true"){
+			console.log("**************Logged in!")
+
+			//Session creation.
+			req.session.loggedIn = "true";
+			req.session.userId = result.userId;
+			req.session.userType = result.userType;
+			req.session.email = result.email;
+			req.session.firstName = result.firstName;
+			req.session.lastName = result.lastName;
+			req.session.street = result.street;
+			req.session.city = result.city;
+			req.session.password = result.password;
+
+			//recreating as they are not accessible 
+			session.userfirstname = result.firstName;
+			session.userid = result.userId;
+			session.loggedstatus = "true";
+
+			res.locals.userFname = result.firstName;
+			//res.sendFile(htmlPath + 'success.html');
+			//res.redirect('/');
+			res.redirect('/index');
+
+
+		}else {
+			req.session.loggedIn = "false";
+			console.log("**************Invalid credentials!");
+			res.redirect('/login-validate');
+			//res.json({'result' : 'Invalid credentials!'});
+			//res.sendFile(htmlPath + 'invalid-credentials.html');
+		}
+	});
+
+	}else if(req.body.userType== 'supplier'){
+		supplier.signIn(req.body, function (result){
+			console.log(result);
+	
+			if(result.loggedIn== "true"){
+				console.log("**************Logged in!")
+	
+				//Session creation.
+				req.session.loggedIn = "true";
+				req.session.userId = result.userId;
+				req.session.userType = result.userType;
+				req.session.email = result.email;
+				req.session.firstName = result.firstName;
+				req.session.lastName = result.lastName;
+				req.session.street = result.street;
+				req.session.city = result.city;
+				req.session.password = result.password;
+				req.session.nmraRegistration = result.nmraRegistration;
+				req.session.pharmacistRegistration = result.pharmacistRegistration;
+				req.session.storeDescription = result.storeDescription;
+				req.session.storeImage= result.storeImage;
+	
+				//res.sendFile(htmlPath + 'success.html');
+				res.redirect('/my-account-supplier');
+				
+	
+			}else{
+				req.session.loggedIn = "false";
+				console.log("**************Invalid credentials!");
+				//res.json({'result' : 'Invalid credentials!'});
+				//res.sendFile(htmlPath + 'invalid-credentials.html');
+				res.redirect('/login-validate');
+			}
+		});
+	}	
+}); 
 */
+
+
