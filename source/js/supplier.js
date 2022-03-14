@@ -350,42 +350,6 @@ function getSupplierData(userId, callback) {
 	});
 }
 
-//Handles adding items.
-function addItem(request, imagePath, supplierId, callback) {
-	var query;
-	var values;
-	var itemPrescribed;
-
-	console.log(request);
-	console.log(imagePath);
-
-	//Handle the null 'item prescribed' check box value received from the form when the checkbox is unchecked.
-	if(typeof request.itemPrescribed== 'undefined'){
-		itemPrescribed= 'false';
-	}else{
-		itemPrescribed= request.itemPrescribed;
-	}
-
-	console.log(itemPrescribed);
-
-	createDbConnection();
-	query= `insert into item(category, name, description, prescribed, quantity, unit_price, image, supplier_id) 
-	values (?, ?, ?, ?, ?, ?, ?, ?)`;
-	values= [request.itemCategory, request.itemName, request.itemDescription, itemPrescribed, 
-		request.itemQuantity, request.itemUnitPrice, imagePath, supplierId];
-
-	connection.query(query, values, (err, result)=>{
-		if(err){
-			console.log(err.message);
-			connection.end();
-			return callback("failure");
-		}else{
-			connection.end();
-			return callback("success");
-		}
-	});
-}
-
 //Handle showing items of a supplier to a customer or visitor.
 function getItemsList(userId, callback) {
 	var query;
@@ -529,11 +493,11 @@ async function getOrder(orderId, callback) {
 //Handle approving an order.
 async function approveOrder(orderId, callback){
 	var query;
-	var values= [orderId];
+	var values;
 	var result;
 
 	query= `update order_table set approval_status='approved' where order_id= ?`;
-	var values= [orderId];
+	values= [orderId];
 
 	try {
 		createDbConnection();
@@ -650,6 +614,98 @@ async function rejectOrder(orderId, callback){
 	}
 }
 
+//Handles adding items.
+function addItem(request, imagePath, supplierId, callback) {
+	var query;
+	var values;
+	var itemPrescribed;
+
+	console.log(request);
+	console.log(imagePath);
+
+	//Handle the null 'item prescribed' check box value received from the form when the checkbox is unchecked.
+	if(typeof request.itemPrescribed== 'undefined'){
+		itemPrescribed= 'false';
+	}else{
+		itemPrescribed= request.itemPrescribed;
+	}
+
+	console.log(itemPrescribed);
+
+	createDbConnection();
+	query= `insert into item(category, name, description, prescribed, quantity, unit_price, image, supplier_id) 
+	values (?, ?, ?, ?, ?, ?, ?, ?)`;
+	values= [request.itemCategory, request.itemName, request.itemDescription, itemPrescribed, 
+		request.itemQuantity, request.itemUnitPrice, imagePath, supplierId];
+
+	connection.query(query, values, (err, result)=>{
+		if(err){
+			console.log(err.message);
+			connection.end();
+			return callback("failure");
+		}else{
+			connection.end();
+			return callback("success");
+		}
+	});
+}
+//Handle deleting an item.
+async function removeItem(itemId, callback){
+	var query;
+	var values;
+	var result;
+
+	query= `delete from item where item_code= ?`;
+	values= [itemId];
+
+	try {
+		createDbConnection();
+		result= await connection.promise().query(query, values);
+		//console.log(result[0]);
+		connection.end();
+		return callback("success");
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+}
+
+//Handle updating an item.
+async function updateItem(request, imagePath, callback){
+	var query;
+	var values;
+	var itemPrescribed;
+	var result;
+
+	//Handle the null 'item prescribed' check box value received from the form when the checkbox is unchecked.
+	if(typeof request.itemPrescribed== 'undefined'){
+		itemPrescribed= 'false';
+	}else{
+		itemPrescribed= request.itemPrescribed;
+	}
+
+	console.log(itemPrescribed);
+
+	query= `update item set category= ?, name= ?, description= ?, prescribed= ?, quantity= ?, unit_price= ?, image= ?, supplier_id= ?
+	where item_code= ?`;
+	values= [request.itemCategory, request.itemName, request.itemDescription, itemPrescribed, request.itemQuantity, 
+		request.itemUnitPrice, imagePath, request.supplierId, request.itemCode];
+
+	try {
+		createDbConnection();
+		result= await connection.promise().query(query, values);
+		//console.log(result[0]);
+		connection.end();
+		return callback("success");
+
+	} catch (error) {
+		console.log(error.message);
+		connection.end();
+		return callback("failure");
+	}
+}
 
 //Exporting class members to the public.
 module.exports.signUp= signUp;
@@ -661,7 +717,6 @@ module.exports.showSuppliersCustomer= showSuppliersCustomer;
 module.exports.editProfile= editProfile;
 module.exports.getProfileData= getProfileData;
 
-module.exports.addItem= addItem;
 module.exports.getSupplierData= getSupplierData;
 module.exports.getItemsList= getItemsList;
 module.exports.getItem= getItem;
@@ -670,3 +725,7 @@ module.exports.getOrders= getOrders;
 module.exports.getOrder= getOrder;
 module.exports.approveOrder= approveOrder;
 module.exports.rejectOrder= rejectOrder;
+
+module.exports.addItem= addItem;
+module.exports.removeItem= removeItem;
+module.exports.updateItem= updateItem;

@@ -1609,22 +1609,6 @@ app.get('/add-item', function(req, res) {
 	res.sendFile(htmlPath + "add-item.html");
 });
 
-//An API which processes adding item information.
-app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req, res) {
-	console.log("Form received!");
-	// req.file is the name of your file in the form above, here 'uploaded_file'
-	// req.body will hold the text fields, if there were any 
-	console.log(req.file, req.body);
-	console.log(req.body.itemName);
-
-	//Handle other file types and limit the maximum file size.
-	file.renameSync(itemImagePath + req.file.filename, itemImagePath + req.file.filename + '.jpg');
-
-	supplier.addItem(req.body, newItemImagePath + req.file.filename + '.jpg', req.session.userId, function(result){
-		res.sendFile(htmlPath + result + '.html');
-	});
-});
-
 //An API to view an item. The caller must send 
 app.post('/view-item-process', function (req, res){
 	console.log("**************Showing the selected item details>");
@@ -1749,6 +1733,57 @@ app.get('/supplier-reject-order-process', function(req, res){
 	}
 });
 
+//This function processes adding an item.
+app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req, res) {
+	console.log("Form received!");
+	// req.file is the name of your file in the form above, here 'uploaded_file'
+	// req.body will hold the text fields, if there were any 
+	console.log(req.file, req.body);
+	console.log(req.body.itemName);
+
+	//Handle other file types and limit the maximum file size.
+	file.renameSync(itemImagePath + req.file.filename, itemImagePath + req.file.filename + '.jpg');
+
+	supplier.addItem(req.body, newItemImagePath + req.file.filename + '.jpg', req.session.userId, function(result){
+		res.sendFile(htmlPath + result + '.html');
+	});
+});
+
+//This function removes a selected item.
+app.get('/remove-item-process', function(req, res){
+	console.log("**************Deleting a selected item>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Item ID has to be sent as the first argument.
+		supplier.removeItem(4, function(result){
+			res.json(result);
+		});
+	}
+});
+
+//This function updates an item.
+//Handle image uploads.
+app.post('/update-item-process', function(req, res){
+	console.log("**************Updating the selected item>");
+	console.log(req.body);
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Data has to be sent from the form.
+		supplier.updateItem(req.body, imageTemp, function(result){
+			res.json(result);
+		});
+	}
+});
 
 app.get('/test', function(req, res){
 	customer.testPromises();
