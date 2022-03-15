@@ -7275,6 +7275,28 @@ img.mfp-img {
     color: #656565;
 }
 
+.inventry-management-form input, .inventry-management-form select, .inventry-management-form textarea {
+    background: #fff;
+    display: block;
+    width: 100%;
+    border: 1px solid #ebebeb;
+    border-radius: 50px;
+    line-height: 24px;
+    padding: 11px 25px;
+    color: #656565;
+}
+
+.order-details-form input, .order-details-form select, .order-details-form textarea {
+    background: #fff;
+    display: block;
+    width: 100%;
+    border: 1px solid #ebebeb;
+    border-radius: 50px;
+    line-height: 24px;
+    padding: 11px 25px;
+    color: #656565;
+}
+
 /*----------------------------------------*/
 /*  16. Contact CSS
 /*----------------------------------------*/
