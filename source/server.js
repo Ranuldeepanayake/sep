@@ -197,17 +197,58 @@ app.get('/customer-update-validate-fail', function (req, res, next){
 app.get('/my-account-supplier', function (req, res, next){
 	console.log("In my-account-supplier")
 	console.log(req.session.firstName)
-	res.render('Account-Supplier.ejs', { userFName: req.session.firstName,
-		userLName: req.session.lastName,
-		userAddress: req.session.street,
-		userCity: req.session.city,
-		userEmail: req.session.email,
-		userPassword: req.session.password,
-		userStoreDesc: req.session.storeDescription,
-		userNMRA: req.session.nmraRegistration,
-		userPharmID: req.session.pharmacistRegistration,
-		userStoreImage: req.session.storeImage,
-		valmessage: ''});
+
+	//check if session.userid has a value
+	if(session.userid)
+	{
+	//Get item list of supplier
+	supplier.getItemsList(session.userid, function (resultItems){
+		console.log("Item List: ", resultItems)
+
+		//Get order list of supplier
+		supplier.getOrders(session.userid, function(result){
+		if(result == "failure")
+		{
+			res.render('Account-Supplier.ejs', { userFName: req.session.firstName,
+				userLName: req.session.lastName,
+				userAddress: req.session.street,
+				userCity: req.session.city,
+				userEmail: req.session.email,
+				userPassword: req.session.password,
+				userStoreDesc: req.session.storeDescription,
+				userNMRA: req.session.nmraRegistration,
+				userPharmID: req.session.pharmacistRegistration,
+				userStoreImage: req.session.storeImage,
+				valmessage: 'Error in loading Order details!',
+				orderList: result, 
+				itemList: resultItems});
+		}
+		else
+		{
+			console.log("Order List:",result);
+			
+			res.render('Account-Supplier.ejs', { userFName: req.session.firstName,
+				userLName: req.session.lastName,
+				userAddress: req.session.street,
+				userCity: req.session.city,
+				userEmail: req.session.email,
+				userPassword: req.session.password,
+				userStoreDesc: req.session.storeDescription,
+				userNMRA: req.session.nmraRegistration,
+				userPharmID: req.session.pharmacistRegistration,
+				userStoreImage: req.session.storeImage,
+				valmessage: '', 
+				orderList: result,
+				itemList: resultItems });
+		}
+		});
+	});
+	}
+	
+});
+
+app.get('/acc-sup', function (req, res, next){
+	res.render('test.ejs')
 });
 
 app.get('/supplier-update-validate-success', function (req, res, next){
@@ -503,6 +544,12 @@ app.post("/sign-in-process", function(req, res){
 				session.userfirstname = result.firstName;
 				session.userid = result.userId;
 				session.loggedstatus = "true";
+				session.userType = result.userType;
+				session.email = result.email;
+				session.lastName = result.lastName;
+				session.street = result.street;
+				session.city = result.city;
+				session.password = result.password;
 
 				res.locals.userFname = result.firstName;
 				//res.sendFile(htmlPath + 'success.html');
@@ -525,6 +572,17 @@ app.post("/sign-in-process", function(req, res){
 				req.session.pharmacistRegistration = result.pharmacistRegistration;
 				req.session.storeDescription = result.storeDescription;
 				req.session.storeImage= result.storeImage;
+
+				//recreating as they are not accessible 
+				session.userfirstname = result.firstName;
+				session.userid = result.userId;
+				session.loggedstatus = "true";
+				session.userType = result.userType;
+				session.email = result.email;
+				session.lastName = result.lastName;
+				session.street = result.street;
+				session.city = result.city;
+				session.password = result.password;
 	
 				//res.sendFile(htmlPath + 'success.html');
 				console.log("**************Logged in!");
@@ -1595,14 +1653,15 @@ app.get('/view-supplier-orders-process', function(req, res){
 		res.redirect('/my-account-error')
 
 	}else{
-		supplier.getOrders(req.session.userId, function(result){
+		//supplier.getOrders(req.session.userId, function(result){
+			supplier.getOrders(session.userid, function(result){
 			res.json(result);
 		});
 	}
 });
 
 //This function shows the selected order of customer.
-app.get('/view-supplier-order-process', function(req, res){
+app.post('/view-supplier-order-process', function(req, res){
 	console.log("**************Showing details of a selected order>");
 	
 	//Check session status.
@@ -1612,7 +1671,8 @@ app.get('/view-supplier-order-process', function(req, res){
 
 	}else{
 		//Order ID has to be sent as the first argument.
-		supplier.getOrder(105, function(result){
+		console.log("Order Body:", req.body)
+		supplier.getOrder(req.body.order_id, function(result){
 			res.json(result);
 		});
 	}
