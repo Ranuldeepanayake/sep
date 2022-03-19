@@ -1,0 +1,209 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Medi2Door - Bringing the medicine at your door</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/icon-font.min.css">
+    <link rel="stylesheet" href="assets/css/plugins.css">
+    <link rel="stylesheet" href="assets/css/helper.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/vendor/modernizr-3.7.1.min.js"></script>
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="header-section section">
+            <div class="header-top header-top-one bg-theme-two">
+                <div class="container-fluid">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col mt-10 mb-10 d-none d-md-flex">
+                            <div class="header-top-left">
+                                <p>Welcome to Medi2Door - Bringing the medicine at your door</p>
+                            </div>
+                        </div>
+                        <div class="col mt-10 mb-10">
+                            <div class="header-top-right">
+                                <% if(userFName.length > 0) { %>
+                                    <p>Hi <%= userFName %></p>                                        
+                                <% } %>
+                                <p><a href="/my-account">My Account</a></p>
+                                <p></a><a href="/logout-process">Logout</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom header-bottom-one header-sticky">
+                <div class="container-fluid">
+                    <div class="row menu-center align-items-center justify-content-between">
+                        <div class="col mt-15 mb-15">
+                            <div class="header-logo">
+                                <a href="/index">
+                                    <img src="assets/images/logo.png">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col order-2 order-lg-3">
+                            <div class="header-shop-links">
+                                <div class="header-mini-cart">
+                                    <a href=""><img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.0</span></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col order-3 order-lg-2">
+                            <div class="main-menu">
+                                <nav>
+                                    <ul>
+                                        <li>
+                                            <a class="active" href="/index">HOME</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">ABOUT</a>
+                                        </li>
+                                        <li><a href="contact.html">CONTACT</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Menu -->
+                        <div class="mobile-menu order-12 d-block d-lg-none col"></div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="page-banner-section section" style="background-image: url(assets/images/page-cover.jpg)">
+            <div class="container">
+                <div class="row">
+                    <div class="page-banner-content col">
+                        <h1>Edit Inventory</h1>
+                        <ul class="page-breadcrumb">
+                            <li><a>Medi2Door</a></li>
+                            <li><a>Inventory</a></li>
+                            <li><a>Edit Inventory</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Page Section Start -->
+        <div class="page-section section section-padding">
+            <div class="container">
+                <div class="inventry-management-form">
+                    <form action="edit-item-process" method="post">
+                        <div class="row">
+                            <div class="col-lg-6 col-12 mb-30">
+                                <input class="form-control" id="item-name" placeholder="Item Name" type="text" name="itemName" value="<%= itemDetails.name %>">
+                                <p><%= itemDetails.name %></p>
+                            </div>
+
+                            <div class="col-lg-6 col-12 mb-30">
+                                <input id="price" placeholder="Price (Rs.)" type="text" name="price" value="<%= itemDetails.unit_price %>">
+                            </div>
+
+                            <div class="col-lg-6 mb-30">
+                                <input id="SOH" placeholder="S.O.H." type="text" name="SOH">
+                            </div>
+
+                            <div class="col-lg-6 col-12 mb-30">
+                                <select id="Category" name="Category">
+                                    <option value="<%= itemDetails.category %>"><%= itemDetails.category %></option>
+                                    <option value="Medicine"> Medicine</option>
+                                    <option value="Grocery"> Groceries</option>
+                                    <option value="Misc"> Miscellaneous</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 mb-30">
+                                <textarea id="description" placeholder="Description" type="text" name="description"><%= itemDetails.description %></textarea>
+                            </div>
+                            <div class="col-lg-6 col-12 mb-30">
+                                <input type="file" id="myFile" name="filename">
+                            </div>
+                            <div class="col-lg-6 col-12 mb-30 text-center">
+                                <img class="w-50 border p-1" src="<%= itemDetails.image %>" />
+                            </div>
+
+                            <div class="col-md-12 col-12">
+                                <button class="btn btn-dark btn-round"><i class="fa fa-check"></i> Update</button>
+                                <button class="btn btn-dark btn-round"><i class="fa fa-trash"></i> Delete</button>
+                            </div>
+
+                        </div>
+                    </form>
+                    <br /><br />
+                </div>
+
+            </div>
+            </div><!-- Page Section End -->
+
+        <div class="footer-top-section section bg-theme-two-light section-padding">
+            <div class="container">
+                <div class="row mbn-40">
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">CONTACT US</h4>
+                        <p>No. 23A/1, Rukmal Place,<br />Sirimal Uyana, Rathmalana</p>
+                        <p><a href="tel:0117544801">0112 123 456</a></p>
+                        <p><a href="mailto:info@mdi2door.com">info@medi2door.com</a><a href="#">www.Medi2Door.com</a></p>
+                    </div>
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">INFORMATION</h4>
+                        <ul>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Contact us</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">NEWSLETTER</h4>
+                        <p>Subscribe our newsletter and get all update of our product</p>
+
+                        <form id="mc-form" class="mc-form footer-subscribe-form" novalidate="true">
+                            <input id="mc-email" autocomplete="off" placeholder="Enter your email here" name="EMAIL" type="email">
+                            <button id="mc-submit"><i class="fa fa-paper-plane-o"></i></button>
+                        </form>
+
+                        <h5>FOLLOW US</h5>
+                        <p class="footer-social"><a href="#">Facebook</a> - <a href="#">Twitter</a> - <a href="#">Google+</a></p>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom-section section bg-theme-two pt-15 pb-15">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center">
+                        <p class="footer-copyright">Copyright &copy; Medi2Door. All rights reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="assets/js/vendor/jquery-3.4.1.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/plugins.js"></script>
+    <script src="assets/js/ajax-mail.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
