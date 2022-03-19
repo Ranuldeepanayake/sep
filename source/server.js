@@ -1788,6 +1788,42 @@ app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req,
 	});
 });
 
+//Get item details to be edited
+app.post('/get-item-details', function(req, res){
+	console.log("**************Details of selected item>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Item ID has to be sent as the first argument.
+		console.log("req.body.item_code:", req.body.item_code)
+		supplier.getItem(req.body.item_code, function(result){
+			console.log(result)
+			res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: result})
+		});
+	}
+});
+
+//This function updates/removes a selected item.
+app.get('/edit-item-process', function(req, res){
+	console.log("**************Deleting a selected item>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Item ID has to be sent as the first argument.
+		supplier.removeItem(4, function(result){
+			res.json(result);
+		});
+	}
+});
+
 //This function removes a selected item.
 app.get('/remove-item-process', function(req, res){
 	console.log("**************Deleting a selected item>");
@@ -1809,6 +1845,7 @@ app.get('/remove-item-process', function(req, res){
 //Data has to be sent from the form.
 //The old item image path has to be sent in an input named 'oldItemImage'.
 //Handle image uploads.
+
 app.post('/update-item-process', uploadItemImage.single('itemImage'), function(req, res){
 	console.log("**************Updating the selected item>");
 	console.log(req.body);
