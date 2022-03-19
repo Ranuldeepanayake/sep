@@ -146,7 +146,9 @@
                             <p>Prescription :</p>
                         </div>
                         <div class="col-lg-4 col-12 mb-30">
-                            <button class="btn btn-primary-cs btn-round">View Prescription</button>
+                            <form action="/view-prescription" method="post">
+                                <button class="btn btn-primary-cs btn-round" value="<%= orderDetails.prescription_image%>" id="prescription_image" name="prescription_image">View Prescription</button>
+                            </form>                            
                         </div>
                     </div>
                     <% } %>
@@ -180,29 +182,66 @@
                             
                             <form method="post" action="/supplier-approve-reject-order-process">
                                 <input style="visibility: hidden;" id="order_id" name="order_id" value="<%= orderDetails.order_id %>"/>  
+                                <input id="reject_reason" name="reject_reason" placeholder="Reason for Order rejection"/>
+                                <br>
                                 <button class="btn btn-success btn-round" type="submit" name="action" value="approve"><i class="fa fa-check"></i> Approve</button> 
-                                <button class="btn btn-danger btn-round" type="submit" name="action" value="reject"><i class="fa fa-times"></i> Reject</button>
+                                <button class="btn btn-danger btn-round" type="submit" name="action" value="reject" id="reject-btn"><i class="fa fa-times"></i> Reject</button>
                             </form>
                         </div>
                     </div>
                     <% } %>
 
                     <% if( message == "" ) { %>
+                        <% }  else if (message == 'Reject Empty' ) {%>
+                            <div class="row mt-2">
+                                <div class="col-lg-12 col-12 mb-30 text-right">
+                                    
+                                    <form method="post" action="/supplier-approve-reject-order-process">
+                                        <input style="visibility: hidden;" id="order_id" name="order_id" value="<%= orderDetails.order_id %>"/>  
+                                        <input id="reject_reason" name="reject_reason" placeholder="Reason for Order rejection"/>
+                                        <br>
+                                        <button class="btn btn-success btn-round" type="submit" name="action" value="approve"><i class="fa fa-check"></i> Approve</button> 
+                                        <button class="btn btn-danger btn-round" type="submit" name="action" value="reject" id="reject-btn"><i class="fa fa-times"></i> Reject</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Please enter reason for rejecting order!
+                                <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <br>
                         <% }  else if (message.length > 15 ) {%>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            Something went wrong!
+                            <%= message %>
                             <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
                           <br>
+                          <div class="row mt-2">
+                            <div class="col-lg-12 col-12 mb-30 text-right">
+                                
+                                <form method="post" action="/supplier-approve-reject-order-process">
+                                    <input style="visibility: hidden;" id="order_id" name="order_id" value="<%= orderDetails.order_id %>"/>  
+                                    <input id="reject_reason" name="reject_reason" placeholder="Reason for Order rejection"/>
+                                    <br>
+                                    <button class="btn btn-success btn-round" type="submit" name="action" value="approve"><i class="fa fa-check"></i> Approve</button> 
+                                    <button class="btn btn-danger btn-round" type="submit" name="action" value="reject" id="reject-btn"><i class="fa fa-times"></i> Reject</button>
+                                </form>
+                            </div>
+                        </div>
                         <% } else { %>
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            Order approved!
+                            <%= message %>
                             <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
+                          <br>
+                          <button type="button" class="btn btn-info btn-sm btn-block"><a href="/my-account">Return</a></button>
                           <br>
                         <% }  %>
                 </div>
@@ -265,5 +304,12 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+        var check = function() {
+            if (document.getElementById('reject_reason').value.length>1) {
+            document.getElementById("reject-btn").disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
