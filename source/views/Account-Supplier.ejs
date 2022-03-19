@@ -335,52 +335,7 @@
                             <div class="tab-pane fade" id="Inventory-Management" role="tabpanel">
                                 <div class="myaccount-content">
                                     <h3>Inventory Management</h3>
-                                    
                                     <div class="inventry-management-form">
-                                        <!--form to be moved
-                                        <form action="edit-customer-process" method="post">
-                                            <div class="row">
-                                                <div class="col-lg-6 col-12 mb-30">
-                                                    <input class="form-control" id="item-name" placeholder="Item Name" type="text" name="itemName">
-                                                </div>
-
-                                                <div class="col-lg-6 col-12 mb-30">
-                                                    <input id="price" placeholder="Price (Rs.)" type="text" name="price">
-                                                </div>
-
-                                                <div class="col-lg-6 mb-30">
-                                                    <input id="SOH" placeholder="S.O.H." type="text" name="SOH">
-                                                </div>
-
-                                                <div class="col-lg-6 col-12 mb-30">
-                                                    <select id="Category" name="Category">
-                                                        <option value="null">Select Category</option>
-                                                        <option value="HomeMedicine">Home Medicine</option>
-
-                                                    </select>
-                                                </div>
-
-                                                <div class="col-12 mb-30">
-                                                    <textarea id="description" placeholder="Description" type="text" name="description"></textarea>
-                                                </div>
-                                                <div class="col-lg-6 col-12 mb-30">
-                                                    <input type="file" id="myFile" name="filename">
-                                                </div>
-                                                <div class="col-lg-6 col-12 mb-30 text-center">
-                                                    <img class="w-50 border p-1" src="assets/images/pharmacies/pharmacy-1.jpg" />
-                                                </div>                                           
-
-                                                <div class="col-md-12 col-12">
-                                                    <button class="btn btn-dark btn-round"><i class="fa fa-plus"></i> Add</button>
-                                                    <button class="btn btn-dark btn-round"><i class="fa fa-check"></i> Update</button>
-                                                    <button class="btn btn-dark btn-round"><i class="fa fa-trash"></i> Delete</button>
-                                                </div>
-
-                                            </div>
-                                        </form>
-                                        <br /><br />
-                                        -->
-
                                         <table class="table table-bordered">
                                             <thead class="thead-light">
                                                 <tr>
@@ -400,8 +355,10 @@
                                                     <td><%= itemList[i].name %></td>
                                                     <td><%= itemList[i].unit_price %></td>
                                                     <td><%= itemList[i].category %></td>
-                                                    <td style="white-space:pre-wrap"><%= itemList[i].category %></td>
-                                                    <td><a href="#" class="btn btn-dark btn-round">Edit</a></td>
+                                                    <td style="white-space:pre-wrap"><%= itemList[i].category %></td> 
+                                                    <form action="/get-item-details" method="post">
+                                                        <td><button type="submit" class="btn btn-primary btn-sm" id="item_code" name="item_code" value="<%= itemList[i].item_code %>">Edit</button></td>
+                                                    </form>                                                                                                
                                                 </tr>
                                                 <% } %>
                                             </tbody>
