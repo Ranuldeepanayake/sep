@@ -270,6 +270,83 @@
                                 </div>
                             </div>
 
+                            <div class="tab-pane fade" id="Inventory-Management" role="tabpanel">
+                                <div class="myaccount-content">
+                                    <h3>Inventory Management</h3>
+                                    
+                                    <div class="inventry-management-form">
+                                        <form action="edit-customer-process" method="post">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-12 mb-30">
+                                                    <input class="form-control" id="item-name" placeholder="Item Name" type="text" name="itemName">
+                                                </div>
+
+                                                <div class="col-lg-6 col-12 mb-30">
+                                                    <input id="price" placeholder="Price (Rs.)" type="text" name="price">
+                                                </div>
+
+                                                <div class="col-lg-6 mb-30">
+                                                    <input id="SOH" placeholder="S.O.H." type="text" name="SOH">
+                                                </div>
+
+                                                <div class="col-lg-6 col-12 mb-30">
+                                                    <select id="Category" name="Category">
+                                                        <option value="null">Select Category</option>
+                                                        <option value="HomeMedicine">Home Medicine</option>
+
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12 mb-30">
+                                                    <textarea id="description" placeholder="Description" type="text" name="description"></textarea>
+                                                </div>
+                                                <div class="col-lg-6 col-12 mb-30">
+                                                    <input type="file" id="myFile" name="filename">
+                                                </div>
+                                                <div class="col-lg-6 col-12 mb-30 text-center">
+                                                    <img class="w-50 border p-1" src="assets/images/pharmacies/pharmacy-1.jpg" />
+                                                </div>                                           
+
+                                                <div class="col-md-12 col-12">
+                                                    <button class="btn btn-dark btn-round"><i class="fa fa-plus"></i> Add</button>
+                                                    <button class="btn btn-dark btn-round"><i class="fa fa-check"></i> Update</button>
+                                                    <button class="btn btn-dark btn-round"><i class="fa fa-trash"></i> Delete</button>
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                        <br /><br />
+
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Image</th>
+                                                    <th>Item Name</th>
+                                                    <th>Price</th>
+                                                    <th>S.O.H.</th>
+                                                    <th>Category</th>
+                                                    <th>Description</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td><img class="border p-1" width="60px;" src="assets/images/pharmacies/pharmacy-1.jpg" /></td>
+                                                    <td>Panadol Tab</td>
+                                                    <td> Rs. 100.00 </td>
+                                                    <td>240</td>
+                                                    <td>Home Medicine</td>
+                                                    <td style="white-space:pre-wrap">enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia res eos qui ratione voluptatem sequi Neque porro quisquam est</td>
+                                                    <td><a href="#" class="btn btn-dark btn-round">Edit</a></td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="tab-pane fade" id="payment-method" role="tabpanel">
                                 <div class="myaccount-content">
                                     <h3>Payment Method</h3>
