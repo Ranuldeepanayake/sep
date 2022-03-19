@@ -1785,8 +1785,13 @@ app.get('/supplier-reject-order-process', function(req, res){
 	}
 });*/
 
+//get form to add item
+app.get('/add-item-form', function(req, res) {
+	res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: '', message: ''})
+});
+
 //This function processes adding an item.
-app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req, res) {
+app.post('/add-item-process', uploadItemImage.single('imagePath'), function(req, res) {
 	console.log("Form received!");
 	// req.file is the name of your file in the form above, here 'uploaded_file'
 	// req.body will hold the text fields, if there were any 
@@ -1796,8 +1801,12 @@ app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req,
 	//Handle other file types and limit the maximum file size.
 	file.renameSync(itemImagePath + req.file.filename, itemImagePath + req.file.filename + '.jpg');
 
-	supplier.addItem(req.body, newItemImagePath + req.file.filename + '.jpg', req.session.userId, function(result){
-		res.sendFile(htmlPath + result + '.html');
+	supplier.addItem(req.body, newItemImagePath + req.file.filename + '.jpg', session.userid, function(result){
+		if(result == 'failure'){
+			res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: result, message: 'fail'})
+		} else{
+			res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: result, message: 'Success'})
+		}
 	});
 });
 
@@ -1815,13 +1824,13 @@ app.post('/get-item-details', function(req, res){
 		console.log("req.body.item_code:", req.body.item_code)
 		supplier.getItem(req.body.item_code, function(result){
 			console.log(result)
-			res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: result})
+			res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: result, message: ''})
 		});
 	}
 });
 
 //This function updates/removes a selected item.
-app.get('/edit-item-process', function(req, res){
+app.post('/edit-item-process', function(req, res){
 	console.log("**************Deleting a selected item>");
 	
 	//Check session status.
@@ -1830,14 +1839,61 @@ app.get('/edit-item-process', function(req, res){
 		res.redirect('/my-account-error')
 
 	}else{
-		//Item ID has to be sent as the first argument.
-		supplier.removeItem(4, function(result){
-			res.json(result);
-		});
+		if(req.body.action == 'delete')
+		{
+			supplier.removeItem(req.body.item_code, function(result){
+				res.json(result);
+			});
+		} else if(req.body.action == 'update')
+		{
+			console.log("**************Updating the selected item>");
+			console.log(req.body);
+			console.log(req.file);
+
+			//Check session status.
+			if(typeof req.session.userId== 'undefined'){
+				console.log("**************User not logged in!");
+				res.redirect('/my-account-error')
+				return;
+			}
+
+			var itemImageFileName;
+
+			//Check if an image file is actually uploaded or not.
+			if(typeof req.file== 'undefined' || req.file== null || req.file.filename== ''){
+
+				//Do not change the existing file if a file is not uploaded.
+				supplier.updateItem(req.body, itemImageFileName, 'false', function(result){
+					res.json(result);
+					return;	//Exit the function from here.
+				});	
+
+			}else{
+				//Save the new image.
+				//Handle other file types and limit the maximum file size.
+				file.renameSync(itemImagePath + req.file.filename, itemImagePath + req.file.filename + '.jpg');
+				itemImageFileName= newItemImagePath + req.file.filename + '.jpg';
+
+				//Delete the old image.
+				//Delete the existing image from the filesystem first.
+				try {
+					file.unlinkSync('./views/' + req.body.oldItemImage);
+				} catch (error) {
+					console.log(error.message);
+				}
+			}	
+			
+			//If the image has to be saved.
+			supplier.updateItem(req.body, itemImageFileName, 'true', function(result){
+				res.json(result);
+			});
+		}
 	}
 });
 
+// remove/update merged to a single function
 //This function removes a selected item.
+/*
 app.get('/remove-item-process', function(req, res){
 	console.log("**************Deleting a selected item>");
 	
@@ -1852,12 +1908,13 @@ app.get('/remove-item-process', function(req, res){
 			res.json(result);
 		});
 	}
-});
+});*/
 
 //This function updates an item.
 //Data has to be sent from the form.
 //The old item image path has to be sent in an input named 'oldItemImage'.
 //Handle image uploads.
+/*
 
 app.post('/update-item-process', uploadItemImage.single('itemImage'), function(req, res){
 	console.log("**************Updating the selected item>");
@@ -1902,6 +1959,7 @@ app.post('/update-item-process', uploadItemImage.single('itemImage'), function(r
 		res.json(result);
 	});
 });
+*/
 
 app.get('/test', function(req, res){
 	customer.testPromises();
