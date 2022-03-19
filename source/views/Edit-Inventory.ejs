@@ -35,8 +35,7 @@
                             <div class="header-top-right">
                                 <% if(userFName.length > 0) { %>
                                     <p>Hi <%= userFName %></p>                                        
-                                <% } %>
-                                <p><a href="/my-account">My Account</a></p>
+                                    <% } %>
                                 <p></a><a href="/logout-process">Logout</a></p>
                             </div>
                         </div>
@@ -99,49 +98,76 @@
                 </div>
             </div>
         </div>
+        <% if(itemDetails == '') { %>
         <!-- Page Section Start -->
         <div class="page-section section section-padding">
             <div class="container">
                 <div class="inventry-management-form">
-                    <form action="edit-item-process" method="post">
+                    <form action="/add-item-process" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-lg-6 col-12 mb-30">
-                                <input class="form-control" id="item-name" placeholder="Item Name" type="text" name="itemName" value="<%= itemDetails.name %>">
-                                <p><%= itemDetails.name %></p>
+                                <input class="form-control" id="itemName" placeholder="Item Name" type="text" name="itemName" required>
                             </div>
 
                             <div class="col-lg-6 col-12 mb-30">
-                                <input id="price" placeholder="Price (Rs.)" type="text" name="price" value="<%= itemDetails.unit_price %>">
+                                <input id="itemUnitPrice" placeholder="Price (Rs.)" type="text" name="itemUnitPrice" required>
                             </div>
 
                             <div class="col-lg-6 mb-30">
-                                <input id="SOH" placeholder="S.O.H." type="text" name="SOH">
+                                <input id="itemQuantity" placeholder="Quantity" type="text" name="itemQuantity" required>
                             </div>
 
                             <div class="col-lg-6 col-12 mb-30">
-                                <select id="Category" name="Category">
-                                    <option value="<%= itemDetails.category %>"><%= itemDetails.category %></option>
-                                    <option value="Medicine"> Medicine</option>
-                                    <option value="Grocery"> Groceries</option>
-                                    <option value="Misc"> Miscellaneous</option>
+                                <select id="itemCategory" name="itemCategory" onchange="enable()" required>
+                                    <option value="null">Select Category</option>
+                                    <option value="Medicine">Medicine</option>
+                                    <option value="Grocery">Groceries</option>
+                                    <option value="Misc">Miscellaneous</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-6 col-12 mb-30">
+                                <select id="isPrescribed" name="isPrescribed" disabled>
+                                    <option value="false">Select Medicine Category</option>
+                                    <option value="true">Prescribed</option>
+                                    <option value="false">Non-prescribed</option>
                                 </select>
                             </div>
 
                             <div class="col-12 mb-30">
-                                <textarea id="description" placeholder="Description" type="text" name="description"><%= itemDetails.description %></textarea>
+                                <textarea id="itemDescription" placeholder="Description" type="text" name="itemDescription"></textarea>
                             </div>
                             <div class="col-lg-6 col-12 mb-30">
-                                <input type="file" id="myFile" name="filename">
+                                <input class="prescription-upload" type="file" id="imagePath" name="imagePath" required>
                             </div>
                             <div class="col-lg-6 col-12 mb-30 text-center">
-                                <img class="w-50 border p-1" src="<%= itemDetails.image %>" />
+                                <img class="w-50 border p-1" src="assets/images/pharmacies/pharmacy-1.jpg" />
                             </div>
 
                             <div class="col-md-12 col-12">
-                                <button class="btn btn-dark btn-round"><i class="fa fa-check"></i> Update</button>
-                                <button class="btn btn-dark btn-round"><i class="fa fa-trash"></i> Delete</button>
+                                <button class="btn btn-dark btn-round" type="submit"><i class="fa fa-check"></i> Add</button>
                             </div>
-
+                            <br>
+                            <% if( message == "" ) { %>
+                                <% }  else if (message == "fail" ) {%>
+                                <br>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    Something went wrong!
+                                    <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <br>
+                                <% } else { %>
+                                    <br>
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    Item added Successfully!
+                                    <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <br>
+                                <% }  %>
                         </div>
                     </form>
                     <br /><br />
@@ -149,6 +175,85 @@
 
             </div>
             </div><!-- Page Section End -->
+            <% } else { %>
+                <!-- Page Section Start -->
+                <div class="page-section section section-padding">
+                    <div class="container">
+                        <div class="inventry-management-form">
+                            <form action="#" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-lg-6 col-12 mb-30">
+                                        <input class="form-control" id="itemName" placeholder="Item Name" type="text" name="itemName" required>
+                                    </div>
+        
+                                    <div class="col-lg-6 col-12 mb-30">
+                                        <input id="itemUnitPrice" placeholder="Price (Rs.)" type="text" name="itemUnitPrice" required>
+                                    </div>
+        
+                                    <div class="col-lg-6 mb-30">
+                                        <input id="itemQuantity" placeholder="Quantity" type="text" name="itemQuantity" required>
+                                    </div>
+        
+                                    <div class="col-lg-6 col-12 mb-30">
+                                        <select id="itemCategory" name="itemCategory" onchange="enable()" required>
+                                            <option value="null">Select Category</option>
+                                            <option value="Medicine">Medicine</option>
+                                            <option value="Grocery">Groceries</option>
+                                            <option value="Misc">Miscellaneous</option>
+                                        </select>
+                                    </div>
+        
+                                    <div class="col-lg-6 col-12 mb-30">
+                                        <select id="isPrescribed" name="isPrescribed" disabled>
+                                            <option value="false">Select Medicine Category</option>
+                                            <option value="true">Prescribed</option>
+                                            <option value="false">Non-prescribed</option>
+                                        </select>
+                                    </div>
+        
+                                    <div class="col-12 mb-30">
+                                        <textarea id="itemDescription" placeholder="Description" type="text" name="itemDescription"></textarea>
+                                    </div>
+                                    <div class="col-lg-6 col-12 mb-30">
+                                        <input class="prescription-upload" type="file" id="imagePath" name="imagePath" required>
+                                    </div>
+                                    <div class="col-lg-6 col-12 mb-30 text-center">
+                                        <img class="w-50 border p-1" src="assets/images/pharmacies/pharmacy-1.jpg" />
+                                    </div>
+        
+                                    <div class="col-md-12 col-12">
+                                        <button class="btn btn-dark btn-round" type="submit" name="action" value="update" id="update-btn"><i class="fa fa-check"></i> Update</button>
+                                        <button class="btn btn-dark btn-round" type="submit" name="action" value="delete" id="delete-btn"><i class="fa fa-trash"></i> Delete</button>
+                                    </div>
+                                    <br>
+                                    <% if( message == "" ) { %>
+                                        <% }  else if (message == "fail" ) {%>
+                                        <br>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Something went wrong!
+                                            <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <br>
+                                        <% } else { %>
+                                            <br>
+                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Item added Successfully!
+                                            <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <br>
+                                        <% }  %>
+                                </div>
+                            </form>
+                            <br /><br />
+                        </div>
+        
+                    </div>
+                    </div><!-- Page Section End -->
+                    <% } %>
 
         <div class="footer-top-section section bg-theme-two-light section-padding">
             <div class="container">
@@ -205,5 +310,15 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+        var enable = function() {
+            if (document.getElementById('itemCategory').value == 'Medicine') {
+                document.getElementById("isPrescribed").disabled = false;
+            }
+            else{
+                document.getElementById("isPrescribed").disabled = true;
+            }
+        }
+    </script>
 </body>
 </html>
