@@ -26,6 +26,7 @@ const { Session } = require('express-session');
 const { serialize } = require('v8');
 const { error } = require('console');
 const { resolve } = require('path');
+const { render } = require('ejs');
 
 //Global constants.
 const app = express();
@@ -1708,22 +1709,34 @@ app.post('/supplier-approve-reject-order-process', function(req, res){
 			});
 		//check if reject btn was clicked
 		} else if(req.body.action == 'reject'){
-			console.log("REJECT req.body.order_id:",req.body.order_id)
-			supplier.rejectOrder(req.body.order_id, function(result){
-				if(result == 'failure'){
-					supplier.getOrder(req.body.order_id, function(result){
-						res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
-									approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Error in rejecting order! Please try again!' })			
-					});
-				}else{
-					supplier.getOrder(req.body.order_id, function(result){
-						res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
-									approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Order rejected!' })			
-					});
-				}
-			});
+			if(req.body.reject_reason == ''){
+				supplier.getOrder(req.body.order_id, function(result){
+					res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+								approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Reject Empty' })			
+				});
+			} else {
+				supplier.rejectOrder(req.body.order_id, req.body.reject_reason, function(result){
+					if(result == 'failure'){
+						supplier.getOrder(req.body.order_id, function(result){
+							res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+										approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Error in rejecting order! Please try again!' })			
+						});
+					}else{
+						supplier.getOrder(req.body.order_id, function(result){
+							res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+										approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Order rejected!' })			
+						});
+					}
+				});
+			}
 		}
 	}
+});
+
+//view prescription
+app.post('/view-prescription', function(req, res){
+	console.log("req.body.prescription_image", req.body.prescription_image)
+	res.render('View-Prescription.ejs', {prescription: req.body.prescription_image})
 });
 
 /* Merge the 2 actions to one route
