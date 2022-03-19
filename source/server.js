@@ -1679,7 +1679,7 @@ app.post('/view-supplier-order-process', function(req, res){
 	}
 });
 
-//This function approves a selected order.
+//This function approves/rejects a selected order.
 app.post('/supplier-approve-reject-order-process', function(req, res){
 	console.log("**************Approving a selected order>");
 	
