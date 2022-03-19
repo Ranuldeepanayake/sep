@@ -1660,6 +1660,7 @@ app.get('/view-supplier-orders-process', function(req, res){
 	}
 });
 
+
 //This function shows the selected order of customer.
 app.post('/view-supplier-order-process', function(req, res){
 	console.log("**************Showing details of a selected order>");
@@ -1671,15 +1672,15 @@ app.post('/view-supplier-order-process', function(req, res){
 
 	}else{
 		//Order ID has to be sent as the first argument.
-		console.log("Order Body:", req.body)
 		supplier.getOrder(req.body.order_id, function(result){
-			res.json(result);
+			res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+						approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })			
 		});
 	}
 });
 
 //This function approves a selected order.
-app.get('/supplier-approve-order-process', function(req, res){
+app.post('/supplier-approve-reject-order-process', function(req, res){
 	console.log("**************Approving a selected order>");
 	
 	//Check session status.
@@ -1689,8 +1690,67 @@ app.get('/supplier-approve-order-process', function(req, res){
 
 	}else{
 		//Order ID has to be sent as the first argument.
-		supplier.approveOrder(105, function(result){
-			res.json(result);
+		console.log("req.body: ", req.body)
+		//check if approve btn was clicked
+		if(req.body.action == 'approve'){
+			supplier.approveOrder(req.body.order_id, function(result){
+				if(result == 'failure'){
+					supplier.getOrder(req.body.order_id, function(result){
+						res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+									approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Error in approving order! Please try again!' })			
+					});
+				}else{
+					supplier.getOrder(req.body.order_id, function(result){
+						res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+									approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Order approved!' })			
+					});
+				}
+			});
+		//check if reject btn was clicked
+		} else if(req.body.action == 'reject'){
+			console.log("REJECT req.body.order_id:",req.body.order_id)
+			supplier.rejectOrder(req.body.order_id, function(result){
+				if(result == 'failure'){
+					supplier.getOrder(req.body.order_id, function(result){
+						res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+									approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Error in rejecting order! Please try again!' })			
+					});
+				}else{
+					supplier.getOrder(req.body.order_id, function(result){
+						res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+									approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Order rejected!' })			
+					});
+				}
+			});
+		}
+	}
+});
+
+/* Merge the 2 actions to one route
+//This function approves a selected order.
+app.post('/supplier-approve-order-process', function(req, res){
+	console.log("**************Approving a selected order>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Order ID has to be sent as the first argument.
+		console.log("req.body.order_id: ", req.body.order_id)
+		supplier.approveOrder(req.body.order_id, function(result){
+			if(result == 'failure'){
+				supplier.getOrder(req.body.order_id, function(result){
+					res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+								approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Error in approving order! Please try again!' })			
+				});
+			}else{
+				supplier.getOrder(req.body.order_id, function(result){
+					res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+								approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Order approved!' })			
+				});
+			}
 		});
 	}
 });
@@ -1710,7 +1770,7 @@ app.get('/supplier-reject-order-process', function(req, res){
 			res.json(result);
 		});
 	}
-});
+});*/
 
 //This function processes adding an item.
 app.post('/add-item-process', uploadItemImage.single('itemImage'), function(req, res) {
