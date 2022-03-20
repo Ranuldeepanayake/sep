@@ -122,36 +122,38 @@
                     <!-- My Account Tab Content Start -->
                     <div class="col-lg-9 col-12 mb-30">
                         <div class="tab-content" id="myaccountContent">
-                                <% if( valmessage == "" ) { %>
-                                    <p>&nbsp;</p>
-                                    <% }  else if (valmessage == "fail" ) {%>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        Something went wrong!
-                                        <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                    <% } else { %>
-                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        Changes saved Successfully!
-                                        <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
-                                      </div>
-                                    <% }  %>
-                                 <br>
+
+                            <!-- Single Tab Content Start -->
+                            <div class="tab-pane fade show active" id="account-info" role="tabpanel">
                                 <div class="myaccount-content">
                                     <h3>Account Details
                                         <button class="btn btn-dark btn-round" style=" margin-top: 1px;
                                         margin-right: 2px; float: right;  padding: auto 0 auto 200px;" onclick="enableEdit()">
                                         <i class="fa fa-pencil"></i> </button>
-                                    </h3>                                    
+                                    </h3>
                                     <div class="account-details-form">
+                                        <% if( valmessage == "" ) { %>
+                                            <% }  else if (valmessage == "fail" ) {%>
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                Something went wrong!
+                                                <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                              </div>
+                                            <% } else { %>
+                                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                Changes saved Successfully!
+                                                <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                              </div>
+                                            <% }  %>
+                                         <br>
                                         <!--Form for updating account details
                                             Get data from the get-session API and bind it to the form.
                                             The form will be populated with existing user information and submitting the
                                             form will lead to a batch update-->
-                                        <form action="/edit-customer-process" method="post">
+                                        <form action="edit-customer-process" method="post">
                                             <div class="row">
                                                 <div class="col-lg-6 col-12 mb-30">
                                                     <input id="first-name" placeholder="First Name" type="text" name="firstName" value = "<%= userFName %>" disabled="True" required> 
@@ -213,7 +215,6 @@
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Name</th>
                                                     <th>Date</th>
                                                     <th>Status</th>
                                                     <th>Total</th>
@@ -222,30 +223,20 @@
                                             </thead>
 
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Moisturizing Oil</td>
-                                                    <td>Aug 22, 2018</td>
-                                                    <td>Pending</td>
-                                                    <td>$45</td>
-                                                    <td><a href="cart.html" class="btn btn-dark btn-round">View</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>Katopeno Altuni</td>
-                                                    <td>July 22, 2018</td>
-                                                    <td>Approved</td>
-                                                    <td>$100</td>
-                                                    <td><a href="cart.html" class="btn btn-dark btn-round">View</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>Murikhete Paris</td>
-                                                    <td>June 12, 2017</td>
-                                                    <td>On Hold</td>
-                                                    <td>$99</td>
-                                                    <td><a href="cart.html" class="btn btn-dark btn-round">View</a></td>
-                                                </tr>
+                                                <% for(var i=0; i < orderDetails.length; i++) { %>
+                                                    <% if(orderDetails[i].approval_status == 'pending' && orderDetails[i].prescription_needed == 'true') {%>
+                                                    <tr>
+                                                        <td><%= orderDetails[i].order_id %></td>
+                                                        <td style="white-space:pre-wrap"><%= orderDetails[i].date %></td>
+                                                        <td><%= orderDetails[i].approval_status %></td>
+                                                        <td>Rs. <%= orderDetails[i].total_price %></td>
+                                                        <form action="/view-customer-order-process" method="post">
+                                                            <input style="visibility: hidden;" id="order_id" name="order_id" value="<%= orderDetails[i].order_id %>"/>  
+                                                            <td><button type="submit" class="btn btn-primary btn-sm">View</button></td>
+                                                        </form>
+                                                    </tr>
+                                                    <% } %> 
+                                                <% } %> 
                                             </tbody>
                                         </table>
                                     </div>
