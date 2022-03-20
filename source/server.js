@@ -142,13 +142,28 @@ app.get('/my-account-error', function (req, res, next){
 app.get('/my-account-customer', function (req, res, next){
 	console.log("In my-account-customer")
 	console.log(req.session.firstName)
-	res.render('Account-Customer.ejs', { userFName: req.session.firstName,
-		userLName: req.session.lastName,
-		userAddress: req.session.street,
-		userCity: req.session.city,
-		userEmail: req.session.email,
-		userPassword: req.session.password,
-		valmessage: ''});
+
+	customer.getOrders(req.session.userId, function(result){
+		console.log(result)
+		if(result == 'failure'){
+			res.render('Account-Customer.ejs', { userFName: req.session.firstName,
+			userLName: req.session.lastName,
+			userAddress: req.session.street,
+			userCity: req.session.city,
+			userEmail: req.session.email,
+			userPassword: req.session.password,
+			valmessage: '',orderDetails: ''});
+		} else {
+			res.render('Account-Customer.ejs', { userFName: req.session.firstName,
+			userLName: req.session.lastName,
+			userAddress: req.session.street,
+			userCity: req.session.city,
+			userEmail: req.session.email,
+			userPassword: req.session.password,
+			valmessage: '',orderDetails: result});
+		}
+	});
+	
 });
 
 app.get('/customer-update-validate-success', function (req, res, next){
@@ -180,7 +195,7 @@ app.get('/customer-update-validate-success', function (req, res, next){
 			userCity: req.session.city,
 			userEmail: req.session.email,
 			userPassword :req.session.password,
-			valmessage : "success"});
+			valmessage : "success", orderDetails: ''});
 	});
 });
 
@@ -191,7 +206,7 @@ app.get('/customer-update-validate-fail', function (req, res, next){
 		userCity: req.session.city,
 		userEmail: req.session.email,
 		userPassword :req.session.password,
-		valmessage : "fail"});
+		valmessage : "fail", orderDetails: ''});
 });
 
 //SUPPLIER EDIT PROFILE routes.
@@ -701,6 +716,7 @@ app.get('/get-session', function(req, res) {
 	res.json(object);
 });
 
+/* Merged 
 //This function shows the order history of the logged in customer.
 app.get('/view-customer-orders-process', function(req, res){
 	console.log("**************Showing orders of the logged in customer>");
@@ -715,10 +731,10 @@ app.get('/view-customer-orders-process', function(req, res){
 			res.json(result);
 		});
 	}
-});
+});*/
 
 //This function shows the selected order of customer.
-app.get('/view-customer-order-process', function(req, res){
+app.post('/view-customer-order-process', function(req, res){
 	console.log("**************Showing details of a selected order>");
 	
 	//Check session status.
@@ -728,8 +744,15 @@ app.get('/view-customer-order-process', function(req, res){
 
 	}else{
 		//Order ID has to be sent as the first argument.
-		customer.getOrder(105, function(result){
-			res.json(result);
+		customer.getOrder(req.body.order_id, function(result){
+			if(result == 'failure'){
+				res.render('OrderDetails-Customer.ejs',{userFName: session.userfirstname, orderDetails: '', orderDetailItems: '', 
+				approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })		
+			}
+			else{
+				res.render('OrderDetails-Customer.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+				approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })		
+			}
 		});
 	}
 });
@@ -1644,6 +1667,7 @@ app.post('/view-item-process', function (req, res){
 		});
 });
 
+/* Merged
 //This function shows the orders placed for a certain supplier.
 app.get('/view-supplier-orders-process', function(req, res){
 	console.log("**************Showing orders of the logged in supplier>");
@@ -1660,6 +1684,7 @@ app.get('/view-supplier-orders-process', function(req, res){
 		});
 	}
 });
+*/
 
 
 //This function shows the selected order of customer.
@@ -1674,8 +1699,14 @@ app.post('/view-supplier-order-process', function(req, res){
 	}else{
 		//Order ID has to be sent as the first argument.
 		supplier.getOrder(req.body.order_id, function(result){
-			res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
-						approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })			
+			if(result == 'failure'){
+				res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+				approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })		
+			}
+			else{
+				res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+				approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })	
+			}	
 		});
 	}
 });
