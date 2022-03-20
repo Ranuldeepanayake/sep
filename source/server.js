@@ -1805,7 +1805,7 @@ app.post('/add-item-process', uploadItemImage.single('imagePath'), function(req,
 		if(result == 'failure'){
 			res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: result, message: 'fail'})
 		} else{
-			res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: result, message: 'Success'})
+			res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: result, message: 'Item Added Successfully!'})
 		}
 	});
 });
@@ -1830,8 +1830,8 @@ app.post('/get-item-details', function(req, res){
 });
 
 //This function updates/removes a selected item.
-app.post('/edit-item-process', function(req, res){
-	console.log("**************Deleting a selected item>");
+app.post('/edit-item-process', uploadItemImage.single('prescriptionImageFile'), function(req, res){
+	console.log("**************Edit a selected item>");
 	
 	//Check session status.
 	if(typeof req.session.userId== 'undefined'){
@@ -1839,36 +1839,25 @@ app.post('/edit-item-process', function(req, res){
 		res.redirect('/my-account-error')
 
 	}else{
+		console.log("req.body:", req.body)
 		if(req.body.action == 'delete')
 		{
-			supplier.removeItem(req.body.item_code, function(result){
-				res.json(result);
+			supplier.removeItem(req.body.itemCode, function(result){
+				if(result == 'failure'){
+					res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: '', message: 'fail'})
+				}else{
+					res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: '', message: 'Item deleted successfully!'})
+				}				
 			});
-		} else if(req.body.action == 'update')
-		{
+		} else if(req.body.action == 'update'){
 			console.log("**************Updating the selected item>");
 			console.log(req.body);
 			console.log(req.file);
 
-			//Check session status.
-			if(typeof req.session.userId== 'undefined'){
-				console.log("**************User not logged in!");
-				res.redirect('/my-account-error')
-				return;
-			}
-
 			var itemImageFileName;
 
 			//Check if an image file is actually uploaded or not.
-			if(typeof req.file== 'undefined' || req.file== null || req.file.filename== ''){
-
-				//Do not change the existing file if a file is not uploaded.
-				supplier.updateItem(req.body, itemImageFileName, 'false', function(result){
-					res.json(result);
-					return;	//Exit the function from here.
-				});	
-
-			}else{
+			if(typeof req.file != 'undefined'){
 				//Save the new image.
 				//Handle other file types and limit the maximum file size.
 				file.renameSync(itemImagePath + req.file.filename, itemImagePath + req.file.filename + '.jpg');
@@ -1881,12 +1870,27 @@ app.post('/edit-item-process', function(req, res){
 				} catch (error) {
 					console.log(error.message);
 				}
-			}	
 			
-			//If the image has to be saved.
-			supplier.updateItem(req.body, itemImageFileName, 'true', function(result){
-				res.json(result);
-			});
+				//If the image has to be saved.
+				supplier.updateItem(req.body, itemImageFileName, 'true', function(result){
+					if(result == 'failure'){
+						res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: '', message: 'fail'})
+					}else{
+						res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: '', message: 'Item deleted successfully!'})
+					}	
+				});
+			} else if(typeof req.file == 'undefined' ){
+
+				var itemImageFileName = req.body.prescriptionImage
+
+				supplier.updateItem(req.body, itemImageFileName, 'true', function(result){
+					if(result == 'failure'){
+						res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: '', message: 'fail'})
+					}else{
+						res.render('Edit-inventory.ejs', {userFName: req.session.firstName, itemDetails: '', message: 'Item updated successfully!'})
+					}	
+				});
+			}
 		}
 	}
 });
