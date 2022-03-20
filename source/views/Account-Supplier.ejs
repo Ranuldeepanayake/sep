@@ -235,7 +235,7 @@
                                                 <td><%= orderList[i].customer_id %></td>
                                                 <td style="white-space:pre-wrap"><%= orderList[i].date %></td>
                                                 <td><%= orderList[i].approval_status %></td>
-                                                <td><%= orderList[i].total_price %></td>
+                                                <td>Rs. <%= orderList[i].total_price %></td>
                                                 <form action="/view-supplier-order-process" method="post">
                                                     <input style="visibility: hidden;" id="order_id" name="order_id" value="<%= orderList[i].order_id %>"/>  
                                                     <input style="visibility: hidden;" id="prescription_needed" name="prescription_needed" value="<%= orderList[i].prescription_needed %>"/> 
@@ -271,7 +271,7 @@
                                                 <td><%= orderList[i].customer_id %></td>
                                                 <td style="white-space:pre-wrap"><%= orderList[i].date %></td>
                                                 <td><%= orderList[i].approval_status %></td>
-                                                <td><%= orderList[i].total_price %></td>
+                                                <td>Rs. <%= orderList[i].total_price %></td>
                                                 <form action="/view-supplier-order-process" method="post">
                                                     <input style="visibility: hidden;" id="order_id" name="order_id" value="<%= orderList[i].order_id %>"/>  
                                                     <input style="visibility: hidden;" id="prescription_needed" name="prescription_needed" value="<%= orderList[i].prescription_needed %>"/> 
@@ -305,7 +305,7 @@
                                                 <td><%= orderList[i].order_id %></td>
                                                 <td><%= orderList[i].customer_id %></td>
                                                 <td style="white-space:pre-wrap"><%= orderList[i].date %></td>
-                                                <td><%= orderList[i].total_price %></td>
+                                                <td>Rs. <%= orderList[i].total_price %></td>
                                                 <form action="/view-supplier-order-process" method="post">
                                                     <input style="visibility: hidden;" id="order_id" name="order_id" value="<%= orderList[i].order_id %>"/>  
                                                     <input style="visibility: hidden;" id="prescription_needed" name="prescription_needed" value="<%= orderList[i].prescription_needed %>"/> 
@@ -343,9 +343,9 @@
                                                 <tr>
                                                     <td><img class="border p-1" width="60px;" src="<%= itemList[i].image %>" /></td>
                                                     <td><%= itemList[i].name %></td>
-                                                    <td><%= itemList[i].unit_price %></td>
+                                                    <td>Rs. <%= itemList[i].unit_price %></td>
                                                     <td><%= itemList[i].category %></td>
-                                                    <td style="white-space:pre-wrap"><%= itemList[i].category %></td> 
+                                                    <td style="white-space:pre-wrap"><%= itemList[i].description %></td> 
                                                     <form action="/get-item-details" method="post">
                                                         <td><button type="submit" class="btn btn-primary btn-sm" id="item_code" name="item_code" value="<%= itemList[i].item_code %>">Edit</button></td>
                                                     </form>                                                                                                
