@@ -96,18 +96,22 @@
                     <form action="/add-item-process" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-lg-6 col-12 mb-30">
+                                <label class="ml-3">Item Name</label>
                                 <input class="form-control" id="itemName" placeholder="Item Name" type="text" name="itemName" required>
                             </div>
 
                             <div class="col-lg-6 col-12 mb-30">
+                                <label class="ml-3">Price (Rs.)</label>
                                 <input id="itemUnitPrice" placeholder="Price (Rs.)" type="text" name="itemUnitPrice" required>
                             </div>
 
                             <div class="col-lg-6 mb-30">
+                                <label class="ml-3">Quantity</label>
                                 <input id="itemQuantity" placeholder="Quantity" type="text" name="itemQuantity" required>
                             </div>
 
                             <div class="col-lg-6 col-12 mb-30">
+                                <label class="ml-3">Item Category</label>
                                 <select id="itemCategory" name="itemCategory" onchange="enable()" required>
                                     <option value="null">Select Category</option>
                                     <option value="Medicine">Medicine</option>
@@ -117,6 +121,7 @@
                             </div>
 
                             <div class="col-lg-6 col-12 mb-30">
+                                <label class="ml-3">Prescribed / Non-prescribed</label>
                                 <select id="isPrescribed" name="isPrescribed" disabled>
                                     <option value="false">Select Medicine Category</option>
                                     <option value="true">Prescribed</option>
@@ -125,9 +130,11 @@
                             </div>
 
                             <div class="col-12 mb-30">
+                                <label class="ml-3">Description</label>
                                 <textarea id="itemDescription" placeholder="Description" type="text" name="itemDescription"></textarea>
                             </div>
                             <div class="col-lg-6 col-12 mb-30">
+                                <label class="ml-3">Image</label>
                                 <input class="prescription-upload" type="file" id="imagePath" name="imagePath" required>
                             </div>
                             <div class="col-lg-6 col-12 mb-30 text-center">
