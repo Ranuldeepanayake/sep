@@ -9,6 +9,7 @@
 </head>
 <body>
 
+<!--The following bar shows the common navigation links for all user types-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/">Navbar</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,13 +21,13 @@
         <a class="nav-link" href="/">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="sign-in">Sign In</a>
+        <a id="signInButton" class="nav-link" href="sign-in">Sign In</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="sign-up">Sign Up</a>
+        <a id="signUpButton" class="nav-link" href="sign-up">Sign Up</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="view-users">Users</a>
+        <a class="nav-link" href="about-us">About Us</a>
       </li>
     </ul>
 
@@ -41,6 +42,60 @@
 
   </div>
 </nav>
+
+<!--The following bar shows the navigation links for customers-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="collapse navbar-collapse" id="navbarCustomer">
+  <ul id="customerMenu"  class="nav navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="view-items">Products</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Cart</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Orders</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="view-suppliers">Pharmacies</a>
+    </li>
+  </ul>
+</div>
+</nav>
+
+<!--The following bar shows the navigation links for suppliers-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse" id="navbarSupplier">
+    <ul id="supplierMenu"  class="nav navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="view-items-supplier">View Items</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="add-item">Add Items</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Pending Orders</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">All Orders</a>
+      </li>
+    </ul>
+  </div>
+  </nav>
+
+  <!--The following bar shows the navigation links for admins-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse" id="navbarAdmin">
+    <ul id="adminMenu"  class="nav navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="view-users">View Users</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="view-items">View Items</a>
+      </li>
+    </ul>
+  </div>
+  </nav>
 
 <script>
   loadData("http://localhost:3000/get-session", getSession);
@@ -71,16 +126,56 @@ function getSession(response){
 
     if(data.loggedIn == 'false'){
       console.log('Session not created. Please log in.');
+
+      //$("customerMenu").hide();
+
+      //Hide the following elements if the user is not logged in.
       document.getElementById('logoutButton').style.display = 'none';
+      console.log('Log out button hidden.');
+      //document.getElementById('customerMenu').style.display = 'none';
+      //document.getElementById('supplierMenu').style.display = 'none';
+
     }else if(data.loggedIn == 'true'){
       console.log(data.email);
+
+      //Hide the following elements if the user is not logged in.
+      document.getElementById('signInButton').style.display = 'none';
+      document.getElementById('signUpButton').style.display = 'none';
+
+      //Show the user's name if logged in.
       document.getElementById("firstNameField").innerHTML =  'Hi ' + data.firstName;
+
+      if(data.userType== 'customer'){
+        console.log(data.userType);
+        //document.getElementById('supplierMenu').style.display = 'none';
+      }else if(data.userType== 'supplier'){
+        console.log(data.userType);
+        //document.getElementById('customerMenu').style.display = 'none';
+      }
+
     }else{
       console.log('Unknown error!');
+      document.getElementById('logoutButton').style.display = 'none';
+
+      //$("customerMenu").hide();
+      //document.getElementById('customerMenu').style.display = 'none';
+      //document.getElementById('supplierMenu').style.display = 'none';
     }
   }
 }
+
+
+/*Render the table inside a container.
+    var divContainer = document.getElementById("showData");
+    divContainer.innerHTML = "";
+    divContainer.appendChild(table);
+
+    //Stop displaying the loading animation.
+    document.getElementById('loading').style.display = 'none';
+    */
+
 </script>
  
 </body>
 </html>
+

@@ -1,0 +1,260 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Medi2Door - Bringing the medicine at your door</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/icon-font.min.css">
+    <link rel="stylesheet" href="assets/css/plugins.css">
+    <link rel="stylesheet" href="assets/css/helper.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/vendor/modernizr-3.7.1.min.js"></script>
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="header-section section">
+            <div class="header-top header-top-one bg-theme-two">
+                <div class="container-fluid">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col mt-10 mb-10 d-none d-md-flex">
+                            <div class="header-top-left">
+                                <p>Welcome to Medi2Door - Bringing the medicine at your door</p>
+                            </div>
+                        </div>
+                        <div class="col mt-10 mb-10">
+                            <div class="header-top-right">
+                                <div class="header-top-right">
+                                    <% if(userFName.length > 0) { %>
+                                        <p>Hi <%= userFName %></p>                                        
+                                        <% } %>
+                                    <p><a href="/my-account">My Account</a></p>
+                                    <% if(userFName.length > 0) { %>
+                                        <p><a href="/logout-process">Logout</a></p>                                        
+                                        <% } else { %>
+                                    <p><a href="/login">Register</a><a href="/login">Login</a></p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom header-bottom-one header-sticky">
+                <div class="container-fluid">
+                    <div class="row menu-center align-items-center justify-content-between">
+                        <div class="col mt-15 mb-15">
+                            <div class="header-logo">
+                                <a href="/index">
+                                    <img src="assets/images/logo.png">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col order-2 order-lg-3">
+                            <div class="header-shop-links">
+                                <div class="header-mini-cart">
+                                    <img src="assets/images/icons/cart.png" alt="Cart"> 
+                                    <% if (totalPrice == 0) { %>
+                                        <span>Rs.<%= totalPrice %></span>
+                                    <% } else { %>
+                                        <span>Rs.<%= totalPrice %></span>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm"><a href="/cart">View Cart</a></button> 
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col order-3 order-lg-2">
+                            <div class="main-menu">
+                                <nav>
+                                    <ul>
+                                        <li>
+                                            <a class="active" href="/index">HOME</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">ABOUT</a>
+                                        </li>
+                                        <li><a href="contact.html">CONTACT</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Menu -->
+                        <div class="mobile-menu order-12 d-block d-lg-none col"></div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="page-banner-section section" style="background-image: url(assets/images/page-cover.jpg)">
+            <div class="container">
+                <div class="row">
+                    <div class="page-banner-content col">
+
+                        <h1>Product Details</h1>
+                        <ul class="page-breadcrumb">
+                            <li><a href="/index">Medi2Door</a></li>
+                            <li><a href="/index">Pharmacy</a></li>
+                            <li><a href="/index">Product Details</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" action="/add-to-cart">
+            <div class="page-section section section-padding">
+                <div class="container">
+                    <div class="row row-30 mbn-50">
+
+                        <div class="col-12">
+                            <div class="row row-20 mb-10">
+
+                                <div class="col-lg-6 col-12 mb-40">
+                                    <img src="<%= ItemDetails[0].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                    width: 300px;
+                                    height: 300px; object-fit: contain; align-self: center;">
+                                </div>
+
+                                <div class="col-lg-6 col-12 mb-40">        
+                                    <div class="single-product-content">                                                                            
+                                        <div class="head">
+                                            <div class="head-left">
+                                                <h3 class="title"><%= ItemDetails[0].name %></h3>
+                                            </div>
+                                            
+                                            <div class="head-right">
+                                                <span class="price">Rs.<%= ItemDetails[0].unit_price %>.00</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="description">
+                                            <p><%= ItemDetails[0].description %></p>
+                                        </div>
+
+                                        <span class="availability">Availability: 
+                                            <% if(ItemDetails[0].quantity == 0) { %>
+                                            <span style="color: crimson;">Not in Stock</span>
+                                            <% } else { %>
+                                            <span style="color: green;">In Stock</span>
+                                            <% } %>
+                                        </span>
+
+                                        <div class="quantity-colors">
+                                            <div class="quantity">
+                                                <h5>Quantity:</h5>
+                                                <div><input type="number" value="<%= ItemDetails[0].quantity %>" min="1" max="<%= ItemDetails[0].quantity %>" id="itemQuantity" name="itemQuantity"></div>
+                                            </div>
+                                            <button class="btn btn-primary-cs btn-round" type="submit"><i class="ti-shopping-cart"></i><span>ADD TO CART</span></button>
+                                        </div>
+
+                                        <div class="tags">
+                                            <h5>Category:</h5>
+                                            <p><%= ItemDetails[0].category %></p>
+                                        </div>
+                                    </div>
+                                </div>                           
+                            </div>
+                        
+
+                            <div class="row mb-50">
+                                <!-- Nav tabs -->
+                                <div class="col-12">
+                                    <ul class="pro-info-tab-list section nav">
+                                        <li><a class="active" href="#more-info" data-toggle="tab">More info</a></li>
+                                    </ul>
+                                </div>
+                                <!-- Tab panes -->
+                                <div class="tab-content col-12">
+                                    <div class="pro-info-tab tab-pane active" id="more-info">
+                                        <p><%= ItemDetails[0].description %></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+            
+                <!-- For the purpose of sending value to route -->
+                <input id="itemCode" name="itemCode" style="visibility: hidden;" value="<%= ItemDetails[0].item_code%>">
+                <input id="itemPrescribed" name="itemPrescribed" style="visibility: hidden;" value="<%= ItemDetails[0].prescribed%>">
+                <input id="itemSupplierId" name="itemSupplierId" style="visibility: hidden;" value="<%= ItemDetails[0].supplier_id%>">
+                <input id="itemUnitPrice" name="itemUnitPrice" style="visibility: hidden;" value="<%= ItemDetails[0].unit_price%>">
+                <input id="itemDescription" name="itemDescription" style="visibility: hidden;" value="<%= ItemDetails[0].description%>">
+                <input type="number" value="<%= ItemDetails[0].quantity %>" max="<%= ItemDetails[0].quantity %>" id="itemDbQuantity" name="itemDbQuantity" style="visibility: hidden;">
+                <input id="itemName" name="itemName" style="visibility: hidden;" value="<%= ItemDetails[0].name%>">
+                <input id="itemCategory" name="itemCategory" style="visibility: hidden;" value="<%= ItemDetails[0].category%>">                                            
+                <input id="itemImage" name="itemImage" style="visibility: hidden;" value="<%= ItemDetails[0].image%>">
+            </div><!-- Page Section End -->
+        </form>
+
+        <div class="footer-top-section section bg-theme-two-light section-padding">
+            <div class="container">
+                <div class="row mbn-40">
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">CONTACT US</h4>
+                        <p>No. 23A/1, Rukmal Place,<br />Sirimal Uyana, Rathmalana</p>
+                        <p><a href="tel:0117544801">0112 123 456</a></p>
+                        <p><a href="mailto:info@mdi2door.com">info@medi2door.com</a><a href="#">www.Medi2Door.com</a></p>
+                    </div>
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">INFORMATION</h4>
+                        <ul>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Contact us</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">NEWSLETTER</h4>
+                        <p>Subscribe our newsletter and get all update of our product</p>
+
+                        <form id="mc-form" class="mc-form footer-subscribe-form" novalidate="true">
+                            <input id="mc-email" autocomplete="off" placeholder="Enter your email here" name="EMAIL" type="email">
+                            <button id="mc-submit"><i class="fa fa-paper-plane-o"></i></button>
+                        </form>
+
+                        <h5>FOLLOW US</h5>
+                        <p class="footer-social"><a href="#">Facebook</a> - <a href="#">Twitter</a> - <a href="#">Google+</a></p>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom-section section bg-theme-two pt-15 pb-15">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center">
+                        <p class="footer-copyright">Copyright &copy; Medi2Door. All rights reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="assets/js/vendor/jquery-3.4.1.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/plugins.js"></script>
+    <script src="assets/js/ajax-mail.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

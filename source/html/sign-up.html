@@ -83,40 +83,19 @@
 </head>
 <body>
 
-<form action="sign-up-process" method="POST"> 
-
+<center>
+  <form action="sign-up-customer" method="GET"> 
   <div class="form-group">
-    <label for="email">Email address</label>
-    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" name= "email">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  </div>
-
-  <div class="form-group">
-    <label for="firstName">First Name</label>
-    <input type="text" class="form-control" id="firstName" placeholder="First Name" name= "firstName">
-  </div>
-  <div class="form-group">
-    <label for="lastName">Last Name</label>
-    <input type="text" class="form-control" id="lastName" placeholder="Last Name" name= "lastName">
-  </div>
-
-  <div class="form-group">
-    <label for="street">Street</label>
-    <input type="text" class="form-control" id="street" placeholder="Street" name= "street">
-  </div>
-
-  <div class="form-group">
-    <label for="city">City</label>
-    <input type="text" class="form-control" id="city" placeholder="City" name= "city">
-  </div>
-
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input type="text" class="form-control" id="password" placeholder="Password" name= "password">
-  </div>
-
-  <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary btn-lg">Customer Sign Up</button>
+</div>
 </form>
+
+<form action="sign-up-supplier" method="GET"> 
+  <div class="form-group">
+    <button type="submit" class="btn btn-secondary btn-lg">Supplier Sign Up</button>
+  </div>
+</form>
+</center>
 
 </body>
 </html>

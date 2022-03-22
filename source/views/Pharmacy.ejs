@@ -1,0 +1,802 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Medi2Door - Bringing the medicine at your door</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/icon-font.min.css">
+    <link rel="stylesheet" href="assets/css/plugins.css">
+    <link rel="stylesheet" href="assets/css/helper.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/vendor/modernizr-3.7.1.min.js"></script>
+</head>
+
+<body>
+    <div class="main-wrapper">
+
+        <div class="header-section section">
+            <div class="header-top header-top-one bg-theme-two">
+                <div class="container-fluid">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col mt-10 mb-10 d-none d-md-flex">
+                            <div class="header-top-left">
+                                <p>Welcome to Medi2Door - Bringing the medicine at your door</p>
+                            </div>
+                        </div>
+                        <div class="col mt-10 mb-10">
+                            <div class="header-top-right">
+                                <% if(userFName.length > 0) { %>
+                                    <p>Hi <%= userFName %></p>                                        
+                                    <p><a href="/my-account">My Account</a></p>
+                                    <p><a href="/logout-process">Logout</a></p>
+                                <% } else { %>
+                                <p><a href="/login">Register</a><a href="/login">Login</a></p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom header-bottom-one header-sticky">
+                <div class="container-fluid">
+                    <div class="row menu-center align-items-center justify-content-between">
+                        <div class="col mt-15 mb-15">
+                            <div class="header-logo">
+                                <a href="/">
+                                    <img src="assets/images/logo.png">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col order-2 order-lg-3">
+                            <div class="header-shop-links">
+                                <div class="header-mini-cart">
+                                    <img src="assets/images/icons/cart.png" alt="Cart"> 
+                                    <% if (totalPrice == 0) { %>
+                                        <span>Rs.<%= totalPrice %></span>
+                                    <% } else { %>
+                                        <span>Rs.<%= totalPrice %></span>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm"><a href="/cart">View Cart</a></button> 
+                                    <% } %>               
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col order-3 order-lg-2">
+                            <div class="main-menu">
+                                <nav>
+                                    <ul>
+                                        <li>
+                                            <a class="active" href="/index">HOME</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">ABOUT</a>
+                                        </li>
+                                        <li><a href="contact.html">CONTACT</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Menu -->
+                        <div class="mobile-menu order-12 d-block d-lg-none col"></div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- Page Banner Section Start -->
+        <div class="page-banner-section section" style="background-image: url(assets/images/page-cover.jpg)">
+            <div class="container">
+                <div class="row">
+                    <div class="page-banner-content col">
+
+                        <h1>Pharmacy</h1>
+                        <ul class="page-breadcrumb">
+                            <li><a href="/index">Medi2Door</a></li>
+                            <li><a href="/view-supplier-details">Pharmacy</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- Page Banner Section End -->
+        <!-- Product Section Start -->
+        <div class="product-section section pt-100">            
+            <div class="container">
+                <div class="col-12 mb-15"> 
+                    <% if(message.length > 5) { %>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <%= message %>
+                            <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>                                  
+                    <% } else if (message.length == 0) { %>
+                        <span aria-hidden="true"></span>
+                    <% } else if (message.length == 4) { %>
+                        <span aria-hidden="true"></span>
+                    <% } else { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <span>Something went wrong!</span>
+                        <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <% } %>
+                </div>
+
+                <div class="row row-20 mb-10">
+                    <div class="col-lg-4 col-12 mb-40">
+                        <img src="<%= SupplierDetails.storeImage %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                        width: 300px;
+                        height: 300px; object-fit: contain; align-self: center;"> 
+                    </div>
+
+                    <div class="col-lg-8 col-12 mb-40">
+                        <div class="single-product-content">
+                            <div class="head">
+                                <div class="head-left">
+                                    <h2 class="title"> <%= SupplierDetails.storeDescription %></h3>
+                                </div>
+
+                                <div class="head-right">
+                                    <h5 class="nmra bold">NMRA : <%= SupplierDetails.nmraRegistration %></h5>
+                                    <h5 class="id bold">Pharmacy ID: <%= SupplierDetails.pharmacistRegistration %></h5>
+                                </div>
+                            </div>
+                           
+                            <h4 class="name">Supplier Name: <span><%= SupplierDetails.firstName %> <%= SupplierDetails.lastName %> </span></span></h4>
+                            <h4 class="email">Email: <span> <%= SupplierDetails.email %> </span></span></h4>
+                            <br>
+                            <br>
+                            <span class="availability">Location: <span><%= SupplierDetails.street %> - <%= SupplierDetails.city %> </span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-50">
+                    <!-- Tab panes -->
+                    <!-- Landing -->
+                    <div class="tab-content col-12" id="landing">
+                    <!-- Nav tabs -->
+                    <div class="col-12">
+                        <ul class="pro-info-tab-list section nav">
+                            <li><a class="active" href="#NonPrescribed" data-toggle="tab">Non-Prescribed</a></li>
+                            <li><a href="#Prescribed" data-toggle="tab">Prescribed</a></li>
+                        </ul>
+                    </div>
+                        <div class="tab-pane active" id="NonPrescribed">
+                            <!-- Page Section Start -->
+                            <div class="page-section section section-padding">
+                                <div class="container">
+                                    <div class="row row-30 mbn-40">
+
+                                        <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40">
+                                            <div class="row">
+                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                <% if(ItemDetails[i].prescribed == 'false') { %>
+                                                    <form action="view-item-process" method="post">
+                                                        <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                        <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
+                                                        <div class="product-item border">
+                                                            <div class="product-inner">
+                                                                <div class="image">
+                                                                    <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                                                    width: 300px;
+                                                                    height: 300px; object-fit: contain; align-self: center;">
+                                                                    <div class="image-overlay">
+                                                                        <div class="action-buttons">
+                                                                            <% if(userFName.length > 0) { %>
+                                                                                <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                            <% } else { %>
+                                                                                <button title="Please log in!" disabled>add to cart</button>    
+                                                                            <% } %>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="content">
+                                                                    <div class="content-left">
+                                                                        <h4 class="title">
+                                                                           <a href="#"><%= ItemDetails[i].name %></a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="content-right">
+                                                                        <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <% } %>
+                                                <% } %>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
+
+                                            <div class="sidebar">
+                                                <h4 class="sidebar-title">Category</h4>
+                                                <ul class="sidebar-list">                                                    
+                                                    <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
+                                                    <li><a href="javascript:showMedicine()" id="category_medicine" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
+                                                    <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
+                                                    <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div><!-- Page Section End -->
+                        </div>
+
+                        <div class="tab-pane" id="Prescribed">
+
+                            <center><p class="btn bg-warning btn-round">Note: If you're purchasing the prescribed items you have to upload the prescription at the checkout!</p></center>
+
+                            <div class="page-section section section-padding">
+                                <div class="container">
+
+                                    <div class="row row-30 mbn-40">
+
+                                        <div class="col-xl-12 col-lg-12 col-12 order-1 order-lg-2 mb-40">
+                                            <div class="row">    
+                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                     <% if(ItemDetails[i].prescribed == 'true') { %>
+                                                        <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                        <form action="view-item-process" method="post">
+                                                        <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>    
+                                                        <div class="product-item border">
+                                                            <div class="product-inner">
+                                                                <div class="image">
+                                                                    <img src="<%= ItemDetails[i].image %>" alt="" style="background-size: 150px;
+                                                                    width: 300px;
+                                                                    height: 300px; object-fit: contain; align-self: center;">
+                                                                    <div class="image-overlay">
+                                                                        <div class="action-buttons">
+                                                                            <% if(userFName.length > 0) { %>
+                                                                                <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                            <% } else { %>
+                                                                                <button title="Please log in!" disabled>add to cart</button>    
+                                                                            <% } %>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="content">
+                                                                    <div class="content-left">
+                                                                        <h4 class="title">
+                                                                            <a href="#">
+                                                                                <%= ItemDetails[i].name %>
+                                                                            </a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="content-right">
+                                                                        <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        </form>
+                                                    </div>
+                                                    <% } %> 
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- Page Section End -->
+                        </div>
+                    </div>
+
+                    <!-- Medicine -->
+                    <div class="tab-content col-12" id="category-medicine" style="display:none">
+                    <!-- Nav tabs -->
+                    <div class="col-12">
+                        <ul class="pro-info-tab-list section nav">
+                            <li><a class="active" href="#NonPrescribedMedicine" data-toggle="tab">Non-Prescribed</a></li>
+                            <li><a href="#PrescribedMedicine" data-toggle="tab">Prescribed</a></li>
+                        </ul>
+                    </div>
+                        <div class="tab-pane active" id="NonPrescribedMedicine">
+                            <!-- Page Section Start -->
+                            <div class="page-section section section-padding">
+                                <div class="container">
+                                    <div class="row row-30 mbn-40">
+
+                                        <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
+                                            <div class="row">
+                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                    <% if(ItemDetails[i].category == 'Medicine') { %>
+                                                        <% if(ItemDetails[i].prescribed == 'false') { %> 
+                                                        <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                        <form action="view-item-process" method="post">
+                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
+                                                            <div class="product-item border">
+                                                                <div class="product-inner">
+                                                                    <div class="image">
+                                                                        <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                                                        width: 300px;
+                                                                        height: 300px; object-fit: contain; align-self: center;">
+                                                                        <div class="image-overlay">
+                                                                            <div class="action-buttons">
+                                                                                <div class="action-buttons">
+                                                                                    <% if(userFName.length > 0) { %>
+                                                                                        <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                    <% } else { %>
+                                                                                        <button title="Please log in!" disabled>add to cart</button>    
+                                                                                    <% } %>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="content">
+                                                                        <div class="content-left">
+                                                                            <h4 class="title">
+                                                                            <a href="/view-item-process"><%= ItemDetails[i].name %></a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div class="content-right">
+                                                                            <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form> 
+                                                    </div>
+                                                        <% } %>
+                                                    <% } %>
+                                                
+                                                <% } %>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
+
+                                            <div class="sidebar">
+                                                <h4 class="sidebar-title">Category</h4>
+                                                <ul class="sidebar-list">                                                    
+                                                    <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
+                                                    <li><a href="javascript:showMedicine()" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
+                                                    <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
+                                                    <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div><!-- Page Section End -->
+                        </div>
+
+                        <div class="tab-pane" id="PrescribedMedicine">
+
+                            <center><p class="btn bg-warning btn-round">Note: If you're purchasing the prescribed items you have to upload the prescription at the checkout!</p></center>
+
+                            <div class="page-section section section-padding">
+                                <div class="container">
+
+                                    <div class="row row-30 mbn-40">
+
+                                        <div class="col-xl-12 col-lg-12 col-12 order-1 order-lg-2 mb-40" style="float: left;">
+                                            <div class="row">    
+                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                        <% if(ItemDetails[i].category == 'Medicine') { %>
+                                                            <% if(ItemDetails[i].prescribed == 'true') { %>
+                                                            <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>    
+                                                                <form action="view-item-process" method="post">
+                                                                <div class="product-item border">
+                                                                <div class="product-inner">
+                                                                    <div class="image">
+                                                                        <img src="<%= ItemDetails[i].image %>" alt="" style="background-size: 150px;
+                                                                        width: 300px;
+                                                                        height: 300px; object-fit: contain; align-self: center;">
+                                                                        <div class="image-overlay">
+                                                                            <div class="action-buttons">
+                                                                                <% if(userFName.length > 0) { %>
+                                                                                    <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                <% } else { %>
+                                                                                    <button title="Please log in!" disabled>add to cart</button>    
+                                                                                <% } %>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="content">
+                                                                        <div class="content-left">
+                                                                            <h4 class="title">
+                                                                                <a href="#">
+                                                                                    <%= ItemDetails[i].name %>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div class="content-right">
+                                                                            <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </form>
+                                                        </div>
+                                                            <% } %>
+                                                        <% } %>
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- Page Section End -->
+                        </div>
+                    </div>
+
+                    <!-- Groceries -->
+                    <div class="tab-content col-12" id="category-grocery" style="display:none">
+                    <!-- Nav tabs -->
+                    <div class="col-12">
+                        <ul class="pro-info-tab-list section nav">
+                            <li><a class="active" href="#NonPrescribedGroceries" data-toggle="tab">Non-Prescribed</a></li>
+                            <li><a href="#PrescribedGroceries" data-toggle="tab">Prescribed</a></li>
+                        </ul>
+                    </div>
+                        <div class="tab-pane active" id="NonPrescribedGroceries">
+                            <!-- Page Section Start -->
+                            <div class="page-section section section-padding">
+                                <div class="container">
+                                    <div class="row row-30 mbn-40">
+
+                                        <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
+                                            <div class="row">
+                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                    <% if(ItemDetails[i].prescribed == 'false' && ItemDetails[i].category == 'Grocery') { %>
+                                                        <form action="view-item-process" method="post">
+                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
+                                                            <div class="product-item border">
+                                                                <div class="product-inner">
+                                                                    <div class="image">
+                                                                        <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                                                        width: 300px;
+                                                                        height: 300px; object-fit: contain; align-self: center;">
+                                                                        <div class="image-overlay">
+                                                                            <div class="action-buttons">
+                                                                                <div class="action-buttons">
+                                                                                    <% if(userFName.length > 0) { %>
+                                                                                        <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                    <% } else { %>
+                                                                                        <button title="Please log in!" disabled>add to cart</button>    
+                                                                                    <% } %>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="content">
+                                                                        <div class="content-left">
+                                                                            <h4 class="title">
+                                                                            <a href="/view-item-process"><%= ItemDetails[i].name %></a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div class="content-right">
+                                                                            <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                <% } } %>
+                                                </div>                                                
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
+
+                                            <div class="sidebar">
+                                                <h4 class="sidebar-title">Category</h4>
+                                                <ul class="sidebar-list">                                                    
+                                                    <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
+                                                    <li><a href="javascript:showMedicine()" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
+                                                    <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
+                                                    <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div><!-- Page Section End -->
+                        </div>
+
+                        <div class="tab-pane" id="PrescribedGroceries">
+                            <center><p class="btn bg-warning btn-round">Note: If you're purchasing the prescribed items you have to upload the prescription at the checkout!</p></center>
+                            <div class="page-section section section-padding">
+                                <div class="container">
+
+                                    <div class="row row-30 mbn-40">
+                                        <div class="col-xl-12 col-lg-12 col-12 order-1 order-lg-2 mb-40" style="float: left;">
+                                            <div class="row">    
+                                                    <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                    <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                        <% if(ItemDetails[i].prescribed == 'true' && ItemDetails[i].category == 'Grocery') { %>
+                                                            <form action="view-item-process" method="post">
+                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>    
+                                                            <div class="product-item border">
+                                                                <div class="product-inner">
+                                                                    <div class="image">
+                                                                        <img src="<%= ItemDetails[i].image %>" alt="" style="background-size: 150px;
+                                                                        width: 300px;
+                                                                        height: 300px; object-fit: contain; align-self: center;">
+                                                                        <div class="image-overlay">
+                                                                            <div class="action-buttons">
+                                                                                <% if(userFName.length > 0) { %>
+                                                                                    <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                <% } else { %>
+                                                                                    <button title="Please log in!" disabled>add to cart</button>    
+                                                                                <% } %>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="content">
+                                                                        <div class="content-left">
+                                                                            <h4 class="title">
+                                                                                <a href="#">
+                                                                                    <%= ItemDetails[i].name %>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div class="content-right">
+                                                                            <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </form>
+                                                        <% } } %>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- Page Section End -->
+                        </div>
+                    </div>
+
+                    <!-- Misc -->
+                    <div class="tab-content col-12" id="category-misc" style="display:none">
+                    <!-- Nav tabs -->
+                    <div class="col-12">
+                        <ul class="pro-info-tab-list section nav">
+                            <li><a class="active" href="#NonPrescribedMisc" data-toggle="tab">Non-Prescribed</a></li>
+                            <li><a href="#PrescribedMisc" data-toggle="tab">Prescribed</a></li>
+                        </ul>
+                    </div>
+                        <div class="tab-pane active" id="NonPrescribedMisc">
+                            <!-- Page Section Start -->
+                            <div class="page-section section section-padding">
+                                <div class="container">
+                                    <div class="row row-30 mbn-40">
+
+                                        <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
+                                            <div class="row">
+                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                    <% if(ItemDetails[i].category == 'Misc'&& ItemDetails[i].prescribed == 'false') { %>
+                                                        <form action="view-item-process" method="post">
+                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
+                                                            <div class="product-item border">
+                                                                <div class="product-inner">
+                                                                    <div class="image">
+                                                                        <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                                                        width: 300px;
+                                                                        height: 300px; object-fit: contain; align-self: center;">
+                                                                        <div class="image-overlay">
+                                                                            <div class="action-buttons">
+                                                                                <div class="action-buttons">
+                                                                                    <% if(userFName.length > 0) { %>
+                                                                                        <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                    <% } else { %>
+                                                                                        <button title="Please log in!" disabled>add to cart</button>    
+                                                                                    <% } %>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="content">
+                                                                        <div class="content-left">
+                                                                            <h4 class="title">
+                                                                            <a href="/view-item-process"><%= ItemDetails[i].name %></a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div class="content-right">
+                                                                            <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                <% } } %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
+
+                                            <div class="sidebar">
+                                                <h4 class="sidebar-title">Category</h4>
+                                                <ul class="sidebar-list">                                                    
+                                                    <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
+                                                    <li><a href="javascript:showMedicine()" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
+                                                    <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
+                                                    <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div><!-- Page Section End -->
+                        </div>
+
+                        <div class="tab-pane" id="PrescribedMisc">
+
+                            <center><p class="btn bg-warning btn-round">Note: If you're purchasing the prescribed items you have to upload the prescription at the checkout!</p></center>
+
+                            <div class="page-section section section-padding">
+                                <div class="container">
+
+                                    <div class="row row-30 mbn-40">
+
+                                        <div class="col-xl-12 col-lg-12 col-12 order-1 order-lg-2 mb-40" style="float: left;">
+                                            <div class="row">    
+                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                    <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                        <% if(ItemDetails[i].category == 'Misc'&& ItemDetails[i].prescribed == 'true') { %>
+                                                            <form action="view-item-process" method="post">
+                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>    
+                                                            <div class="product-item border">
+                                                                <div class="product-inner">
+                                                                    <div class="image">
+                                                                        <img src="<%= ItemDetails[i].image %>" alt="" style="background-size: 150px;
+                                                                        width: 300px;
+                                                                        height: 300px; object-fit: contain; align-self: center;">
+                                                                        <div class="image-overlay">
+                                                                            <div class="action-buttons">
+                                                                                <% if(userFName.length > 0) { %>
+                                                                                    <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                <% } else { %>
+                                                                                    <button title="Please log in!" disabled>add to cart</button>    
+                                                                                <% } %>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="content">
+                                                                        <div class="content-left">
+                                                                            <h4 class="title">
+                                                                                <a href="#">
+                                                                                    <%= ItemDetails[i].name %>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div class="content-right">
+                                                                            <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </form>
+                                                        </div>
+                                                    <% } } %>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- Page Section End -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-top-section section bg-theme-two-light section-padding">
+                <div class="container">
+                    <div class="row mbn-40">
+
+                        <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                            <h4 class="title">CONTACT US</h4>
+                            <p>No. 23A/1, Rukmal Place,<br />Sirimal Uyana, Rathmalana</p>
+                            <p><a href="tel:0117544801">0112 123 456</a></p>
+                            <p><a href="mailto:info@mdi2door.com">info@medi2door.com</a><a href="#">www.Medi2Door.com</a></p>
+                        </div>
+
+                        <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                            <h4 class="title">INFORMATION</h4>
+                            <ul>
+                                <li><a href="#">About us</a></li>
+                                <li><a href="#">Contact us</a></li>
+                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                            <h4 class="title">NEWSLETTER</h4>
+                            <p>Subscribe our newsletter and get all update of our product</p>
+
+                            <form id="mc-form" class="mc-form footer-subscribe-form" novalidate="true">
+                                <input id="mc-email" autocomplete="off" placeholder="Enter your email here" name="EMAIL" type="email">
+                                <button id="mc-submit"><i class="fa fa-paper-plane-o"></i></button>
+                            </form>
+
+                            <h5>FOLLOW US</h5>
+                            <p class="footer-social"><a href="#">Facebook</a> - <a href="#">Twitter</a> - <a href="#">Google+</a></p>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-section section bg-theme-two pt-15 pb-15">
+                <div class="container">
+                    <div class="row">
+                        <div class="col text-center">
+                            <p class="footer-copyright">Copyright &copy; Medi2Door. All rights reserved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!-- JS
+    ============================================ -->
+    <!-- jQuery JS -->
+    <script src="assets/js/vendor/jquery-3.4.1.min.js"></script>
+    <!-- Popper JS -->
+    <script src="assets/js/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- Plugins JS -->
+    <script src="assets/js/plugins.js"></script>
+    <!-- Ajax Mail -->
+    <script src="assets/js/ajax-mail.js"></script>
+    <!-- Main JS -->
+    <script src="assets/js/main.js"></script>
+    <script>
+         function showAll() {
+          document.getElementById("landing").style.display = "block";
+          document.getElementById("category-medicine").style.display = "none";
+          document.getElementById("category-grocery").style.display = "none";
+          document.getElementById("category-misc").style.display = "none";
+        }
+
+        function showMedicine() {
+          document.getElementById("category-medicine").style.display = "block";
+          document.getElementById("landing").style.display = "none";          
+          document.getElementById("category-grocery").style.display = "none";
+          document.getElementById("category-misc").style.display = "none";
+        }
+
+        function showGroceries() {
+          document.getElementById("category-grocery").style.display = "block";
+          document.getElementById("category-medicine").style.display = "none";
+          document.getElementById("landing").style.display = "none";  
+          document.getElementById("category-misc").style.display = "none";
+        }
+
+        function showMisc() {
+          document.getElementById("category-misc").style.display = "block";
+          document.getElementById("category-medicine").style.display = "none";
+          document.getElementById("landing").style.display = "none";          
+          document.getElementById("category-grocery").style.display = "none";          
+        }
+    </script>
+
+</body>
+
+</html>

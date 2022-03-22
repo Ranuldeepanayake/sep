@@ -1,0 +1,322 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Medi2Door - Bringing the medicine at your door</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/icon-font.min.css">
+    <link rel="stylesheet" href="assets/css/plugins.css">
+    <link rel="stylesheet" href="assets/css/helper.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/vendor/modernizr-3.7.1.min.js"></script>
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="header-section section">
+            <div class="header-top header-top-one bg-theme-two">
+                <div class="container-fluid">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col mt-10 mb-10 d-none d-md-flex">
+                            <div class="header-top-left">
+                                <p>Welcome to Medi2Door - Bringing the medicine at your door</p>
+                            </div>
+                        </div>
+                        <div class="col mt-10 mb-10">
+                            <div class="header-top-right">
+                                <% if(userFName.length > 0) { %>
+                                    <p>Hi <%= userFName %></p>                                        
+                                    <p><a href="/my-account">My Account</a></p>
+                                    <p><a href="/logout-process">Logout</a></p>
+                                <% } else { %>
+                                <p><a href="/login">Register</a><a href="/login">Login</a></p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom header-bottom-one header-sticky">
+                <div class="container-fluid">
+                    <div class="row menu-center align-items-center justify-content-between">
+                        <div class="col mt-15 mb-15">
+                            <div class="header-logo">
+                                <a href="index.html">
+                                    <img src="assets/images/logo.png">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col order-2 order-lg-3">
+                            <div class="header-shop-links">
+                                <div class="header-mini-cart">
+                                    <img src="assets/images/icons/cart.png" alt="Cart"> 
+                                    <% if (totalPrice == 0) { %>
+                                        <span>Rs.<%= totalPrice %></span>
+                                    <% } else { %>
+                                        <span>Rs.<%= totalPrice %></span>&nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm"><a href="/cart">View Cart</a></button> 
+                                    <% } %> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col order-3 order-lg-2">
+                            <div class="main-menu">
+                                <nav>
+                                    <ul>
+                                        <li>
+                                            <a class="active" href="/index">HOME</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">ABOUT</a>
+                                        </li>
+                                        <li><a href="contact.html">CONTACT</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Menu -->
+                        <div class="mobile-menu order-12 d-block d-lg-none col"></div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="page-banner-section section" style="background-image: url(assets/images/page-cover.jpg)">
+            <div class="container">
+                <div class="row">
+                    <div class="page-banner-content col">
+
+                        <h1>Cart</h1>
+                        <ul class="page-breadcrumb">
+                            <li><a href="/index">Medi2Door</a></li>
+                            <li><a href="/cart">Cart</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Section Start -->
+        <div class="page-section section section-padding">
+            <div class="container">
+                <% if (isCartEmpty==1) { %>
+                    <div class="row mbn-40">
+                        <div class="col-12 mb-40">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Cart is empty!
+                                <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <button type="button" class="btn btn-info btn-sm btn-block"><a href="/view-supplier-products-redirect">Return to Store</a></button>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="row mbn-40">
+                        <div class="col-12 mb-40">
+                            <div class="cart-table table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="pro-thumbnail">Image</th>
+                                            <th class="pro-title">Product</th>
+                                            <th class="pro-price">Price</th>
+                                            <th class="pro-quantity">Quantity</th>
+                                            <th class="pro-subtotal">Total</th>
+                                            <th class="pro-remove">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for(var i=0; i < cartItems.length; i++) { %>
+                                            <tr>                        
+                                                <td class="pro-thumbnail"><a href="#"><img src="<%= cartItems[i].cartItemImage %>" alt="" /></a></td>
+                                                <td class="pro-title"><a href="#"><%= cartItems[i].cartItemName %></a></td>
+                                                <td class="pro-price"><span class="amount">Rs. <%= cartItems[i].cartItemUnitPrice %></span></td>
+                                                <td class="pro-quantity">
+                                                    <input type="number" id = "cartQuantity" value="<%= cartItems[i].cartItemQuantity %>" min="0" max="<%= cartItems[i].dbQuantity %>" onchange="checkQuantity()"/>
+                                                    <input type="number" id = "dbQuantity" value="<%= cartItems[i].dbQuantity %>" hidden/>
+                                                </td>
+                                                <td class="pro-subtotal">Rs. <%= cartItems[i].cartItemSubTotal %></td>
+                                                <form method="post" action="remove-from-cart">
+                                                    <input style="visibility: hidden;" id="itemNumber" name="itemNumber" value="<%= cartItems[i].cartItemNumber %>"/>  
+                                                    <td class="pro-remove"><button type="submit" class="btn btn-danger btn-sm">Remove</button></td>
+                                                </form>                                                
+                                            </tr>
+                                        <% } %>                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-8 col-md-7 col-12 mb-40">
+                        <% if(reqPrescription == 1) { %> 
+                            <form method="post" action="upload-prescription-process" enctype="multipart/form-data">
+                              <p>*Please upload the prescription to checkout.</p>
+                                <input class="prescription-upload" type="file" id="prescriptionImage" name="prescriptionImage" onchange="checkData()">
+                                <button class="btn btn-warning btn-round" type="submit" id="upload-btn" onkeyup="checkPrescription()" disabled>Upload</button>  
+                            </form>
+                                <div class="cart-buttons mt-30 mb-30">
+                                    <% if(prescriptionUploaded == 1) { %>
+                                        <p>File Uploaded: <%= prescriptionFile %></p>
+                                        <br>
+                                        <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn" ><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
+                                        <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" ><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
+                                    <% } else { %> 
+                                        <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn"><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
+                                        <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" disabled><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
+                                    <% } %>
+                                </div>
+                             
+                        <% } else { %> 
+                            <div class="cart-buttons mt-30 mb-30">
+                                <button class="btn btn-primary-cs btn-round" onclick="continueShopping()" id="continue-shopping-btn" ><i class="ti-shopping-cart"></i>&nbsp;<span>Continue Shopping</span></button>
+                                <button class="btn btn-primary-cs btn-round" onclick="checkoutItems()" id="check-out-btn" ><i class="ti-check"></i>&nbsp;<span>Proceed to Checkout</span></button>
+                            </div>
+                        <% } %>
+                        <br>
+                            <% if(prescriptionUploaded == 0) { %> 
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    Error in saving prescription!
+                                    <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            <% } else if(prescriptionUploaded == 1){ %> 
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    Prescription saved successfully!
+                                    <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            <% } else if(prescriptionUploaded == 'null') { %>
+                                <span aria-hidden="true"></span>
+                            <% } %>
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-5 col-12 mb-40">
+                            <div class="cart-total fix">
+                                <h3>Cart Totals</h3>
+                                <table>
+                                    <tbody>
+                                        <tr class="cart-subtotal">
+                                            <th>Subtotal</th>
+                                            <td><span class="amount">Rs. <%= totalPrice %></span></td>
+                                        </tr>
+                                        <tr class="order-total">
+                                            <th>Total</th>
+                                            <td>
+                                                <strong><span class="amount">Rs. <%= totalPrice %></span></strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div><!-- Page Section End -->
+
+
+        <div class="footer-top-section section bg-theme-two-light section-padding">
+            <div class="container">
+                <div class="row mbn-40">
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">CONTACT US</h4>
+                        <p>No. 23A/1, Rukmal Place,<br />Sirimal Uyana, Rathmalana</p>
+                        <p><a href="tel:0117544801">0112 123 456</a></p>
+                        <p><a href="mailto:info@mdi2door.com">info@medi2door.com</a><a href="#">www.Medi2Door.com</a></p>
+                    </div>
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">INFORMATION</h4>
+                        <ul>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Contact us</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">NEWSLETTER</h4>
+                        <p>Subscribe our newsletter and get all update of our product</p>
+
+                        <form id="mc-form" class="mc-form footer-subscribe-form" novalidate="true">
+                            <input id="mc-email" autocomplete="off" placeholder="Enter your email here" name="EMAIL" type="email">
+                            <button id="mc-submit"><i class="fa fa-paper-plane-o"></i></button>
+                        </form>
+
+                        <h5>FOLLOW US</h5>
+                        <p class="footer-social"><a href="#">Facebook</a> - <a href="#">Twitter</a> - <a href="#">Google+</a></p>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom-section section bg-theme-two pt-15 pb-15">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center">
+                        <p class="footer-copyright">Copyright &copy; Medi2Door. All rights reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="assets/js/vendor/jquery-3.4.1.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/plugins.js"></script>
+    <script src="assets/js/ajax-mail.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        var checkData = function() {
+            if (document.getElementById('prescriptionImage').value.length > 0) {
+            document.getElementById("upload-btn").disabled = false;
+            }
+            else{
+                document.getElementById("upload-btn").disabled = true;
+            }
+        }
+
+        var continueShopping = function() {
+            window.location = '/continue-shopping';
+        }
+
+        var checkoutItems = function() {
+            window.location = '/checkout';
+        }
+
+        var checkPrescription = function() {
+            if (document.getElementById('prescriptionImage').value.length > 0) {
+            document.getElementById('continue-shopping-btn').disabled = false;
+            document.getElementById('check-out-btn').disabled = false;
+            }
+        }
+
+        var checkQuantity = function() {
+            if (document.getElementById('cartQuantity').value > document.getElementById('dbQuantity').value ) {
+            document.getElementById("cartQuantity").value = document.getElementById('dbQuantity').value ;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Medi2Door - Bringing the medicine at your door</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+
+   
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/icon-font.min.css">
+    <link rel="stylesheet" href="assets/css/plugins.css">
+    <link rel="stylesheet" href="assets/css/helper.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/vendor/modernizr-3.7.1.min.js"></script>
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="header-section section">
+            <div class="header-top header-top-one bg-theme-two">
+                <div class="container-fluid">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col mt-10 mb-10 d-none d-md-flex">
+                            <div class="header-top-left">
+                                <p>Welcome to Medi2Door - Bringing the medicine at your door</p>
+                            </div>
+                        </div>
+                        <div class="col mt-10 mb-10">
+                            <div class="header-top-right">
+                                <p><a href="/my-account">My Account</a></p>
+                                <p><a href="/login">Register</a><a href="/login">Login</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="col-12 mb-15"> 
+                <% if(loginerror.length > 0) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <%= loginerror %>
+                        <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <% } %>
+                </div>
+            <div class="header-bottom header-bottom-one header-sticky">
+                <div class="container-fluid">
+                    <div class="row menu-center align-items-center justify-content-between">
+                        <div class="col mt-15 mb-15">
+                            <div class="header-logo">
+                                <a href="/">
+                                    <img src="assets/images/logo.png">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col order-2 order-lg-3">
+                            <div class="header-shop-links">
+                                <div class="header-mini-cart">
+                                    <a href=""><img src="assets/images/icons/cart.png" alt="Cart"> <span>Rs.0</span></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col order-3 order-lg-2">
+                            <div class="main-menu">
+                                <nav>
+                                    <ul>
+                                        <li>
+                                            <a class="active" href="/index">HOME</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">ABOUT</a>
+                                        </li>
+                                        <li><a href="contact.html">CONTACT</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Menu -->
+                        <div class="mobile-menu order-12 d-block d-lg-none col"></div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="page-banner-section section" style="background-image: url(assets/images/page-cover.jpg)">
+            <div class="container">
+                <div class="row">
+                    <div class="page-banner-content col">
+
+                        <h1>Login & Register</h1>
+                        <ul class="page-breadcrumb">
+                            <li><a href="/index">Home</a></li>
+                            <li><a href="/login">Login & Register</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Form for signing in-->
+        <div class="page-section section section-padding">
+            <div class="container">
+                <div class="row mbn-40">
+                    <div class="col-lg-4 col-12 mb-40">
+                        <div class="login-register-form-wrap">
+                            <h3>Login</h3>
+                            <form action="sign-in-process" method="post" class="mb-30">
+                                <div class="row">
+                                    <div class="col-12 mb-15"><input name="email" type="text" placeholder="Email" required></div>
+                                    <div class="col-12 mb-15"><input name="password" type="password" placeholder="Password" required></div>
+                                    <div class="col-12"><button class="btn btn-dark btn-round" type="submit" value="Login">Login</button></div>
+                                </div>
+                                <br>
+                                <div class="col-12 mb-15"> 
+                                    <% if(message.length > 0) { %>
+                                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                          <%= message %>
+                                          <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                      <% } %>
+                                  </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1 col-12 mb-40 text-center">
+                        <span class="login-register-separator"></span>
+                    </div>
+
+                    <!--Form for signing up-->
+                    <div class="col-lg-7 col-12 mb-40 ml-auto">
+                        <div class="col-12 mb-15"> 
+                            <% if(valmessage.length > 25) { %>
+                              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                  <%= valmessage %>
+                                  <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                              <% } else if (valmessage.length == 0) { %>
+                                    <span aria-hidden="true"></span>
+                              <% } else { %>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                  <%= valmessage %>
+                                  <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                              <% } %>
+                          </div>
+                        <div class="login-register-form-wrap">
+                            <h3>Register</h3>
+                            <form action="sign-up-process" method="post">
+                                <div class="row">
+                                    <div class="col-md-12 col-12 mb-15">
+                                        <select name="userType" id="userTypeRegister" required onchange="toggleRegisterView()">
+                                            <option value="">Select User Type</option>
+                                            <option value="customer">Customer</option>
+                                            <option value="supplier">Supplier</option>
+                                      </select>
+                                    </div>
+                                    <div class="col-md-6 col-12 mb-15"><input name="firstName" type="text" placeholder="First Name" required></div>
+                                    <div class="col-md-6 col-12 mb-15"><input name="lastName" type="text" placeholder="Last Name" required></div>
+                                    <div class="col-md-6 col-12 mb-15"><input name="street" type="text" placeholder="Address" required></div>
+                                    <div class="col-md-6 col-12 mb-15">
+                                        <select id="city" name="city" required>
+                                            <option value="null">Nearest City</option>
+                                            <option value="Kottawa">Kottawa</option>
+                                            <option value="Rajagiriya">Rajagiriya</option>
+                                            <option value="Nugegoda">Nugegoda</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 col-12 mb-15"><input name="email" type="email" placeholder="Email" required></div>
+                                    <div class="col-md-6 col-12 mb-15"><input id = "password" name="password" type="password" placeholder="Password" onkeyup="check()" required></div>
+                                    <div class="col-md-6 col-12 mb-15"><input id ="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password" onkeyup="check()" required></div>
+                                    <span id='message' style="tab-size: 4;"></span>
+                                    <div class="col-md-6 col-12 mb-15"><input id="nmraRegistration" name="nmraRegistration" type="text" placeholder="NMRA ID"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input id= "pharmacistRegistration" name="pharmacistRegistration" type="text" placeholder="Pharmacist ID"></div>
+                                    <div class="col-md-6 col-12 mb-15"><input id= "storeDescription" name="storeDescription" type="text" placeholder="Store Description"></div>
+                                    <div class="col-md-12 col-12"><button id="register" class="btn btn-dark btn-round" type="submit" value="Register">Register</div>
+                                </div>
+                            </form>
+                            <br>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-top-section section bg-theme-two-light section-padding">
+            <div class="container">
+                <div class="row mbn-40">
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">CONTACT US</h4>
+                        <p>No. 23A/1, Rukmal Place,<br />Sirimal Uyana, Rathmalana</p>
+                        <p><a href="tel:0117544801">0112 123 456</a></p>
+                        <p><a href="mailto:info@mdi2door.com">info@medi2door.com</a><a href="#">www.Medi2Door.com</a></p>
+                    </div>
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">INFORMATION</h4>
+                        <ul>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Contact us</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-widget col-lg-4 col-md-6 col-12 mb-40">
+                        <h4 class="title">NEWSLETTER</h4>
+                        <p>Subscribe our newsletter and get all update of our product</p>
+
+                        <form id="mc-form" class="mc-form footer-subscribe-form" novalidate="true">
+                            <input id="mc-email" autocomplete="off" placeholder="Enter your email here" name="EMAIL" type="email">
+                            <button id="mc-submit"><i class="fa fa-paper-plane-o"></i></button>
+                        </form>
+                      
+                        <h5>FOLLOW US</h5>
+                        <p class="footer-social"><a href="#">Facebook</a> - <a href="#">Twitter</a> - <a href="#">Google+</a></p>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom-section section bg-theme-two pt-15 pb-15">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center">
+                        <p class="footer-copyright">Copyright &copy; Medi2Door. All rights reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="assets/js/vendor/jquery-3.4.1.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/plugins.js"></script>
+    <script src="assets/js/ajax-mail.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        var check = function() {
+            if (document.getElementById('confirmPassword').value.length<1 && document.getElementById('password').value.length<1) {
+            document.getElementById('message').style.color = 'red';
+            document.getElementById("register").disabled = true;
+            document.getElementById('message').innerHTML = 'Passwords do not Match!';
+            } else if (document.getElementById('confirmPassword').value == document.getElementById('password').value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById("register").disabled = false;
+                document.getElementById('message').innerHTML = 'Passwords Match!';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById("register").disabled = true;
+                document.getElementById('message').innerHTML = 'Passwords do not match!';
+            }
+        }
+
+        var toggleRegisterView = function() {
+
+            console.log('Function triggered!');
+
+            console.log(document.getElementById('userTypeRegister').value);
+
+            if (document.getElementById('userTypeRegister').value== 'customer') {
+                document.getElementById('nmraRegistration').style.visibility= "hidden";
+                document.getElementById('pharmacistRegistration').style.visibility= "hidden";
+                document.getElementById('storeDescription').style.visibility= "hidden";
+            
+            } else if (document.getElementById('userTypeRegister').value== 'supplier') {
+                document.getElementById('nmraRegistration').style.visibility= "visible";
+                document.getElementById('pharmacistRegistration').style.visibility= "visible";
+                document.getElementById('storeDescription').style.visibility= "visible";
+                //document.getElementById('message').style.color = 'green';
+                //document.getElementById("register").disabled = false;
+                //document.getElementById('message').innerHTML = 'Passwords Match!';
+            } 
+        }
+    </script>
+</body>
+</html>
