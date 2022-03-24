@@ -2,6 +2,7 @@
 This class provides back end functionality to the user class.
 */
 const sql = require("mysql2");
+const fs = require('fs');	//For reading the config file.
 const bcrypt = require('bcrypt');	//For hashing passwords.
 const saltRounds = 2;	//Number of salt rounds for hashing.
 
@@ -12,22 +13,32 @@ var connection;
 
 //Create a connection to a database.
 function createDbConnection() {
-	connection = sql.createConnection({
-		host: "54.169.116.74",
-  		user: "sep",
-  		password: "RHFkwLSa62uXb7vQ",
-		database: 'sep'
-	});
 
-	connection.connect(function(err) {
-  		if (err) {
-    			return console.error('error: ' + err.message);
+	//Read the configuration file.
+	try {
+		var data= JSON.parse(fs.readFileSync('./configuration.json'));
+
+		//console.log(data.dbConf.host);
+
+		connection = sql.createConnection({
+			host: data.dbConf.host,
+			user: data.dbConf.user,
+			password: data.dbConf.password,
+			database: data.dbConf.database
+		});
+		
+	} catch (error) {
+		return console.error('Error: ' + error.message);
+	}
+
+	connection.connect(function(error) {
+  		if (error) {
+    		return console.error('error: ' + error.message);
   		}
   		console.log('Connected to the MySQL server.');
 	});
-
-	
 }
+
 
 //Handles the customer sign up process.
 function signUp(request, callback) {
