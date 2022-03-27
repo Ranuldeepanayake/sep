@@ -386,25 +386,15 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 	var result;
 	var orderId;
 
-	//console.log('###Data passed to the order>');
-	//console.log(itemArray);
-
-	//Hard coded values for testing.
-	/*totalPrice= 1500;
-	supplierId= 3;
-	customerId= 1;
-	itemArray= [{'itemId': '1', 'itemQuantity' : '3'}, {'itemId': '2', 'itemQuantity' : '5'}];*/
-	//var date= '2022-02-26';
-
-	//Create a date object. This gives both the date and time but the database will filter out only the date when inserting since
-	//the column data type is date.
-	var date= new Date();
+	var date = new Date(); 
+	var newDate = date.getFullYear() + '-' + (date.getMonth() + 1)+ '-' + date.getDate(); 
+	//console.log(newDate);
 
 	createDbConnection();
 
 	//Insert record into the order table first.
 	query= `insert into order_table (customer_id, supplier_id, date, approval_status, total_price) values (?, ?, ?, 'approved', ?)`;
-	values= [customerId, supplierId, date, totalPrice];
+	values= [customerId, supplierId, newDate, totalPrice];
 
 	try {
 		//The await keyword waits for an asynchronous function's promise result (resolve/reject) effectively
@@ -478,23 +468,16 @@ async function createOrderPrescribed(itemArray, totalPrice, supplierId, customer
 	var result;
 	var orderId;
 
-	//Hard coded values for testing.
-	/*totalPrice= 1500;
-	supplierId= 3;
-	customerId= 1;
-	itemArray= [{'itemId': '1', 'itemQuantity' : '3'}, {'itemId': '2', 'itemQuantity' : '5'}];*/
-	//var date= '2022-02-26';
-
-	//Create a date object. This gives both the date and time but the database will filter out only the date when inserting since
-	//the column data type is date.
-	var date= new Date();
+	var date = new Date(); 
+	var newDate = date.getFullYear() + '-' + (date.getMonth() + 1)+ '-' + date.getDate(); 
+	//console.log(newDate);
 
 	createDbConnection();
 
 	//Insert record into the order table first.
 	query= `insert into order_table (customer_id, supplier_id, date, prescription_needed, prescription_image, total_price) 
 			values (?, ?, ?, ?, ?, ?)`;
-	values= [customerId, supplierId, date, 'true', imagePath, totalPrice];
+	values= [customerId, supplierId, newDate, 'true', imagePath, totalPrice];
 
 	try {
 		//The await keyword waits for an asynchronous function's promise result (resolve/reject) effectively

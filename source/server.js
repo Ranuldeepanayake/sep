@@ -1704,6 +1704,7 @@ app.post('/view-supplier-order-process', function(req, res){
 				approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })		
 			}
 			else{
+				console.log(result);
 				res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
 				approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })	
 			}	
@@ -1770,51 +1771,6 @@ app.post('/view-prescription', function(req, res){
 	res.render('View-Prescription.ejs', {prescription: req.body.prescription_image})
 });
 
-/* Merge the 2 actions to one route
-//This function approves a selected order.
-app.post('/supplier-approve-order-process', function(req, res){
-	console.log("**************Approving a selected order>");
-	
-	//Check session status.
-	if(typeof req.session.userId== 'undefined'){
-		console.log("**************User not logged in!");
-		res.redirect('/my-account-error')
-
-	}else{
-		//Order ID has to be sent as the first argument.
-		console.log("req.body.order_id: ", req.body.order_id)
-		supplier.approveOrder(req.body.order_id, function(result){
-			if(result == 'failure'){
-				supplier.getOrder(req.body.order_id, function(result){
-					res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
-								approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Error in approving order! Please try again!' })			
-				});
-			}else{
-				supplier.getOrder(req.body.order_id, function(result){
-					res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
-								approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Order approved!' })			
-				});
-			}
-		});
-	}
-});
-
-//This function rejects a selected order.
-app.get('/supplier-reject-order-process', function(req, res){
-	console.log("**************Rejecting a selected order>");
-	
-	//Check session status.
-	if(typeof req.session.userId== 'undefined'){
-		console.log("**************User not logged in!");
-		res.redirect('/my-account-error')
-
-	}else{
-		//Order ID and the rejection reason has to be sent as arguments.
-		supplier.rejectOrder(105, 'Bad prescription', function(result){
-			res.json(result);
-		});
-	}
-});*/
 
 //get form to add item
 app.get('/add-item-form', function(req, res) {
@@ -1926,6 +1882,81 @@ app.post('/edit-item-process', uploadItemImage.single('prescriptionImageFile'), 
 	}
 });
 
+app.post('/about-us', function(req, res){
+	console.log("**************About us>");
+	
+	res.render('about-us.ejs');
+});
+
+
+app.get('/test', function(req, res){
+	customer.testPromises();
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Handle invalid URLs.
+app.all('*', function(req, res) {
+    	res.send('Bad request');
+});
+
+//Starts a nodejs server instance.
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
+
+//This function delivers a page with a data table (Old UI).
+/*app.get('/view-suppliers', function(req, res) {
+	res.sendFile(htmlPath + "view-suppliers.html");
+});*/
+
+/* Merge the 2 actions to one route
+//This function approves a selected order.
+app.post('/supplier-approve-order-process', function(req, res){
+	console.log("**************Approving a selected order>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Order ID has to be sent as the first argument.
+		console.log("req.body.order_id: ", req.body.order_id)
+		supplier.approveOrder(req.body.order_id, function(result){
+			if(result == 'failure'){
+				supplier.getOrder(req.body.order_id, function(result){
+					res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+								approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Error in approving order! Please try again!' })			
+				});
+			}else{
+				supplier.getOrder(req.body.order_id, function(result){
+					res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
+								approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: 'Order approved!' })			
+				});
+			}
+		});
+	}
+});
+
+//This function rejects a selected order.
+app.get('/supplier-reject-order-process', function(req, res){
+	console.log("**************Rejecting a selected order>");
+	
+	//Check session status.
+	if(typeof req.session.userId== 'undefined'){
+		console.log("**************User not logged in!");
+		res.redirect('/my-account-error')
+
+	}else{
+		//Order ID and the rejection reason has to be sent as arguments.
+		supplier.rejectOrder(105, 'Bad prescription', function(result){
+			res.json(result);
+		});
+	}
+});*/
+
+
 // remove/update merged to a single function
 //This function removes a selected item.
 /*
@@ -1995,27 +2026,6 @@ app.post('/update-item-process', uploadItemImage.single('itemImage'), function(r
 	});
 });
 */
-
-app.get('/test', function(req, res){
-	customer.testPromises();
-});
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//Handle invalid URLs.
-app.all('*', function(req, res) {
-    	res.send('Bad request');
-});
-
-//Starts a nodejs server instance.
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
-
-//This function delivers a page with a data table (Old UI).
-/*app.get('/view-suppliers', function(req, res) {
-	res.sendFile(htmlPath + "view-suppliers.html");
-});*/
 
 
 //An API which sends supplier data to the caller.

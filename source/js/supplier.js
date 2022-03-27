@@ -468,7 +468,7 @@ async function getOrder(orderId, callback) {
 		createDbConnection();
 		resultOrder= await connection.promise().query(query, values);
 		resultOrder= resultOrder[0][0];
-		console.log(resultOrder);
+		//console.log(resultOrder);
 		connection.end();
 
 	} catch (error) {
@@ -486,7 +486,7 @@ async function getOrder(orderId, callback) {
 		createDbConnection();
 		resultOrderItems= await connection.promise().query(query, values);
 		resultOrderItems= resultOrderItems[0];
-		console.log(resultOrderItems);
+		//console.log(resultOrderItems);
 		connection.end();
 
 	} catch (error) {
