@@ -48,7 +48,7 @@ function signUp(request, callback) {
 	//console.log(request.email + request.firstName + request.age + request.password);
 	createDbConnection();
 	query= `insert into user(type, email, first_name, last_name, street, city, password) values (?, ?, ?, ?, ?, ?, ?)`;
-	values= ['supplier', request.email, request.firstName, request.lastName, request.street, request.city, request.password];
+	values= ['supplier', request.email, request.firstName, request.lastName, request.street, request.city, passHash];
 
 	connection.query(query, values, (err, result)=>{
 		if(err){

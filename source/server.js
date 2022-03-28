@@ -507,30 +507,40 @@ app.post("/sign-up-process", function(req, res){
 
 				if(result == "success"){
 					res.redirect("/registration-success");
-				}
-				else {
+
+				}else {
 					res.redirect('/registration-error');
 				}
 			});	
 	}
+
 	//SUPPLIER
-	else if(req.body.userType== 'supplier'){
+	if(req.body.userType== 'supplier'){
+
 		//Checking additional supplier fields
 		if(req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '' || req.body.storeDescription== ''){
 			res.redirect('/register-supplier-validate');
 
 		} else {
+
 		//Save data in the database.
 		supplier.signUp(req.body, function(result){
 			//console.log(result)
+
+			try {
 				if(result == "success"){
 					console.log('pre');
 					res.redirect('/registration-success');
 					console.log('post');
-				}
-				else{
+
+				}else{
 					res.redirect('/registration-error');
 				}
+				
+			} catch (error) {
+				console.log(error.message);
+			}
+				
 			});	
 		}
 	}
