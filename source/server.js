@@ -503,35 +503,36 @@ app.post("/sign-up-process", function(req, res){
 	if(req.body.userType== 'customer'){
 		//Save data in the database.
 		customer.signUp(req.body, function(result){
-			console.log(result)
+			//console.log(result)
 
-			if(result == "success"){
-				res.redirect("/registration-success")
-			}
-			else {
-				res.redirect('/registration-error')
-			}
+				if(result == "success"){
+					res.redirect("/registration-success");
+				}
+				else {
+					res.redirect('/registration-error');
+				}
 			});	
 	}
 	//SUPPLIER
-	else if(req.body.userType== 'supplier')
-		{
+	else if(req.body.userType== 'supplier'){
 		//Checking additional supplier fields
 		if(req.body.nmraRegistration== '' || req.body.pharmacistRegistration== '' || req.body.storeDescription== ''){
-			res.redirect('/register-supplier-validate')
-		}
-		else {
+			res.redirect('/register-supplier-validate');
+
+		} else {
 		//Save data in the database.
 		supplier.signUp(req.body, function(result){
-			console.log(result)
-			if(result == "success"){
-				res.redirect('/registration-success')
-			}
-			else{
-				res.redirect('/registration-error')
-			}
+			//console.log(result)
+				if(result == "success"){
+					console.log('pre');
+					res.redirect('/registration-success');
+					console.log('post');
+				}
+				else{
+					res.redirect('/registration-error');
+				}
 			});	
-	}
+		}
 	}
 });
 
@@ -1882,10 +1883,10 @@ app.post('/edit-item-process', uploadItemImage.single('prescriptionImageFile'), 
 	}
 });
 
-app.post('/about-us', function(req, res){
+app.get('/about-us', function(req, res){
 	console.log("**************About us>");
 	
-	res.render('about-us.ejs');
+	res.render('about.ejs');
 });
 
 
