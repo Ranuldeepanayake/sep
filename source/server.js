@@ -529,9 +529,7 @@ app.post("/sign-up-process", function(req, res){
 
 			try {
 				if(result == "success"){
-					console.log('pre');
 					res.redirect('/registration-success');
-					console.log('post');
 
 				}else{
 					res.redirect('/registration-error');
