@@ -127,6 +127,14 @@
                         <div class="col-lg-4 col-12 mb-30">
                             <label class="bold">Rs. <%= orderDetails.total_price%></label>
                         </div>
+                        <% if (approvalStatus == 'rejected' { %>
+                        <div class="col-lg-2 col-12 mb-30">
+                            <p>Rejected Reason :</p>
+                        </div>
+                        <div class="col-lg-4 col-12 mb-30">
+                            <label class="bold">Rs. <%= orderDetails.approval_message%></label>
+                        </div>
+                        <% } %>
                     </div>
                     <% if (prescriptionReq == 'true') { %>
                     <div class="row mt-2">

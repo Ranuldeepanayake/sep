@@ -152,7 +152,7 @@ app.get('/my-account-customer', function (req, res, next){
 			userCity: req.session.city,
 			userEmail: req.session.email,
 			userPassword: req.session.password,
-			valmessage: '',orderDetails: ''});
+			valmessage: '',orderDetails: '', message: 'fail'});
 		} else {
 			res.render('Account-Customer.ejs', { userFName: req.session.firstName,
 			userLName: req.session.lastName,
@@ -160,7 +160,7 @@ app.get('/my-account-customer', function (req, res, next){
 			userCity: req.session.city,
 			userEmail: req.session.email,
 			userPassword: req.session.password,
-			valmessage: '',orderDetails: result});
+			valmessage: '',orderDetails: result, message: ''});
 		}
 	});
 	
@@ -187,26 +187,55 @@ app.get('/customer-update-validate-success', function (req, res, next){
 			req.session.street = result.street;
 			req.session.city = result.city;
 			req.session.password = result.password;
-		}
+
+			customer.getOrders(req.session.userId, function(result){
+				console.log(result)
+				if(result == 'failure'){
+					res.render('Account-Customer.ejs', { userFName: req.session.firstName,
+					userLName: req.session.lastName,
+					userAddress: req.session.street,
+					userCity: req.session.city,
+					userEmail: req.session.email,
+					userPassword: req.session.password,
+					valmessage: 'success',orderDetails: '', message: ''});
+				} else {
+					res.render('Account-Customer.ejs', { userFName: req.session.firstName,
+					userLName: req.session.lastName,
+					userAddress: req.session.street,
+					userCity: req.session.city,
+					userEmail: req.session.email,
+					userPassword: req.session.password,
+					valmessage: 'success',orderDetails: result, message: ''});
+				}
+			});
 		
-		res.render('Account-customer.ejs', {userFName: req.session.firstName,
-			userLName: req.session.lastName,
-			userAddress: req.session.street,
-			userCity: req.session.city,
-			userEmail: req.session.email,
-			userPassword :req.session.password,
-			valmessage : "success", orderDetails: ''});
+		
+		}
 	});
 });
 
 app.get('/customer-update-validate-fail', function (req, res, next){
-	res.render('Account-customer.ejs', {userFName: req.session.firstName,
-		userLName: req.session.lastName,
-		userAddress: req.session.street,
-		userCity: req.session.city,
-		userEmail: req.session.email,
-		userPassword :req.session.password,
-		valmessage : "fail", orderDetails: ''});
+
+	customer.getOrders(req.session.userId, function(result){
+		console.log(result)
+		if(result == 'failure'){
+			res.render('Account-Customer.ejs', { userFName: req.session.firstName,
+			userLName: req.session.lastName,
+			userAddress: req.session.street,
+			userCity: req.session.city,
+			userEmail: req.session.email,
+			userPassword: req.session.password,
+			valmessage: 'fail',orderDetails: '', message: ''});
+		} else {
+			res.render('Account-Customer.ejs', { userFName: req.session.firstName,
+			userLName: req.session.lastName,
+			userAddress: req.session.street,
+			userCity: req.session.city,
+			userEmail: req.session.email,
+			userPassword: req.session.password,
+			valmessage: 'fail',orderDetails: result, message: ''});
+		}
+	});
 });
 
 //SUPPLIER EDIT PROFILE routes.
@@ -294,18 +323,49 @@ app.get('/supplier-update-validate-success', function (req, res, next){
 			req.session.storeImage= result.storeImage;
 		}
 
-		res.render('Account-Supplier.ejs', {userFName: req.session.firstName,
-			userLName: req.session.lastName,
-			userAddress: req.session.street,
-			userCity: req.session.city,
-			userEmail: req.session.email,
-			userPassword :req.session.password,
-			userStoreDesc: req.session.storeDescription,
-			userNMRA: req.session.nmraRegistration,
-			userPharmID: req.session.pharmacistRegistration,
-			userStoreImage: req.session.storeImage,
-			valmessage : "success"});
+	//Get item list of supplier
+	supplier.getItemsList(session.userid, function (resultItems){
+		console.log("Item List: ", resultItems)
+
+		//Get order list of supplier
+		supplier.getOrders(session.userid, function(result){
+		if(result == "failure")
+		{
+			res.render('Account-Supplier.ejs', { userFName: req.session.firstName,
+				userLName: req.session.lastName,
+				userAddress: req.session.street,
+				userCity: req.session.city,
+				userEmail: req.session.email,
+				userPassword: req.session.password,
+				userStoreDesc: req.session.storeDescription,
+				userNMRA: req.session.nmraRegistration,
+				userPharmID: req.session.pharmacistRegistration,
+				userStoreImage: req.session.storeImage,
+				valmessage: 'Error in loading Order details!',
+				orderList: result, 
+				itemList: resultItems});
+		}
+		else
+		{
+			console.log("Order List:",result);
+			
+			res.render('Account-Supplier.ejs', { userFName: req.session.firstName,
+				userLName: req.session.lastName,
+				userAddress: req.session.street,
+				userCity: req.session.city,
+				userEmail: req.session.email,
+				userPassword: req.session.password,
+				userStoreDesc: req.session.storeDescription,
+				userNMRA: req.session.nmraRegistration,
+				userPharmID: req.session.pharmacistRegistration,
+				userStoreImage: req.session.storeImage,
+				valmessage: '', 
+				orderList: result,
+				itemList: resultItems });
+		}
 		});
+		});
+	});
 });
 
 app.get('/supplier-update-validate-fail', function (req, res, next){
