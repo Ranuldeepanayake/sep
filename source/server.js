@@ -294,18 +294,49 @@ app.get('/supplier-update-validate-success', function (req, res, next){
 			req.session.storeImage= result.storeImage;
 		}
 
-		res.render('Account-Supplier.ejs', {userFName: req.session.firstName,
-			userLName: req.session.lastName,
-			userAddress: req.session.street,
-			userCity: req.session.city,
-			userEmail: req.session.email,
-			userPassword :req.session.password,
-			userStoreDesc: req.session.storeDescription,
-			userNMRA: req.session.nmraRegistration,
-			userPharmID: req.session.pharmacistRegistration,
-			userStoreImage: req.session.storeImage,
-			valmessage : "success"});
+	//Get item list of supplier
+	supplier.getItemsList(session.userid, function (resultItems){
+		console.log("Item List: ", resultItems)
+
+		//Get order list of supplier
+		supplier.getOrders(session.userid, function(result){
+		if(result == "failure")
+		{
+			res.render('Account-Supplier.ejs', { userFName: req.session.firstName,
+				userLName: req.session.lastName,
+				userAddress: req.session.street,
+				userCity: req.session.city,
+				userEmail: req.session.email,
+				userPassword: req.session.password,
+				userStoreDesc: req.session.storeDescription,
+				userNMRA: req.session.nmraRegistration,
+				userPharmID: req.session.pharmacistRegistration,
+				userStoreImage: req.session.storeImage,
+				valmessage: 'Error in loading Order details!',
+				orderList: result, 
+				itemList: resultItems});
+		}
+		else
+		{
+			console.log("Order List:",result);
+			
+			res.render('Account-Supplier.ejs', { userFName: req.session.firstName,
+				userLName: req.session.lastName,
+				userAddress: req.session.street,
+				userCity: req.session.city,
+				userEmail: req.session.email,
+				userPassword: req.session.password,
+				userStoreDesc: req.session.storeDescription,
+				userNMRA: req.session.nmraRegistration,
+				userPharmID: req.session.pharmacistRegistration,
+				userStoreImage: req.session.storeImage,
+				valmessage: '', 
+				orderList: result,
+				itemList: resultItems });
+		}
 		});
+		});
+	});
 });
 
 app.get('/supplier-update-validate-fail', function (req, res, next){
