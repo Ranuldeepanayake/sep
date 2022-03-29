@@ -209,7 +209,17 @@
                             <div class="tab-pane fade" id="orders" role="tabpanel">
                                 <div class="myaccount-content">
                                     <h3>Orders</h3>
-
+                                    <% if( message == "" ) { %>
+                                        <% }  else if (message == "fail" ) {%>
+                                        <br>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Something went wrong!
+                                            <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                        <% } %>
+                                     <br>
                                     <div class="myaccount-table table-responsive text-center">
                                         <table class="table table-bordered">
                                             <thead class="thead-light">
