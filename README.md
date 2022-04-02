@@ -4,7 +4,7 @@ M.Sc group project for IT5030 Software Engineering Practices
 # Instructions for setting up the application.
 1. Clone the repository. Acces should be granted to the allowed Github account email addresses.
 2. Fetch the latest changes.
-3. Intsall nodejs in your computer.
+3. Install nodejs in your computer.
 4. Install the NPM package manager in your computer. 
 5. Open the cloned repo location in your computer. Go to sep -> source.
 6. Open a powershell window in the above location.
