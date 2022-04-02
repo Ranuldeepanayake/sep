@@ -35,7 +35,7 @@ function createDbConnection() {
   		if (error) {
     		return console.error('error: ' + error.message);
   		}
-  		console.log('Connected to the MySQL server.');
+  		//console.log('Connected to the MySQL server.');
 	});
 }
 
@@ -158,23 +158,23 @@ async function signIn(request, callback){
 	try {
 		createDbConnection();
 		result= await connection.promise().query(query, values);
-		console.log(result[0]);
+		//console.log(result[0]);
 		connection.end();
 
 	} catch (error) {
-		console.log(error.message);
+		//console.log(error.message);
 		connection.end();
 		return callback("failure");
 	}
 
 	//Check if at least account with the provide email exists. 
 	if(result[0].length> 0){
-		console.log('Account exists');
-		console.log('Hash stored in the database: ' + result[0][0].password);
+		//console.log('Account exists');
+		//console.log('Hash stored in the database: ' + result[0][0].password);
 
 		//Check if password hashes are matching.
 		if(bcrypt.compareSync(password, result[0][0].password)){
-			console.log('Credentials are correct>');
+			//console.log('Credentials are correct>');
 
 			//Check the account type.
 			if(result[0][0].type== 'customer'){
@@ -184,7 +184,7 @@ async function signIn(request, callback){
 				try {
 					createDbConnection();
 					result= await connection.promise().query(query, values);
-					console.log(result[0]);
+					//console.log(result[0]);
 					connection.end();
 
 					var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
@@ -200,11 +200,11 @@ async function signIn(request, callback){
 					authObject.city= result[0][0].city;
 					authObject.password= result[0][0].password;
 					
-					console.log(authObject);
+					//console.log(authObject);
 					return callback(authObject);
 			
 				} catch (error) {
-					console.log(error.message);
+					//console.log(error.message);
 					connection.end();
 					return callback("failure");
 				}
@@ -218,7 +218,7 @@ async function signIn(request, callback){
 				try {
 					createDbConnection();
 					result= await connection.promise().query(query, values);
-					console.log(result[0]);
+					//console.log(result[0]);
 					connection.end();
 
 					var authObject = {loggedIn : "", userType: "", userId: "", email : "" , firstName: "", 
@@ -239,17 +239,17 @@ async function signIn(request, callback){
 					authObject.storeDescription= result[0][0].store_description;
 					authObject.storeImage= result[0][0].store_image;
 
-					console.log(authObject);
+					//console.log(authObject);
 					return callback(authObject);
 
 				}catch (error) {
-					console.log(error.message);
+					//console.log(error.message);
 					connection.end();
 					return callback("failure");
 				}
 
 			}else{
-				console.log('Incorrect account type!');
+				//console.log('Incorrect account type!');
 
 				var authObject = {loggedIn : ""}
 				authObject.loggedIn= "false";
@@ -257,7 +257,7 @@ async function signIn(request, callback){
 			}
 
 		}else{
-			console.log('Incorrect credentials!');
+			//console.log('Incorrect credentials!');
 
 			var authObject = {loggedIn : ""}
 			authObject.loggedIn= "false";
@@ -265,7 +265,7 @@ async function signIn(request, callback){
 		}
 		
 	}else{
-		console.log('Account does not exist!');
+		//console.log('Account does not exist!');
 
 		var authObject = {loggedIn : ""}
 		authObject.loggedIn= "false";

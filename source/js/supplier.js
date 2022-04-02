@@ -32,7 +32,7 @@ function createDbConnection() {
   		if (error) {
     		return console.error('error: ' + error.message);
   		}
-  		console.log('Connected to the MySQL server.');
+  		//console.log('Connected to the MySQL server.');
 	});
 }
 
@@ -111,9 +111,9 @@ async function signIn(request, callback) {
 
 	//Check if at least account with the provide email exists. 
 	if(result[0].length> 0){
-		console.log('Account exists');
+		//console.log('Account exists');
 
-		console.log('Hash stored in the database: ' + result[0][0].password);
+		//console.log('Hash stored in the database: ' + result[0][0].password);
 
 		//Check if password hashes are matching.
 		if(bcrypt.compareSync(password, result[0][0].password)){
@@ -136,12 +136,12 @@ async function signIn(request, callback) {
 			authObject.storeDescription= result[0][0].store_description;
 			authObject.storeImage= result[0][0].store_image;
 			
-			console.log('User authenticated!');
-			console.log(authObject);
+			//console.log('User authenticated!');
+			//console.log(authObject);
 			return callback(authObject);
 
 		}else{
-			console.log('DB authentication failure!');
+			//console.log('DB authentication failure!');
 
 			var authObject = {loggedIn : ""}
 			authObject.loggedIn= "false";
@@ -149,7 +149,7 @@ async function signIn(request, callback) {
 		}
 
 	}else{
-		console.log('Account does not exist!');
+		//console.log('Account does not exist!');
 
 		var authObject = {loggedIn : ""}
 		authObject.loggedIn= "false";
@@ -514,7 +514,7 @@ async function approveOrder(orderId, callback){
 		createDbConnection();
 		result= await connection.promise().query(query, values);
 		status= result[0][0].approval_status;
-		console.log('Current order status: ' + status);
+		//console.log('Current order status: ' + status);
 		connection.end();
 
 	} catch (error) {
@@ -548,7 +548,7 @@ async function approveOrder(orderId, callback){
 		try {
 			createDbConnection();
 			resultItems= await connection.promise().query(query, values);
-			console.log(result[0]);
+			//console.log(result[0]);
 			connection.end();
 
 		} catch (error) {
@@ -569,14 +569,14 @@ async function approveOrder(orderId, callback){
 	
 				result= await connection.promise().query(query, values);
 				quantity= result[0][0].quantity;
-				console.log('Old quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
+				//console.log('Old quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
 	
 				//Update the quantity.
 				query= `update item set quantity= ? where item_code= ?`;
 				values= [quantity - resultItems[0][i].quantity, resultItems[0][i].item_code];
 	
 				result= await connection.promise().query(query, values);
-				console.log('Affected rows: ' + result[0].affectedRows);
+				//console.log('Affected rows: ' + result[0].affectedRows);
 	
 				//Get the new quantity from the item table.
 				query= `select quantity from item where item_code= ?`;
@@ -584,7 +584,7 @@ async function approveOrder(orderId, callback){
 	
 				result= await connection.promise().query(query, values);
 				quantity= result[0][0].quantity;
-				console.log('New quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
+				//console.log('New quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
 	
 				connection.end();
 	
