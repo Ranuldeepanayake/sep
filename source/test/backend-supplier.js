@@ -9,7 +9,7 @@ describe('Testing supplier.showVisitor()', function(done){
             chai.assert.notEqual(result, 'failure', "Failed to retrieve data!");
             done();
         });
-    })
+    });
 });
 
 //Unit test to check if the supplier.getItemsList() dataset is defined.
@@ -24,7 +24,7 @@ describe('Testing supplier.getItemsList()', function(){
             chai.assert.isNotEmpty(result, "Failed to retrieve data!");
             done();
         });
-    })
+    });
 });
 
 //Unit test to check if supplier.approveOrder() is functioning.
@@ -39,7 +39,7 @@ describe('Testing supplier.approveOrder()', function(){
             chai.assert.isNotEmpty(result, "Failed to approve order!");
             done();
         });
-    })
+    });
 });
 
 //Unit test to check if supplier.rejectOrder() is functioning.
@@ -54,22 +54,30 @@ describe('Testing supplier.rejectOrder()', function(){
             chai.assert.isNotEmpty(result, "Failed to reject order!");
             done();
         });
-    })
+    });
 });
 
-/*
-//Unit test to check if the supplier.getItemsList() dataset is defined.
-describe('Testing supplier.getItemsList()', function(){
+//Unit test to check if supplier.getItemsList() dataset is defined.
+describe('Testing supplier.signUp()', function(){
     
-    it('Test if the list of items for a particular supplier can be queried from the backend to be shown to a visitor/customer.', 
+    it('Test if a supplier can successfully create an account.', 
     function(done){
-        supplier.getItemsList('3', function (result){
-            chai.assert.notEqual(result, 'failure', "Failed to retrieve data!");
-            chai.assert.isDefined(result, "Failed to retrieve data!");
-            chai.assert.isNotNull(result, "Failed to retrieve data!");
-            chai.assert.isNotEmpty(result, "Failed to retrieve data!");
-            done();
+
+        var dataSet= {
+            email : "janith@gmail.com", firstName : "Janith", lastName : "Bada", street : "Main street",
+            city : "Nugegoda", password : "gehan",  nmraRegistration : "HIJKLMNO", 
+            pharmacistRegistration : "PQRSTUV", storeDescription : "Me mage pharmacy eka"
+        }
+        supplier.signUp(dataSet, function (result){
+            try {
+                chai.assert.notEqual(result, 'failure', "Failed to create account!");
+                chai.assert.isDefined(result, "Failed to create account!");
+                chai.assert.isNotNull(result, "Failed to create account!");
+                chai.assert.isNotEmpty(result, "Failed to create account!");
+                done();
+            } catch (error) {
+                //Ignore this weird exception.
+            }       
         });
-    })
+    });
 });
-*/

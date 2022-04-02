@@ -22,7 +22,7 @@
     "mysql2": "^2.3.3"
   },
   "scripts": {
-    "test-customer": "mocha",
-	"test-supplier": "mocha"
+    "test-customer": "mocha test/backend-customer.js",
+	"test-supplier": "mocha test/backend-supplier.js"
   }
 }

@@ -57,7 +57,7 @@ function signUp(request, callback) {
 			return callback("failure");
 		}else{
 			//console.log("Record inserted with ID: " + JSON.stringify(result));
-            console.log(result);
+            //console.log(result);
 
             //If data was successfully inserted into the user table, proceed with inserting data into the supplier table.
             query= `insert into supplier(supplier_id, nmra_registration, pharmacist_registration, store_description, 
@@ -100,7 +100,7 @@ async function signIn(request, callback) {
 	try {
 		createDbConnection();
 		result= await connection.promise().query(query, values);
-		console.log(result[0]);
+		//console.log(result[0]);
 		connection.end();
 
 	} catch (error) {
@@ -616,7 +616,7 @@ async function rejectOrder(orderId, rejectReason, callback){
 	try {
 		createDbConnection();
 		result= await connection.promise().query(query, values);
-		console.log('Current order status: ' + result[0][0].approval_status);
+		//console.log('Current order status: ' + result[0][0].approval_status);
 		connection.end();
 
 		if(result[0][0].approval_status== 'rejected'){
@@ -652,7 +652,7 @@ async function rejectOrder(orderId, rejectReason, callback){
 	try {
 		createDbConnection();
 		resultItems= await connection.promise().query(query, values);
-		console.log(result[0]);
+		//console.log(result[0]);
 		connection.end();
 
 	} catch (error) {
@@ -674,14 +674,14 @@ async function rejectOrder(orderId, rejectReason, callback){
 
 			result= await connection.promise().query(query, values);
 			quantity= result[0][0].quantity;
-			console.log('Old quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
+			//console.log('Old quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
 
 			//Update the quantity.
 			query= `update item set quantity= ? where item_code= ?`;
 			values= [quantity + resultItems[0][i].quantity, resultItems[0][i].item_code];
 
 			result= await connection.promise().query(query, values);
-			console.log('Affected rows: ' + result[0].affectedRows);
+			//console.log('Affected rows: ' + result[0].affectedRows);
 
 			//Get the new quantity from the item table.
 			query= `select quantity from item where item_code= ?`;
@@ -689,7 +689,7 @@ async function rejectOrder(orderId, rejectReason, callback){
 
 			result= await connection.promise().query(query, values);
 			quantity= result[0][0].quantity;
-			console.log('New quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
+			//console.log('New quantity for item ' + resultItems[0][i].item_code+ ': ' + quantity);
 
 			connection.end();
 
