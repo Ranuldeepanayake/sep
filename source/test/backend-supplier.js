@@ -57,7 +57,7 @@ describe('Testing supplier.rejectOrder()', function(){
     });
 });
 
-//Unit test to check if supplier.getItemsList() dataset is defined.
+//Unit test to check if supplier.signUp() is functioning.
 describe('Testing supplier.signUp()', function(){
     
     it('Test if a supplier can successfully create an account.', 

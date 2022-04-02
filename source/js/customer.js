@@ -345,8 +345,8 @@ function editProfile(request, userId, password, changePassword, callback) {
 	var query;
 	var values;
 
-	console.log('Change password: ' + changePassword);
-	console.log('Password: ' + password);
+	//console.log('Change password: ' + changePassword);
+	//console.log('Password: ' + password);
 
 	if(changePassword== 'false'){
 		query= `update user set email= ?, first_name= ?, last_name= ?, street= ?, city= ? where user_id= ?`;
@@ -354,7 +354,7 @@ function editProfile(request, userId, password, changePassword, callback) {
 
 	}else if(changePassword== 'true'){
 		password= bcrypt.hashSync(password, saltRounds);
-		console.log('Password hash: ' + password);
+		//console.log('Password hash: ' + password);
 
 		query= `update user set email= ?, first_name= ?, last_name= ?, street= ?, city= ?, password= ? where user_id= ?`
 		values= [request.email, request.firstName, request.lastName, request.street, request.city, password, userId];
@@ -371,7 +371,7 @@ function editProfile(request, userId, password, changePassword, callback) {
 			connection.end();
 			return callback("failure");
 		}else{
-			console.log("Record updated with ID: " + JSON.stringify(result));
+			//console.log("Record updated with ID: " + JSON.stringify(result));
 			connection.end();
 			return callback("success");
 		}
