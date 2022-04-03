@@ -60,3 +60,19 @@ describe('Testing customer.editProfile()', function(){
     });
 });
 
+//Unit test to check if customer.getOrders() is functioning.
+describe('Testing customer.getOrders()', function(){
+    
+    it('Test if a customer can retrieve their past orders.', function(done){
+
+        var userId= '1';
+
+        customer.getOrders(userId, function (result){
+            chai.assert.equal(result, 'success', "Failed to edit profile!");
+            chai.assert.isDefined(result, "Failed to edit profile!");
+            chai.assert.isNotNull(result, "Failed to edit profile!");
+            chai.assert.isNotEmpty(result, "Failed to edit profile!");
+            done(); 
+        });
+    });
+});

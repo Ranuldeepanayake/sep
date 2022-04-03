@@ -408,7 +408,7 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 	}
 	
 	orderId= result[0].insertId;
-	console.log('Order ID: ' + orderId);
+	//console.log('Order ID: ' + orderId);
 
 
 	//Insert records into the order_item table in a loop.
@@ -425,7 +425,7 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 			values= [orderId, itemArray[i].itemId, itemArray[i].itemQuantity];
 
 			result= await connection.promise().query(query, values);
-			console.log('Added order item ' + i);
+			//console.log('Added order item ' + i);
 
 			//Get the existing quantity from item table.
 			query= `select quantity from item where item_code= ?`;
@@ -433,7 +433,7 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 
 			result= await connection.promise().query(query, values);
 			var quantity= result[0][0].quantity;
-			console.log('Existing quantity: ' + quantity);
+			//console.log('Existing quantity: ' + quantity);
 
 			//Subtract and update the new quantity.
 			query= `update item set quantity= ? where item_code= ?`;
@@ -447,7 +447,7 @@ async function createOrder(itemArray, totalPrice, supplierId, customerId, callba
 
 			result= await connection.promise().query(query, values);
 			quantity= result[0][0].quantity;
-			console.log('New quantity: ' + quantity);
+			//console.log('New quantity: ' + quantity);
 
 			connection.end();
 

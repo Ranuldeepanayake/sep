@@ -22,7 +22,8 @@
     "mysql2": "^2.3.3"
   },
   "scripts": {
-    "test-customer": "mocha test/backend-customer.js",
-	"test-supplier": "mocha test/backend-supplier.js"
+    "test-customer-1": "mocha test/backend-customer-1.js",
+    "test-customer-2": "mocha test/backend-customer-2.js",
+	  "test-supplier-1": "mocha test/backend-supplier-1.js"
   }
 }
