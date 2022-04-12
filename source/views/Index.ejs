@@ -16,6 +16,15 @@
     <link rel="stylesheet" href="assets/css/helper.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="assets/js/vendor/modernizr-3.7.1.min.js"></script>
+
+
+<style>
+    .product-item .product-inner .content .content-left {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 calc(100% - 0px);
+        flex: 0 0 calc(100% - 0px);
+    }
+</style>
 </head>
 
 <body>
@@ -154,9 +163,7 @@
                                 <div class="product-item">
                                     <div class="product-inner">
                                         <div class="image">
-                                            <img src="<%= suppliers[i].store_image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
-                                            width: 300px;
-                                            height: 300px; object-fit: contain; align-self: center;">
+                                            <img src="<%= suppliers[i].store_image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg">
                                             <div class="image-overlay">
                                                 <div class="action-buttons">
                                                     <form action="view-supplier-products" method="post">
@@ -169,7 +176,7 @@
                                         <div class="content">
                                             <div class="content-left">
                                                 <h4 class="title"><a href="single-product.html"><%= suppliers[i].store_description %></a></h4>
-                                                <h5 class="nmra">Location: <%= suppliers[i].street %></h5>
+                                                <h5>Location: <%= suppliers[i].street %></h5>
                                                 <hr>
                                                 <h5 class="nmra">NRMA ID: <%= suppliers[i].nmra_registration %></h5>
                                                 <h5 class="id">Pharmacist ID: <%= suppliers[i].pharmacist_registration %></h5>

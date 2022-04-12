@@ -108,6 +108,12 @@ button, input[type="submit"] {
         border-color: #47cfca;
     }
 
+    .lbl-style {
+        font-size: 14px;
+        color: #6d6d6d;
+        margin-left: 1rem !important;
+      }
+
 ul {
     list-style: outside none none;
     margin: 0;
@@ -4761,13 +4767,13 @@ img.mfp-img {
         }
 
         .single-product-content .quantity-colors .quantity .pro-qty {
-            width: 100px;
-            padding: 0 30px;
+            width: 150px;
+            padding: 10px 10px;
             float: left;
             border: 1px solid #cccccc;
             position: relative;
             border-radius: 50px;
-        }
+          }
 
             .single-product-content .quantity-colors .quantity .pro-qty .qtybtn {
                 position: absolute;
@@ -5204,14 +5210,14 @@ img.mfp-img {
             width: 180px;
         }
 
-            .cart-table table tbody tr td.pro-quantity .pro-qty {
-                width: 100px;
-                padding: 0 30px;
-                border: 1px solid #cccccc;
-                position: relative;
-                border-radius: 50px;
-                margin: auto;
-            }
+        .cart-table table tbody tr td.pro-quantity .pro-qty {
+            width: 130px;
+            padding: 10px 10px;
+            border: 1px solid #cccccc;
+            position: relative;
+            border-radius: 50px;
+            margin: auto;
+          }
 
                 .cart-table table tbody tr td.pro-quantity .pro-qty .qtybtn {
                     position: absolute;
