@@ -127,7 +127,7 @@
                         <div class="col-lg-4 col-12 mb-30">
                             <label class="bold">Rs. <%= orderDetails.total_price%></label>
                         </div>
-                        <% if (approvalStatus == 'rejected' { %>
+                        <% if (approvalStatus == 'rejected') { %>
                         <div class="col-lg-2 col-12 mb-30">
                             <p>Rejected Reason :</p>
                         </div>
@@ -232,12 +232,5 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/ajax-mail.js"></script>
     <script src="assets/js/main.js"></script>
-    <script>
-        var check = function() {
-            if (document.getElementById('reject_reason').value.length>1) {
-            document.getElementById("reject-btn").disabled = false;
-            }
-        }
-    </script>
 </body>
 </html>
