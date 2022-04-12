@@ -250,39 +250,6 @@
                                     </div>
                                     <br> 
 
-                                    <h4>Orders with Non-prescribed items</h4>
-                                        <div class="myaccount-table table-responsive text-center">
-                                        <table class="table table-bordered">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>Order No</th>
-                                                <th>Customer No</th>
-                                                <th>Date</th>
-                                                <th>Total</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        
-                                        <tbody>
-                                        <% for(var i=0; i < orderList.length; i++) { %>
-                                            <% if(orderList[i].prescription_needed == 'false') {%>
-                                            <tr>
-                                                <td><%= orderList[i].order_id %></td>
-                                                <td><%= orderList[i].customer_id %></td>
-                                                <td style="white-space:pre-wrap"><%= orderList[i].date %></td>
-                                                <td>Rs. <%= orderList[i].total_price %></td>
-                                                <form action="/view-supplier-order-process" method="post">
-                                                    <input style="visibility: hidden;" id="order_id" name="order_id" value="<%= orderList[i].order_id %>"/>  
-                                                    <input style="visibility: hidden;" id="prescription_needed" name="prescription_needed" value="<%= orderList[i].prescription_needed %>"/> 
-                                                    <input style="visibility: hidden;" id="approval_status" name="approval_status" value="<%= orderList[i].approval_status %>"/> 
-                                                    <td><button type="submit" class="btn btn-primary btn-sm">View</button></td>
-                                                </form>
-                                            </tr>
-                                            <% } %> 
-                                        <% } %> 
-                                        </tbody>
-                                    </table> 
-                                    </div>
                                     <h4>Past Orders</h4>
                                     <div class="myaccount-table table-responsive text-center">
                                         <table class="table table-bordered">
@@ -299,7 +266,7 @@
                                         
                                         <tbody>
                                         <% for(var i=0; i < orderList.length; i++) { %>
-                                            <% if(orderList[i].prescription_needed == 'true' && orderList[i].approval_status == 'approved' || orderList[i].approval_status == 'rejected') {%>
+                                            <% if(orderList[i].approval_status == 'approved' || orderList[i].approval_status == 'rejected') {%>
                                             <tr>
                                                 <td><%= orderList[i].order_id %></td>
                                                 <td><%= orderList[i].customer_id %></td>
