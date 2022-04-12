@@ -172,18 +172,18 @@
                             <li><a href="#Prescribed" data-toggle="tab">Prescribed</a></li>
                         </ul>
                     </div>
-                        <div class="tab-pane active" id="NonPrescribed">
-                            <!-- Page Section Start -->
-                            <div class="page-section section section-padding">
-                                <div class="container">
-                                    <div class="row row-30 mbn-40">
+                    <div class="tab-pane active" id="NonPrescribed">
+                        <!-- Page Section Start -->
+                        <div class="page-section section section-padding">
+                            <div class="container">
+                                <div class="row row-30 mbn-40">
 
-                                        <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40">
-                                            <div class="row">
-                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                                <% if(ItemDetails[i].prescribed == 'false') { %>
+                                    <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
+                                        <div class="row">
+                                            <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                    <% if(ItemDetails[i].prescribed == 'false') { %> 
+                                                    <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                     <form action="view-item-process" method="post">
-                                                        <div class="col-xl-4 col-md-6 col-12 mb-40">
                                                         <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
                                                         <div class="product-item border">
                                                             <div class="product-inner">
@@ -193,18 +193,20 @@
                                                                     height: 300px; object-fit: contain; align-self: center;">
                                                                     <div class="image-overlay">
                                                                         <div class="action-buttons">
-                                                                            <% if(userFName.length > 0) { %>
-                                                                                <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
-                                                                            <% } else { %>
-                                                                                <button title="Please log in!" disabled>add to cart</button>    
-                                                                            <% } %>
+                                                                            <div class="action-buttons">
+                                                                                <% if(userFName.length > 0) { %>
+                                                                                    <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                <% } else { %>
+                                                                                    <button title="Please log in!" disabled>add to cart</button>    
+                                                                                <% } %>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="content">
                                                                     <div class="content-left">
                                                                         <h4 class="title">
-                                                                           <a href="#"><%= ItemDetails[i].name %></a>
+                                                                        <a href="#"><%= ItemDetails[i].name %></a>
                                                                         </h4>
                                                                     </div>
                                                                     <div class="content-right">
@@ -213,30 +215,31 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </form>
+                                                    </form> 
+                                                </div>
                                                 <% } %>
-                                                <% } %>
-                                            </div>
+                                            
+                                            <% } %>
                                         </div>
-
-                                        <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
-
-                                            <div class="sidebar">
-                                                <h4 class="sidebar-title">Category</h4>
-                                                <ul class="sidebar-list">                                                    
-                                                    <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
-                                                    <li><a href="javascript:showMedicine()" id="category_medicine" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
-                                                    <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
-                                                    <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-
                                     </div>
+
+                                    <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
+
+                                        <div class="sidebar">
+                                            <h4 class="sidebar-title">Category</h4>
+                                            <ul class="sidebar-list">                                                    
+                                                <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
+                                                <li><a href="javascript:showMedicine()" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
+                                                <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
+                                                <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div><!-- Page Section End -->
-                        </div>
+                            </div>
+                        </div><!-- Page Section End -->
+                    </div>
 
                         <div class="tab-pane" id="Prescribed">
 
@@ -442,96 +445,30 @@
                     <div class="col-12">
                         <ul class="pro-info-tab-list section nav">
                             <li><a class="active" href="#NonPrescribedGroceries" data-toggle="tab">Non-Prescribed</a></li>
-                            <li><a href="#PrescribedGroceries" data-toggle="tab">Prescribed</a></li>
                         </ul>
                     </div>
-                        <div class="tab-pane active" id="NonPrescribedGroceries">
-                            <!-- Page Section Start -->
-                            <div class="page-section section section-padding">
-                                <div class="container">
-                                    <div class="row row-30 mbn-40">
+                    <div class="tab-pane active" id="NonPrescribedGroceries">
+                        <!-- Page Section Start -->
+                        <div class="page-section section section-padding">
+                            <div class="container">
+                                <div class="row row-30 mbn-40">
 
-                                        <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
-                                            <div class="row">
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                                    <% if(ItemDetails[i].prescribed == 'false' && ItemDetails[i].category == 'Grocery') { %>
-                                                        <form action="view-item-process" method="post">
-                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
-                                                            <div class="product-item border">
-                                                                <div class="product-inner">
-                                                                    <div class="image">
-                                                                        <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
-                                                                        width: 300px;
-                                                                        height: 300px; object-fit: contain; align-self: center;">
-                                                                        <div class="image-overlay">
-                                                                            <div class="action-buttons">
-                                                                                <div class="action-buttons">
-                                                                                    <% if(userFName.length > 0) { %>
-                                                                                        <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
-                                                                                    <% } else { %>
-                                                                                        <button title="Please log in!" disabled>add to cart</button>    
-                                                                                    <% } %>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="content">
-                                                                        <div class="content-left">
-                                                                            <h4 class="title">
-                                                                            <a href="#"><%= ItemDetails[i].name %></a>
-                                                                            </h4>
-                                                                        </div>
-                                                                        <div class="content-right">
-                                                                            <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                <% } } %>
-                                                </div>                                                
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
-
-                                            <div class="sidebar">
-                                                <h4 class="sidebar-title">Category</h4>
-                                                <ul class="sidebar-list">                                                    
-                                                    <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
-                                                    <li><a href="javascript:showMedicine()" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
-                                                    <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
-                                                    <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div><!-- Page Section End -->
-                        </div>
-
-                        <div class="tab-pane" id="PrescribedGroceries">
-                            <center><p class="btn bg-warning btn-round">Note: If you're purchasing the prescribed items you have to upload the prescription at the checkout!</p></center>
-                            <div class="page-section section section-padding">
-                                <div class="container">
-
-                                    <div class="row row-30 mbn-40">
-                                        <div class="col-xl-12 col-lg-12 col-12 order-1 order-lg-2 mb-40" style="float: left;">
-                                            <div class="row">    
+                                    <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
+                                        <div class="row">
+                                            <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                <% if(ItemDetails[i].category == 'Grocery') { %>
+                                                    <% if(ItemDetails[i].prescribed == 'false') { %> 
                                                     <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                                        <% if(ItemDetails[i].prescribed == 'true' && ItemDetails[i].category == 'Grocery') { %>
-                                                            <form action="view-item-process" method="post">
-                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>    
-                                                            <div class="product-item border">
-                                                                <div class="product-inner">
-                                                                    <div class="image">
-                                                                        <img src="<%= ItemDetails[i].image %>" alt="" style="background-size: 150px;
-                                                                        width: 300px;
-                                                                        height: 300px; object-fit: contain; align-self: center;">
-                                                                        <div class="image-overlay">
+                                                    <form action="view-item-process" method="post">
+                                                        <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
+                                                        <div class="product-item border">
+                                                            <div class="product-inner">
+                                                                <div class="image">
+                                                                    <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                                                    width: 300px;
+                                                                    height: 300px; object-fit: contain; align-self: center;">
+                                                                    <div class="image-overlay">
+                                                                        <div class="action-buttons">
                                                                             <div class="action-buttons">
                                                                                 <% if(userFName.length > 0) { %>
                                                                                     <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
@@ -541,29 +478,46 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="content">
-                                                                        <div class="content-left">
-                                                                            <h4 class="title">
-                                                                                <a href="#">
-                                                                                    <%= ItemDetails[i].name %>
-                                                                                </a>
-                                                                            </h4>
-                                                                        </div>
-                                                                        <div class="content-right">
-                                                                            <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
-                                                                        </div>
+                                                                </div>
+                                                                <div class="content">
+                                                                    <div class="content-left">
+                                                                        <h4 class="title">
+                                                                        <a href="#"><%= ItemDetails[i].name %></a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="content-right">
+                                                                        <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            </form>
-                                                        <% } } %>
-                                                    </div>
-                                            </div>
+                                                        </div>
+                                                    </form> 
+                                                </div>
+                                                    <% } %>
+                                                <% } %>
+                                            
+                                            <% } %>
                                         </div>
                                     </div>
+
+                                    <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
+
+                                        <div class="sidebar">
+                                            <h4 class="sidebar-title">Category</h4>
+                                            <ul class="sidebar-list">                                                    
+                                                <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
+                                                <li><a href="javascript:showMedicine()" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
+                                                <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
+                                                <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div><!-- Page Section End -->
-                        </div>
+                            </div>
+                        </div><!-- Page Section End -->
+                    </div>
+
                     </div>
 
                     <!-- Misc -->
@@ -572,75 +526,79 @@
                     <div class="col-12">
                         <ul class="pro-info-tab-list section nav">
                             <li><a class="active" href="#NonPrescribedMisc" data-toggle="tab">Non-Prescribed</a></li>
-                            <li><a href="#PrescribedMisc" data-toggle="tab">Prescribed</a></li>
+                            <!-- <li><a href="#PrescribedMisc" data-toggle="tab">Prescribed</a></li> -->
                         </ul>
                     </div>
-                        <div class="tab-pane active" id="NonPrescribedMisc">
-                            <!-- Page Section Start -->
-                            <div class="page-section section section-padding">
-                                <div class="container">
-                                    <div class="row row-30 mbn-40">
+                    <div class="tab-pane active" id="NonPrescribedMisc">
+                        <!-- Page Section Start -->
+                        <div class="page-section section section-padding">
+                            <div class="container">
+                                <div class="row row-30 mbn-40">
 
-                                        <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
-                                            <div class="row">
-                                                <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                                    <% if(ItemDetails[i].category == 'Misc'&& ItemDetails[i].prescribed == 'false') { %>
-                                                        <form action="view-item-process" method="post">
-                                                            <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
-                                                            <div class="product-item border">
-                                                                <div class="product-inner">
-                                                                    <div class="image">
-                                                                        <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
-                                                                        width: 300px;
-                                                                        height: 300px; object-fit: contain; align-self: center;">
-                                                                        <div class="image-overlay">
+                                    <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
+                                        <div class="row">
+                                            <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                <% if(ItemDetails[i].category == 'Misc') { %>
+                                                    <% if(ItemDetails[i].prescribed == 'false') { %> 
+                                                    <div class="col-xl-4 col-md-6 col-12 mb-40">
+                                                    <form action="view-item-process" method="post">
+                                                        <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
+                                                        <div class="product-item border">
+                                                            <div class="product-inner">
+                                                                <div class="image">
+                                                                    <img src="<%= ItemDetails[i].image %>" alt="" onerror=this.src="images/pharmacies/alt-store.jpg" style="background-size: 150px;
+                                                                    width: 300px;
+                                                                    height: 300px; object-fit: contain; align-self: center;">
+                                                                    <div class="image-overlay">
+                                                                        <div class="action-buttons">
                                                                             <div class="action-buttons">
-                                                                                <div class="action-buttons">
-                                                                                    <% if(userFName.length > 0) { %>
-                                                                                        <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
-                                                                                    <% } else { %>
-                                                                                        <button title="Please log in!" disabled>add to cart</button>    
-                                                                                    <% } %>
-                                                                                </div>
+                                                                                <% if(userFName.length > 0) { %>
+                                                                                    <button onsubmit="view-item-process">add to cart  <% userFName %></button>                                 
+                                                                                <% } else { %>
+                                                                                    <button title="Please log in!" disabled>add to cart</button>    
+                                                                                <% } %>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="content">
-                                                                        <div class="content-left">
-                                                                            <h4 class="title">
-                                                                            <a href="#"><%= ItemDetails[i].name %></a>
-                                                                            </h4>
-                                                                        </div>
-                                                                        <div class="content-right">
-                                                                            <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
-                                                                        </div>
+                                                                </div>
+                                                                <div class="content">
+                                                                    <div class="content-left">
+                                                                        <h4 class="title">
+                                                                        <a href="#"><%= ItemDetails[i].name %></a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="content-right">
+                                                                        <span class="price">Rs. <%= ItemDetails[i].unit_price %></span>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </form>
-                                                <% } } %>
+                                                        </div>
+                                                    </form> 
                                                 </div>
-                                            </div>
+                                                    <% } %>
+                                                <% } %>
+                                            
+                                            <% } %>
                                         </div>
-
-                                        <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
-
-                                            <div class="sidebar">
-                                                <h4 class="sidebar-title">Category</h4>
-                                                <ul class="sidebar-list">                                                    
-                                                    <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
-                                                    <li><a href="javascript:showMedicine()" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
-                                                    <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
-                                                    <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-
                                     </div>
+
+                                    <div class="col-xl-3 col-lg-4 col-12 order-2 order-lg-1 mb-40">
+
+                                        <div class="sidebar">
+                                            <h4 class="sidebar-title">Category</h4>
+                                            <ul class="sidebar-list">                                                    
+                                                <li><a href="javascript:showAll()" name="category_all"><h3>All (<%= CategoryCount.all %>)</h3></a></li>
+                                                <li><a href="javascript:showMedicine()" name="category_medicine">Medicine<span class="num"><%= CategoryCount.medicine %></span></a></li>
+                                                <li><a href="javascript:showGroceries()" name="category_groceries">Groceries<span class="num"><%= CategoryCount.groceries %></span></a></li>
+                                                <li><a href="javascript:showMisc()" name="category_misc">Miscellaneous<span class="num"><%= CategoryCount.misc %></span></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div><!-- Page Section End -->
-                        </div>
+                            </div>
+                        </div><!-- Page Section End -->
+                    </div>
 
                         <div class="tab-pane" id="PrescribedMisc">
 
