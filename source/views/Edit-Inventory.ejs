@@ -138,13 +138,15 @@
                                 <input class="prescription-upload" type="file" id="imagePath" name="imagePath" required>
                             </div>
                             <div class="col-lg-6 col-12 mb-30 text-center">
-                                <img class="w-50 border p-1" src="assets/images/pharmacies/alt-store.jpg" alt="assets/images/pharmacies/alt-store.jpg" />
+                                <img class="w-50 border p-1" src="assets/images/pharmacies/pharmacy-1.jpg" alt="assets/images/pharmacies/pharmacy-1.jpg" />
                             </div>
 
                             <% if( message == "" ) { %>
                                 <div class="col-md-12 col-12 text-right">
                                     <button class="btn btn-success btn-round" type="submit"><i class="fa fa-check"></i> Add</button>
-                                    <button class="btn btn-dark btn-round" type="submit"><i class="fa fa-mail-reply"></i> Go Back</button>
+                                    <button class="btn btn-dark btn-round" type="submit" value="ignore" formnovalidate><i class="fa fa-mail-reply"></i>
+                                        <a href="/my-account-supplier">Go Back
+                                    </button>
                                 </div>
                                 <br>
                                 <% }  else if (message == "fail" ) {%>
@@ -168,7 +170,9 @@
                                     width:100%;
                                     height:fit-content;
                                     left: 0;">
-                                        <button type="button" class="btn btn-info btn-sm btn-block"><a href="/my-account-supplier">Go Back</a></button>
+                                        <button class="btn btn-dark btn-round" type="submit" value="ignore" formnovalidate><i class="fa fa-mail-reply"></i>
+                                            <a href="/my-account-supplier">Go Back
+                                        </button>
                                         <br>
                                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                                             <%= message %>
@@ -251,7 +255,7 @@
 
                                 <div class="col-lg-6 col-12 mb-30 text-center">
                                   
-                                        <img class="w-50 border p-1" src="<%= itemDetails[0].image %>" alt="assets/images/pharmacies/alt-store.jpg"/>
+                                        <img class="w-50 border p-1" src="<%= itemDetails[0].image %>" alt="assets/images/pharmacies/pharmacy-1.jpg"/>
                                     
                                   
                                 </div>
@@ -296,8 +300,10 @@
                                         width:100%;
                                         height:fit-content;
                                         left: 0;">
-                                            <button type="button" class="btn btn-info btn-sm btn-block"><a href="/my-account-supplier">Go Back</a></button>
-                                            <br>
+                                             <button class="btn btn-dark btn-round" type="submit" value="ignore" formnovalidate><i class="fa fa-mail-reply"></i> 
+                                                <a href="/my-account-supplier">Go Back
+                                                </button>
+                                             <br>
                                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                                 <%= message %>
                                                 <button type="button" class="close" data-dismiss="alert" style="background-color: transparent;">
