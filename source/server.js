@@ -1770,12 +1770,12 @@ app.post('/view-supplier-order-process', function(req, res){
 		supplier.getOrder(req.body.order_id, function(result){
 			if(result == 'failure'){
 				res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
-				approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })		
+				approvalStatus: result[0].approval_status, prescriptionReq: result[0].prescription_needed, message: '' })		
 			}
 			else{
 				console.log(result);
 				res.render('OrderDetails.ejs',{userFName: session.userfirstname, orderDetails: result[0], orderDetailItems: result[1], 
-				approvalStatus: req.body.approval_status, prescriptionReq: req.body.prescription_needed, message: '' })	
+				approvalStatus: result[0].approval_status, prescriptionReq: result[0].prescription_needed, message: '' })	
 			}	
 		});
 	}
