@@ -156,18 +156,22 @@
                                         <form action="edit-customer-process" method="post">
                                             <div class="row">
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">First Name</label>
                                                     <input id="first-name" placeholder="First Name" type="text" name="firstName" value = "<%= userFName %>" disabled="True" required> 
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">Last Name</label>
                                                     <input id="last-name" placeholder="Last Name" type="text" name="lastName" value = "<%= userLName %>" disabled="True"  required>
                                                 </div>
 
                                                 <div class="col-12 mb-30">
+                                                    <label class="lbl-style">Address</label>
                                                     <input id="address" placeholder="Address" type="text" name="street" value = "<%= userAddress %>" disabled="True" required>
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">Nearest City</label>
                                                     <select id="city" name="city" disabled="True" required>
                                                         <option value = "<%= userCity %>"><%= userCity %></option>
                                                         <option value="Kottawa">Kottawa</option>
@@ -176,20 +180,25 @@
                                                     </select>
                                                 </div>
 
-                                                <div class="col-lg-6 col-12 mb-15"><input id= "email" type="email" placeholder="Email" name = "email" value = "<%= userEmail %>" disabled="True" required readonly="true"></div>
+                                                <div class="col-lg-6 col-12 mb-15">
+                                                    <label class="lbl-style">Email</label>
+                                                    <input id= "email" type="email" placeholder="Email" name = "email" value = "<%= userEmail %>" disabled="True" required readonly="true"></div>
 
 
                                                 <div class="col-12 mb-30"><h4>Password change</h4></div>
 
                                                 <div class="col-12 mb-30">
+                                                    <label class="lbl-style">Current Password</label>
                                                     <input id="current-pwd" placeholder="Current Password" style="-webkit-text-security: disc;" name="currentPassword" value = "<%= userPassword %>"  disabled="True" required>
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">New Password</label>
                                                     <input id="new-pwd" placeholder="New Password" type="password" name="password" disabled="True" onkeyup="check()">
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">Confirm Password</label>
                                                     <input id="confirm-pwd" placeholder="Confirm Password" type="password" name="confirmPassword" disabled="True" onkeyup="check()">
                                                 </div>
 
@@ -241,7 +250,7 @@
                                                         <td>Rs. <%= orderDetails[i].total_price %></td>
                                                         <form action="/view-customer-order-process" method="post">
                                                             <input style="visibility: hidden;" id="order_id" name="order_id" value="<%= orderDetails[i].order_id %>"/>  
-                                                            <td><button type="submit" class="btn btn-primary btn-sm">View</button></td>
+                                                            <td><button type="submit" class="btn btn-dark btn-round">View</button></td>
                                                         </form>
                                                     </tr>
                                                 <% } %> 

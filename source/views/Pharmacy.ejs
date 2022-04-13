@@ -172,18 +172,19 @@
                             <li><a href="#Prescribed" data-toggle="tab">Prescribed</a></li>
                         </ul>
                     </div>
-                    <div class="tab-pane active" id="NonPrescribed">
-                        <!-- Page Section Start -->
-                        <div class="page-section section section-padding">
-                            <div class="container">
-                                <div class="row row-30 mbn-40">
+                        <div class="tab-pane active" id="NonPrescribed">
+                            <!-- Page Section Start -->
+                            <div class="page-section section section-padding">
+                                <div class="container">
+                                    <div class="row row-30 mbn-40">
 
-                                    <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40" style="float: left;">
-                                        <div class="row">
-                                            <% for(var i=0; i < ItemDetails.length; i++) { %>
-                                                    <% if(ItemDetails[i].prescribed == 'false') { %> 
-                                                    <div class="col-xl-4 col-md-6 col-12 mb-40">
-                                                    <form action="view-item-process" method="post">
+                                        <div class="col-xl-9 col-lg-8 col-12 order-1 order-lg-2 mb-40">
+                                            <div class="row">
+                                                <% for(var i=0; i < ItemDetails.length; i++) { %>
+                                                <% if(ItemDetails[i].prescribed == 'false') { %>
+                                                    
+                                                    <form action="view-item-process" method="post" class="col-xl-4 col-md-6 col-12 mb-40">
+                                                       
                                                         <div class="col-md-6 col-12 mb-15"><input id="itemCode" name="itemCode" type="text" value="<%= ItemDetails[i].item_code %>" style="visibility:hidden"></div>
                                                         <div class="product-item border">
                                                             <div class="product-inner">
@@ -214,9 +215,9 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </form> 
-                                                </div>
+                                                    </div>
+                                                </form>
+                                                <% } %>
                                                 <% } %>
                                             
                                             <% } %>

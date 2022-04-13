@@ -145,8 +145,8 @@
                                                 <td class="pro-title"><a href="#"><%= cartItems[i].cartItemName %></a></td>
                                                 <td class="pro-price"><span class="amount">Rs. <%= cartItems[i].cartItemUnitPrice %></span></td>
                                                 <td class="pro-quantity">
-                                                    <input type="number" id = "cartQuantity" value="<%= cartItems[i].cartItemQuantity %>" min="0" max="<%= cartItems[i].dbQuantity %>" onchange="checkQuantity()"/>
-                                                    <input type="number" id = "dbQuantity" value="<%= cartItems[i].dbQuantity %>" hidden/>
+                                                    <input class="pro-qty" type="number" id = "cartQuantity" value="<%= cartItems[i].cartItemQuantity %>" min="0" max="<%= cartItems[i].dbQuantity %>" onchange="checkQuantity()"/>
+                                                    <input class="pro-qty" type="number" id = "dbQuantity" value="<%= cartItems[i].dbQuantity %>" hidden/>
                                                 </td>
                                                 <td class="pro-subtotal">Rs. <%= cartItems[i].cartItemSubTotal %></td>
                                                 <form method="post" action="remove-from-cart">
