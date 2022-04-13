@@ -141,18 +141,22 @@
                                         <form action="edit-supplier-process" method="post" enctype="multipart/form-data">
                                             <div class="row">
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">First Name</label>
                                                     <input id="first-name" placeholder="First Name" type="text" name="firstName" value = "<%= userFName %>" disabled="True" required> 
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">Last Name</label>
                                                     <input id="last-name" placeholder="Last Name" type="text" name="lastName" value = "<%= userLName %>" disabled="True"  required>
                                                 </div>
 
                                                 <div class="col-12 mb-30">
+                                                    <label class="lbl-style">Address</label>
                                                     <input id="address" placeholder="Address" type="text" name="street" value = "<%= userAddress %>" disabled="True" required>
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">Nearest City</label>
                                                     <select id="city" name="city" disabled="True" required>
                                                         <option value = "<%= userCity %>"><%= userCity %></option>
                                                         <option value="null">Nearest City</option>
@@ -162,18 +166,26 @@
                                                     </select>
                                                 </div>
 
-                                                <div class="col-lg-6 col-12 mb-15"><input type="email" placeholder="Email" id = "email" name = "email" value = "<%= userEmail %>" disabled="True" required readonly="true"></div>
+                                                <div class="col-lg-6 col-12 mb-15">
+                                                    <label class="lbl-style">Email</label>
+                                                    <input type="email" placeholder="Email" id = "email" name = "email" value = "<%= userEmail %>" disabled="True" required readonly="true"></div>
 
-                                                <div class="col-lg-6 col-12 mb-15"><input type="text" placeholder="NMRA ID" id = "nmraRegistration"  name="nmraRegistration" value = "<%= userNMRA %>" disabled="True" ></div>
+                                                <div class="col-lg-6 col-12 mb-15">
+                                                    <label class="lbl-style">NMRA ID</label>
+                                                    <input type="text" placeholder="NMRA ID" id = "nmraRegistration"  name="nmraRegistration" value = "<%= userNMRA %>" disabled="True" ></div>
 
-                                                <div class="col-lg-6 col-12 mb-15"><input type="text" placeholder="Pharmacy ID"  id="pharmacistRegistration"  name="pharmacistRegistration" value = "<%= userPharmID %>" disabled="True" ></div>
+                                                <div class="col-lg-6 col-12 mb-15">
+                                                    <label class="lbl-style">Pharmacy ID</label>
+                                                    <input type="text" placeholder="Pharmacy ID"  id="pharmacistRegistration"  name="pharmacistRegistration" value = "<%= userPharmID %>" disabled="True" ></div>
 
                                                 
                                                 <div class="col-12 mb-30">
                                                     <hr/>
+                                                    <label class="lbl-style">Description</label>
                                                     <input id="storeDescription" placeholder="Description" type="text" name="storeDescription" value = "<%= userStoreDesc %>" disabled="True" >
                                                 </div>
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">Image</label>
                                                     <input type="file" id="storeImage" name="storeImage" disabled="True">
                                                 </div>
                                                 <div class="col-lg-6 col-12 mb-30 text-center">
@@ -182,14 +194,17 @@
                                                 <div class="col-12 mb-30"> <hr /> <h4>Password change</h4></div>
 
                                                 <div class="col-12 mb-30">
+                                                    <label class="lbl-style">Current Password</label>
                                                     <input id="current-pwd" placeholder="Current Password" type="password" name="currentPassword"  style="-webkit-text-security: disc;" name="currentPassword" value = "<%= userPassword %>"  disabled="True" required>
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">New Password</label>
                                                     <input id="new-pwd" placeholder="New Password" type="password" name="password" disabled="True" onkeyup="check()">
                                                 </div>
 
                                                 <div class="col-lg-6 col-12 mb-30">
+                                                    <label class="lbl-style">Confirm Password</label>
                                                     <input id="confirm-pwd" placeholder="Confirm Password" type="password" name="confirmPassword" disabled="True" onkeyup="check()">
                                                 </div>
                                                 
@@ -237,7 +252,7 @@
                                                 <td style="white-space:pre-wrap"><%= orderList[i].date %></td>
                                                 <td><%= orderList[i].approval_status %></td>
                                                 <td>Rs. <%= orderList[i].total_price %></td>
-                                                <td><button type="submit" class="btn btn-primary btn-sm" name="order_id"  id="order_id" value="<%= orderList[i].order_id %>">View</button></td>
+                                                <td><button type="submit" class="btn btn-primary-cs btn-round" name="order_id"  id="order_id" value="<%= orderList[i].order_id %>">View</button></td>
                                                 </form>
                                             </tr>
                                             <% } %> 
@@ -271,7 +286,7 @@
                                                 <td style="white-space:pre-wrap"><%= orderList[i].date %></td>
                                                 <td><%= orderList[i].approval_status %></td>
                                                 <td>Rs. <%= orderList[i].total_price %></td>
-                                                <td><button type="submit" class="btn btn-primary btn-sm" name="order_id"  id="order_id" value="<%= orderList[i].order_id %>">View</button></td>
+                                                <td><button type="submit" class="btn btn-primary-cs btn-round" name="order_id"  id="order_id" value="<%= orderList[i].order_id %>">View</button></td>
                                                 </form>
                                             </tr>
                                             <% } %> 
@@ -289,6 +304,7 @@
                             <div class="tab-pane fade" id="Inventory-Management" role="tabpanel">
                                 <div class="myaccount-content">
                                     <h3>Inventory Management</h3>
+                                    <button type="button" class="btn btn-primary-cs btn-round mb-2 float-right"><a href="/add-item-form"><i class="fa fa-plus"></i> Add New Items</a></button>
                                     <div class="inventry-management-form">
                                         <table class="table table-bordered">
                                             <thead class="thead-light">
@@ -311,7 +327,7 @@
                                                     <td><%= itemList[i].category %></td>
                                                     <td style="white-space:pre-wrap"><%= itemList[i].description %></td> 
                                                     <form action="/get-item-details" method="post">
-                                                        <td><button type="submit" class="btn btn-primary btn-sm" id="item_code" name="item_code" value="<%= itemList[i].item_code %>">Edit</button></td>
+                                                        <td><button type="submit" class="btn btn-primary-cs btn-round" id="item_code" name="item_code" value="<%= itemList[i].item_code %>">Edit</button></td>
                                                     </form>                                                                                                
                                                 </tr>
                                                 <% } %>
